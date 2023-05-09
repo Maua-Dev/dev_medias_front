@@ -1,8 +1,10 @@
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import Scaffold from "./src/views/Scaffold";
 
 export default function App() {
   return <SafeAreaView style={styles.container}>
     <StatusBar barStyle={'light-content'} />
+    <Scaffold />
   </SafeAreaView>
 }
 
