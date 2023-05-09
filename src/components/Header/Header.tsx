@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         zIndex: 1,
         paddingHorizontal: "3%",
-        paddingVertical: "6%"
+        paddingVertical: "6%",
+        borderWidth: 1.2,
     },
     mainInfosStudent: {
         color: "#fff",
