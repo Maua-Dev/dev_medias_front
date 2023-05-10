@@ -2,27 +2,27 @@ import { StyleSheet, Text, TouchableHighlight, View } from "react-native"
 
 type Props = {
     isHomePage: boolean,
-    title: string,
-    subtitle: string
 }
 
-const Header = ({ isHomePage, title, subtitle }: Props) => {
+const Header = ({ isHomePage }: Props) => {
 
-    isHomePage = true
-    if (isHomePage) {
-        title = "Beatriz Seco Corrêa - 4º ano"
-        subtitle = "Engenharia Civil - 5 anos - Verão - Diurno"
+    const handleTitle = () => {
+        return isHomePage ?
+            "Beatriz Seco Corrêa - 4º ano" :
+            "Teoria das estruturas"
     }
-    else {
-        title = "Teoria das estruturas"
-        subtitle = "ETC314"
+
+    const handleSubtitle = () => {
+        return isHomePage ?
+            "Engenharia Civil - 5 anos - Verão - Diurno" :
+            "ETC314"
     }
 
     return <View style={styles.content}>
         <View style={styles.bluelayer}>
             <View style={styles.texts}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.subtitle}>{subtitle}</Text>
+                <Text style={styles.title}>{handleTitle()}</Text>
+                <Text style={styles.subtitle}>{handleSubtitle()}</Text>
             </View>
             {
                 isHomePage ?
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     content: {
         width: "100%",
         height: "100%",
+        flex: 0.6,
         flexDirection: "column",
         alignItems: "center",
     },
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#0F5F88",
         width: "90%",
-        height: "12%",
+        height: "100%",
         borderRadius: 20,
         zIndex: 1,
         paddingHorizontal: "3%",
@@ -84,11 +85,12 @@ const styles = StyleSheet.create({
     redlayer: {
         backgroundColor: "#BA2512",
         width: "90%",
-        height: "12%",
+        height: "100%",
+        zIndex: 0,
         borderRadius: 20,
         position: "absolute",
-        top: "1%",
-        right: "3.5%"
+        top: "3%",
+        right: "2.9%"
     }
 })
 
