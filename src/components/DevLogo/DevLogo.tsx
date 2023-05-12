@@ -1,5 +1,5 @@
 import { Image, StyleSheet, View } from "react-native"
-import logo from "../../../assets/foto.png"
+import logo from "../../../assets/logo.png"
 
 const DevLogo = () => {
     return <View style={styles.content}>
