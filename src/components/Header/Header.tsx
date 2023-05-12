@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         zIndex: 0,
         borderRadius: 20,
         position: "absolute",
-        top: "3%",
+        top: "8%",
         right: "2.9%"
     }
 })

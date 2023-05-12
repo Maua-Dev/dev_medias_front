@@ -16,7 +16,6 @@ const MainBox = ({ children }: Props) => {
 const styles = StyleSheet.create({
     content: {
         width: "100%",
-        height: "100%",
         flex: 4,
         alignItems: "center",
         marginTop: "4%"
