@@ -1,4 +1,6 @@
 import { StyleSheet, Text, View } from "react-native"
+import { getFontSize } from "../../utils/fontSizeHandlers"
+import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers"
 
 type Props = {
     grade: number,
@@ -7,22 +9,13 @@ type Props = {
 }
 
 const SubjectCard = ({ title, subtitle, grade }: Props) => {
-
-    const handleGradeBoxBackgroundColor = () => {
-        return grade >= 6 ? "rgba(15, 95, 136, 0.19)" : "rgba(186, 37, 18, 0.19)"
-    }
-
-    const handleGradeFormat = () => {
-        return grade.toFixed(1).replace(".", ",")
-    }
-
     return <View style={styles.content}>
-        <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor() }]}>
-            <Text style={styles.grade}>{handleGradeFormat()}</Text>
+        <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(grade) }]}>
+            <Text style={[styles.grade, { fontSize: getFontSize(20) }]}>{handleGradeFormat(grade)}</Text>
         </View>
         <View style={styles.subjectBox}>
-            <Text style={styles.subjectTitle}>{title}</Text>
-            <Text style={styles.subjectSubtitle}>{subtitle}</Text>
+            <Text style={[styles.subjectTitle, { fontSize: getFontSize(16) }]}>{title}</Text>
+            <Text style={[styles.subjectSubtitle, { fontSize: getFontSize(13) }]}>{subtitle}</Text>
         </View>
     </View>
 }
@@ -42,18 +35,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     grade: {
-        fontSize: 20,
         fontWeight: "bold"
     },
     subjectBox: {
         marginLeft: "2%",
     },
     subjectTitle: {
-        fontSize: 16,
         fontWeight: "bold"
     },
     subjectSubtitle: {
-        fontSize: 13,
         fontWeight: "bold"
     }
 })

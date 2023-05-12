@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native"
+import { getFontSize } from "../../utils/fontSizeHandlers"
 
 type Props = {
     isHomePage: boolean,
@@ -21,15 +22,15 @@ const Header = ({ isHomePage }: Props) => {
     return <View style={styles.content}>
         <View style={styles.bluelayer}>
             <View style={styles.texts}>
-                <Text style={styles.title}>{handleTitle()}</Text>
-                <Text style={styles.subtitle}>{handleSubtitle()}</Text>
+                <Text style={[styles.title, { fontSize: getFontSize(24) }]}>{handleTitle()}</Text>
+                <Text style={[styles.subtitle, { fontSize: getFontSize(13) }]}>{handleSubtitle()}</Text>
             </View>
             {
                 isHomePage ?
                     null :
                     <TouchableHighlight onPress={() => alert('volta pagina')}>
                         <View style={styles.buttonExitContainer}>
-                            <Text style={styles.buttonExit}>
+                            <Text style={[styles.buttonExit, { fontSize: getFontSize(30) }]}>
                                 X
                             </Text>
                         </View>
@@ -64,12 +65,10 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#fff",
-        fontSize: 24,
         fontWeight: "bold",
     },
     subtitle: {
         color: "#fff",
-        fontSize: 13,
         fontWeight: "bold"
     },
     buttonExitContainer: {
@@ -79,7 +78,6 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     buttonExit: {
-        fontSize: 30,
         color: "#fff",
     },
     redlayer: {
