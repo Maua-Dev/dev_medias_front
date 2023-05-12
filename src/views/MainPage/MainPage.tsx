@@ -23,6 +23,11 @@ const MainPage = () => {
             grade: 2
         },
         {
+            title: "Teoria das Estruturas",
+            subtitle: "ETC314 - Diurno - Anual - DP",
+            grade: 2
+        },
+        {
             title: "Estruturas de Concreto",
             subtitle: "ETC323 - Diurno - Anual",
             grade: 2
@@ -57,7 +62,7 @@ const MainPage = () => {
     return <>
         <Header isHomePage={true} />
         <MainBox>
-            <ScrollView style={{ overflow: "hidden" }}>
+            <ScrollView>
                 {response.map((value, index) => {
                     return <SubjectCard key={index} title={value.title} subtitle={value.subtitle} grade={value.grade} />
                 })}
