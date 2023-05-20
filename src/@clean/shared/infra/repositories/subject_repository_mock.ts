@@ -2,19 +2,17 @@ import { ISubjectRepository } from "../../../modules/subject/domain/repositories
 import { Subject } from "../../../shared/domain/entities/subject";
 
 export class SubjectRepositoryMock implements ISubjectRepository {
-    private subjects: Subject[] = [];
+    private subjects: { [key: string]: Subject } = {};
 
-    async getSubjects(): Promise<Subject[]> {
+    async getSubjects(): Promise<{ [key: string]: Subject }> {
         return this.subjects;
     }
 
-    async saveSubject(subject: Subject): Promise<void> {
-        this.subjects.push(subject);
+    async saveSubject(code: string, subject: Subject): Promise<void> {
+        this.subjects[code] = subject;
     }
 
-    async deleteSubject(subject: Subject): Promise<void> {
-        this.subjects = this.subjects.filter(
-            (s: Subject) => s.code !== subject.code
-        );
+    async deleteSubject(code: string): Promise<void> {
+        delete this.subjects[code]
     }
 }
