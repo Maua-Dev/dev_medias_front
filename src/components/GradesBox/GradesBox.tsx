@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import MaskInput, { createNumberMask } from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 
 type Props = {
@@ -11,14 +12,29 @@ const Item = ({ title, isEmpty }: Props) => {
 
     const [text, setText] = useState('');
 
+    const mask = createNumberMask({
+        delimiter: '.',
+        separator: ',',
+        precision: 1,
+    });
+
+    const onChange = (newText: string) => {
+        const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
+
+        if (isValidInput || newText === '') {
+            setText(newText);
+        }
+    }
+
     return <View style={isEmpty ? [styles.inputBox, { opacity: 0 }] : styles.inputBox}>
         <Text style={styles.inputTitle}>{title}</Text>
-        <TextInput
+        <MaskInput
             style={styles.input}
-            defaultValue={text}
-            onChangeText={newText => setText(newText)}
+            value={text}
+            onChangeText={onChange}
             maxLength={4}
             keyboardType="numeric"
+            mask={mask}
         />
     </View>
 }
