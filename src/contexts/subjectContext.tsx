@@ -2,9 +2,9 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 import {subjectsContainer, Registry} from '../@clean/shared/infra/containers/subjectsContainer'
 
-import { SaveSubjectUsecase } from '../@clean/modules/subject/usecases/saveSubjectUsecase'
-import { GetSubjectsUsecase } from '../@clean/modules/subject/usecases/getSubjectsUsecase'
-import { DeleteSubjectUsecase } from '../@clean/modules/subject/usecases/deleteSubjectUsecase'
+import { SaveSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
+import { GetSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase'
+import { DeleteSubjectUsecase } from '../@clean/modules/subject/usecases/deleteStudentSubjectUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
 
 

@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { Container, injectable } from "inversify";
 import { SubjectRepositoryMock } from "../repositories/subjectRepositoryMock";
-import { SaveSubjectUsecase } from "../../../modules/subject/usecases/saveSubjectUsecase";
-import { GetSubjectsUsecase } from "../../../modules/subject/usecases/getSubjectsUsecase";
-import { DeleteSubjectUsecase } from "../../../modules/subject/usecases/deleteSubjectUsecase";
+import { SaveSubjectUsecase } from "../../../modules/subject/usecases/saveStudentSubjectUsecase";
+import { GetSubjectsUsecase } from "../../../modules/subject/usecases/getStudentSubjectsUsecase";
+import { DeleteSubjectUsecase } from "../../../modules/subject/usecases/deleteStudentSubjectUsecase";
 
 export const Registry = {
     SubjectRepositoryMock: Symbol.for("SubjectRepositoryMock"),

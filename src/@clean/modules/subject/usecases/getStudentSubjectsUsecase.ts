@@ -4,7 +4,7 @@ import { ISubjectRepository } from "../domain/repositories/subject_repository_in
 export class GetSubjectsUsecase {
     constructor(private subjectRepository: ISubjectRepository) {}
 
-    async execute(): Promise<{ [key: string]: Subject }> {
-        return await this.subjectRepository.getSubjects();
+    async execute(): Promise<Subject[]> {
+        return await this.subjectRepository.getStudentSubjects();
     }
 }
