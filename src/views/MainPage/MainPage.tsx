@@ -1,4 +1,5 @@
 import { ScrollView } from "react-native"
+import CreationSubjectCard from "../../components/CreationSubjectCard/CreationSubjectCard"
 import DevLogo from "../../components/DevLogo/DevLogo"
 import Header from "../../components/Header/Header"
 import MainBox from "../../components/MainBox/MainBox"
@@ -66,6 +67,7 @@ const MainPage = () => {
                 {response.map((value, index) => {
                     return <SubjectCard key={index} title={value.title} subtitle={value.subtitle} grade={value.grade} />
                 })}
+                <CreationSubjectCard />
             </ScrollView>
         </MainBox>
         <DevLogo />
