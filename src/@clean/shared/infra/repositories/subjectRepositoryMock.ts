@@ -1,5 +1,5 @@
 import { ISubjectRepository } from "../../../modules/subject/domain/repositories/subject_repository_interface";
-import { Subject } from "../../../shared/domain/entities/subject";
+import { Subject } from "../../domain/entities/subject";
 
 export class SubjectRepositoryMock implements ISubjectRepository {
     private subjects: { [key: string]: Subject } = {};
