@@ -1,7 +1,7 @@
 import { Subject } from "../../../shared/domain/entities/subject";
 import { ISubjectRepository } from "../domain/repositories/subject_repository_interface";
 
-export class SaveSubjectUsecase {
+export class SaveStudentSubjectUsecase {
     constructor(private subjectRepository: ISubjectRepository) {}
 
     async execute(code: string, subject: Subject): Promise<void> {
