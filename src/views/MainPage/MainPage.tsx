@@ -10,7 +10,7 @@ const MainPage = () => {
         {
             title: "Empreendedorismo e Gestão",
             subtitle: "EFH113 - Diurno - Anual",
-            grade: 2
+            grade: 2 //media
         },
         {
             title: "Urbanismo",

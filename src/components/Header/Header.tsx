@@ -9,13 +9,13 @@ const Header = ({ isHomePage }: Props) => {
 
     const handleTitle = () => {
         return isHomePage ?
-            "Guilherme Fernandes" :
+            "Bem vindo ao DevMédias!" :
             "Teoria das estruturas"
     }
 
     const handleSubtitle = () => {
         return isHomePage ?
-            "Eng. Civil - 4/5 anos - Diurno - Verão" :
+            "Adicione as suas matérias abaixo" :
             "ETC314"
     }
 

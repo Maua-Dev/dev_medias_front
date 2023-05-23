@@ -1,11 +1,11 @@
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
-import InputGraduationTests from "./src/views/InputGraduationTests/InputGraduationTests";
+import MainPage from "./src/views/MainPage/MainPage";
 
 export default function App() {
   return <SafeAreaView style={styles.container}>
     <StatusBar barStyle={'light-content'} />
-    {/* <MainPage /> */}
-    <InputGraduationTests />
+    <MainPage />
+    {/* <InputGraduationTests /> */}
   </SafeAreaView>
 }
 
