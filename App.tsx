@@ -5,6 +5,7 @@ export default function App() {
   return <SafeAreaView style={styles.container}>
     <StatusBar barStyle={'light-content'} />
     <MainPage />
+    {/* <InputGraduationTests /> */}
   </SafeAreaView>
 }
 

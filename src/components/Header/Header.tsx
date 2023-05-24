@@ -9,20 +9,20 @@ const Header = ({ isHomePage }: Props) => {
 
     const handleTitle = () => {
         return isHomePage ?
-            "Beatriz Seco Corrêa - 4º ano" :
+            "Bem vindo ao DevMédias!" :
             "Teoria das estruturas"
     }
 
     const handleSubtitle = () => {
         return isHomePage ?
-            "Engenharia Civil - 5 anos - Verão - Diurno" :
+            "Adicione as suas matérias abaixo" :
             "ETC314"
     }
 
     return <View style={styles.content}>
         <View style={styles.bluelayer}>
             <View style={styles.texts}>
-                <Text style={[styles.title, { fontSize: getFontSize(24) }]}>{handleTitle()}</Text>
+                <Text style={[styles.title, { fontSize: getFontSize(22) }]}>{handleTitle()}</Text>
                 <Text style={[styles.subtitle, { fontSize: getFontSize(13) }]}>{handleSubtitle()}</Text>
             </View>
             {
