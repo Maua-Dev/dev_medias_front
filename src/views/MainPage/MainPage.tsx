@@ -1,14 +1,16 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { ScrollView } from "react-native"
 import CreationSubjectCard from "../../components/CreationSubjectCard/CreationSubjectCard"
 import DevLogo from "../../components/DevLogo/DevLogo"
 import Header from "../../components/Header/Header"
 import MainBox from "../../components/MainBox/MainBox"
 import SubjectCard from "../../components/SubjectCard/SubjectCard"
-import {SubjectContext} from "../../contexts/subjectContext"
+import { SubjectContext } from "../../contexts/subjectContext"
 
 const MainPage = () => {
     const { subjects } = useContext(SubjectContext)
+
+    const [isAddingSubject, setIsAddingSubject] = useState(false)
 
     return <>
         <Header isHomePage={true} />

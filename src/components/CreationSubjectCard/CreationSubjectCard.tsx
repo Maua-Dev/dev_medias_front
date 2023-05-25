@@ -1,17 +1,23 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import SubjectModal from "../SubjectModal/SubjectModal";
 
 const CreationSubjectCard = () => {
-    return <View style={styles.content}>
-        <View style={styles.gradeBox}>
-            <Text style={styles.grade}>
-                <MaterialIcons name="add-circle" size={getFontSize(26)} color="#0F5F88" />
-            </Text>
-        </View>
-        <View style={styles.subjectBox}>
-            <Text style={styles.subjectTitle}>Adicione sua matéria</Text>
-        </View>
+    const [isAddingSubject, setIsAddingSubject] = useState(false)
+    return <View>
+        <Pressable style={styles.content} onPress={() => setIsAddingSubject(true)}>
+            <View style={styles.gradeBox}>
+                <Text style={styles.grade}>
+                    <MaterialIcons name="add-circle" size={getFontSize(26)} color="#0F5F88" />
+                </Text>
+            </View>
+            <View style={styles.subjectBox}>
+                <Text style={styles.subjectTitle}>Adicione sua matéria</Text>
+            </View>
+        </Pressable>
+        <SubjectModal isAdding={isAddingSubject} setIsAdding={setIsAddingSubject} />
     </View>
 }
 
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
         color: "#0F5F88",
         fontWeight: "bold",
         fontSize: getFontSize(16)
-    },
+    }
 })
 
 export default CreationSubjectCard
