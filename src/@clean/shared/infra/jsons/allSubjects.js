@@ -1,4 +1,4 @@
-{
+export default allSubjects = {
     "EFB105": {
         "name": "Cálculo Diferencial Integral I",
         "code": "EFB105",
@@ -19,7 +19,7 @@
         "code": "EFB205",
         "period": "1",
         "examWeight": 0.6,
-        "assingnmentWeight": 0.4,
+        "assignmentWeight": 0.4,
         "exams": [
             {"name": "P1", "weight": 1},
              {"name": "P2", "weight": 1}

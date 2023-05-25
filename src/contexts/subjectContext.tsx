@@ -27,7 +27,7 @@ const defaultSubjectContext: SubjectContextType = {
     deleteSubject: async (subject: Subject) => {},
 }
 
-const SubjectContext = createContext<SubjectContextType>(defaultSubjectContext);
+export const SubjectContext = createContext<SubjectContextType>(defaultSubjectContext);
 
 const getStudentSubjectsUsecase = subjectsContainer.get<GetStudentSubjectsUsecase>(Registry.GetStudentSubjectsUsecase)
 const getAllSubjectsUsecase = subjectsContainer.get<GetAllSubjectsUsecase>(Registry.GetAllSubjectsUsecase)
@@ -40,6 +40,7 @@ export function SubjectProvider({children}: PropsWithChildren) {
 
     useEffect(() => {
         getSubjects()
+        getAllSubjects()
     }, [])
 
     async function getSubjects() {
