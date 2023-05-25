@@ -34,9 +34,11 @@ export class Subject {
     set code(code: string) {
         this.props.code = code;
     }
+    get average(): number {
+        return this.props.average;
+    }
 
-    static fromDataJson(dataJson: string): Subject[]{
-        const data = JSON.parse(dataJson);
+    static fromDataJson(data: Record<string, any>): Subject[]{
         const subjects: Subject[] = [];
 
         for (const subjectCode in data) {
@@ -46,7 +48,7 @@ export class Subject {
                 name,
                 code,
                 period,
-                average: 0, // Não é fornecido no arquivo JSON, então iniciamos em 0.
+                average: 0,
                 examWeight,
                 assignmentWeight,
                 exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 0, weight: exam.weight })),

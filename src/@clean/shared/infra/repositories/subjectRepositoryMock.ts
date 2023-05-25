@@ -1,6 +1,7 @@
+import { decorate, injectable } from "inversify";
 import { ISubjectRepository } from "../../../modules/subject/domain/repositories/subject_repository_interface";
 import { Subject } from "../../domain/entities/subject";
-import allSubjects from "../jsons/allSubjects.json";
+import allSubjects from "../jsons/allSubjects";
 
 export class SubjectRepositoryMock implements ISubjectRepository {
     private subjects: { [key: string]: Subject } = {};
@@ -10,7 +11,7 @@ export class SubjectRepositoryMock implements ISubjectRepository {
     }
 
     async getAllSubjects(): Promise<Subject[]> {
-        return Subject.fromDataJson(String(allSubjects));
+        return Subject.fromDataJson(allSubjects);
     }
 
     async saveStudentSubject(code: string, subject: Subject): Promise<void> {
@@ -21,3 +22,5 @@ export class SubjectRepositoryMock implements ISubjectRepository {
         delete this.subjects[code]
     }
 }
+
+decorate(injectable(), SubjectRepositoryMock);
