@@ -1,8 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons"
-import { useContext } from "react"
+import { SetStateAction, useContext, useEffect, useState } from "react"
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
+import { SelectList } from "react-native-dropdown-select-list"
 import { SubjectContext } from "../../contexts/subjectContext"
 import { getFontSize } from "../../utils/fontSizeHandlers"
+import Button from "../Button/Button"
 
 type Props = {
     isAdding: boolean,
@@ -11,7 +13,45 @@ type Props = {
 
 const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
 
-    const { allSubjects } = useContext(SubjectContext)
+    const { allSubjects, saveSubject } = useContext(SubjectContext)
+
+    type Item = {
+        key: string;
+        value: string
+    }
+
+    const [selectedCode, setSelectedCode] = useState<string>()
+    const [dataFormatted, setDataFormatted] = useState<any>({ key: '0', value: 'a' })
+    const [select, setSelect] = useState<any>()
+
+    useEffect(() => {
+        const requestData = async () => {
+            const subjectsFormatToList: Item[] = allSubjects.map(item => {
+                return {
+                    key: item.code,
+                    value: `${item.code} - ${item.name}`
+                }
+            })
+
+            setDataFormatted(subjectsFormatToList)
+        }
+
+        requestData()
+    }, [allSubjects])
+
+
+    useEffect(() => {
+        const handleChoice = async () => {
+            allSubjects.map(item => {
+                if (item.code === selectedCode) {
+                    setSelect(item)
+                }
+            })
+        }
+
+        handleChoice()
+    }, [selectedCode])
+
     return <Modal
         transparent={true}
         visible={isAdding}
@@ -30,9 +70,19 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
                         </Pressable>
                     </View>
                     <View style={styles.modalContent}>
-                        <View>{allSubjects.map((item, key) => {
-                            return <Text key={key}>{item.code} - {item.name}</Text>
-                        })}</View>
+                        <View style={styles.modalPosition}>
+                            <SelectList
+                                boxStyles={{ width: "90%" }}
+                                dropdownStyles={{ width: "90%" }}
+                                dropdownItemStyles={{}}
+                                setSelected={(value: SetStateAction<string | undefined>) => setSelectedCode(value)}
+                                data={dataFormatted}
+                                save="key"
+                                placeholder="Buscar disciplina"
+                                notFoundText="Disciplina não encontrada"
+                            />
+                        </View>
+                        <Button action={() => saveSubject(select)}>Selecionar</Button>
                     </View>
                 </View>
                 <View style={styles.redLayer} />
@@ -49,7 +99,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalBackground: {
-        width: "80%",
+        width: "85%",
     },
     modalMain: {
         zIndex: 1,
@@ -77,11 +127,15 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: "#fff",
-        height: 100,
+        paddingVertical: 20,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         borderWidth: 1,
         borderColor: "#000",
+    },
+    modalPosition: {
+        width: "100%",
+        marginHorizontal: "5%"
     },
     redLayer: {
         backgroundColor: "#BA2512",
@@ -90,8 +144,8 @@ const styles = StyleSheet.create({
         zIndex: 0,
         borderRadius: 20,
         position: "absolute",
-        top: "8%",
-        left: "2.9%",
+        top: "5%",
+        left: "1.5%",
         borderWidth: 1,
         borderColor: "#000"
     },

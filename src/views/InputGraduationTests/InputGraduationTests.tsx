@@ -13,7 +13,7 @@ const InputGraduationTests = () => {
             <ScrollView>
                 <GradesBox />
                 <FinalAverage />
-                <Button />
+                <Button>Calcular média</Button>
             </ScrollView>
         </MainBox>
         <DevLogo />
