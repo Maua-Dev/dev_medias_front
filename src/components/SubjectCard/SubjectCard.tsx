@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
 import DeleteButton from "../DeleteButton/DeleteButton";
@@ -21,7 +21,7 @@ const SubjectCard = ({ list, title, subtitle, grade }: Props) => {
     }, [list])
 
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={() => setPress(!press)}>
-        <View style={[styles.content, !longPress ? null : styles.shadowStyle]}>
+        <View style={[styles.content, !longPress ? null : Platform.OS === "ios" ? styles.shadowIOS : styles.shadowAndroid]}>
             <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(grade) }]}>
                 <View>
                     {!longPress ?
@@ -68,13 +68,17 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: getFontSize(13)
     },
-    shadowStyle: {
+    shadowIOS: {
         backgroundColor: "#fff",
         borderRadius: 10,
         shadowOffset: { width: 0, height: 3 },
         shadowColor: '#171717',
         shadowOpacity: 0.2,
         shadowRadius: 1,
+    },
+    shadowAndroid: {
+        shadowColor: '#52006A',
+        elevation: 20,
     }
 })
 
