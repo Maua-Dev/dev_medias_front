@@ -1,23 +1,42 @@
-import { StyleSheet, Text, View } from "react-native"
-import { getFontSize } from "../../utils/fontSizeHandlers"
-import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers"
+import { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { getFontSize } from "../../utils/fontSizeHandlers";
+import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
+import DeleteButton from "../DeleteButton/DeleteButton";
 
 type Props = {
+    list: any[],
     grade: number,
     title: string,
     subtitle: string
 }
 
-const SubjectCard = ({ title, subtitle, grade }: Props) => {
-    return <View style={styles.content}>
-        <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(grade) }]}>
-            <Text style={[styles.grade, { fontSize: getFontSize(20) }]}>{handleGradeFormat(grade)}</Text>
+const SubjectCard = ({ list, title, subtitle, grade }: Props) => {
+
+    const [press, setPress] = useState<boolean>(false)
+    const [longPress, setLongPress] = useState<boolean>(false)
+
+    useEffect(() => {
+        setLongPress(false)
+    }, [list])
+
+    return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={() => setPress(!press)}>
+        <View style={[styles.content, !longPress ? null : styles.shadowStyle]}>
+            <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(grade) }]}>
+                <View>
+                    {!longPress ?
+                        <Text style={styles.grade}>{handleGradeFormat(grade)}</Text>
+                        :
+                        <DeleteButton code={subtitle} />
+                    }
+                </View>
+            </View>
+            <View style={styles.subjectBox}>
+                <Text style={styles.subjectTitle}>{title}</Text>
+                <Text style={styles.subjectSubtitle}>{subtitle}</Text>
+            </View>
         </View>
-        <View style={styles.subjectBox}>
-            <Text style={[styles.subjectTitle, { fontSize: getFontSize(16) }]}>{title}</Text>
-            <Text style={[styles.subjectSubtitle, { fontSize: getFontSize(13) }]}>{subtitle}</Text>
-        </View>
-    </View>
+    </Pressable>
 }
 
 const styles = StyleSheet.create({
@@ -35,16 +54,27 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     grade: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: getFontSize(20)
     },
     subjectBox: {
         marginLeft: "2%",
     },
     subjectTitle: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: getFontSize(16)
     },
     subjectSubtitle: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: getFontSize(13)
+    },
+    shadowStyle: {
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        shadowOffset: { width: 0, height: 3 },
+        shadowColor: '#171717',
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
     }
 })
 
