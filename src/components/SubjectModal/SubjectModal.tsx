@@ -1,5 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons"
+import { useContext } from "react"
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
+import { SubjectContext } from "../../contexts/subjectContext"
 import { getFontSize } from "../../utils/fontSizeHandlers"
 
 type Props = {
@@ -8,6 +10,8 @@ type Props = {
 }
 
 const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
+
+    const { allSubjects } = useContext(SubjectContext)
     return <Modal
         transparent={true}
         visible={isAdding}
@@ -26,7 +30,9 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
                         </Pressable>
                     </View>
                     <View style={styles.modalContent}>
-                        <Text>Input aqui caraio</Text>
+                        <View>{allSubjects.map((item, key) => {
+                            return <Text key={key}>{item.code} - {item.name}</Text>
+                        })}</View>
                     </View>
                 </View>
                 <View style={styles.redLayer} />
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: "#fff",
-        padding: 30,
+        height: 100,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         borderWidth: 1,

@@ -5,7 +5,9 @@ import { getFontSize } from "../../utils/fontSizeHandlers";
 import SubjectModal from "../SubjectModal/SubjectModal";
 
 const CreationSubjectCard = () => {
+
     const [isAddingSubject, setIsAddingSubject] = useState(false)
+
     return <View>
         <Pressable style={styles.content} onPress={() => setIsAddingSubject(true)}>
             <View style={styles.gradeBox}>
