@@ -52,7 +52,8 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
 
     return <ModalBox headerText="Adicionar Matérias" condition={isAdding} conditionClose={() => setIsAdding(false)}>
         <SelectList
-            dropdownItemStyles={{}}
+            boxStyles={{ borderRadius: 0 }}
+            dropdownStyles={{ marginTop: 0, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderTopWidth: 0 }}
             setSelected={(value: SetStateAction<string | undefined>) => setSelectedCode(value)}
             data={dataFormatted}
             save="key"
