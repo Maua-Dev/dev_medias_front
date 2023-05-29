@@ -1,4 +1,5 @@
-import { StyleSheet, Text, TouchableHighlight, View } from "react-native"
+import { MaterialIcons } from "@expo/vector-icons"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import { getFontSize } from "../../utils/fontSizeHandlers"
 
 type Props = {
@@ -28,13 +29,11 @@ const Header = ({ isHomePage }: Props) => {
             {
                 isHomePage ?
                     null :
-                    <TouchableHighlight onPress={() => alert('volta pagina')}>
+                    <Pressable onPress={() => alert('volta pagina')}>
                         <View style={styles.buttonExitContainer}>
-                            <Text style={[styles.buttonExit, { fontSize: getFontSize(30) }]}>
-                                X
-                            </Text>
+                            <MaterialIcons name="close" size={getFontSize(32)} color="#fff" />
                         </View>
-                    </TouchableHighlight>
+                    </Pressable>
             }
         </View>
         <View style={styles.redlayer} />
