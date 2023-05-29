@@ -1,4 +1,5 @@
 import { SetStateAction, useContext, useEffect, useState } from "react"
+import { StyleSheet, View } from "react-native"
 import { SelectList } from "react-native-dropdown-select-list"
 import { SubjectContext } from "../../contexts/subjectContext"
 import Button from "../Button/Button"
@@ -58,10 +59,17 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
             placeholder="Buscar disciplina"
             notFoundText="Disciplina não encontrada"
         />
-        <Button action={() => saveSubject(select)}>Selecionar</Button>
+        <View style={styles.buttonPosition}>
+            <Button action={() => saveSubject(select)}>Selecionar</Button>
+        </View>
 
     </ModalBox>
 }
 
+const styles = StyleSheet.create({
+    buttonPosition: {
+        marginTop: "4%"
+    }
+})
 
 export default SubjectModal
