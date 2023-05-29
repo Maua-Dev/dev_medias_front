@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import MaskInput, { createNumberMask } from "react-native-mask-input";
@@ -122,6 +123,7 @@ const GradesBox = () => {
 
 
     return <View style={styles.content}>
+        <MaterialIcons name="settings" style={{ fontSize: getFontSize(20), position: "absolute", right: 0 }} />
         <View style={styles.subareas}>
             <Text style={styles.title}>Provas</Text>
             <FlatList
