@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native"
+import { ScrollView, StyleSheet, View } from "react-native"
 import Button from "../../components/Button/Button"
 import DevLogo from "../../components/DevLogo/DevLogo"
 import FinalAverage from "../../components/FinalAverage/FinalAverage"
@@ -13,11 +13,19 @@ const InputGraduationTests = () => {
             <ScrollView>
                 <GradesBox />
                 <FinalAverage />
-                <Button>Calcular média</Button>
+                <View style={styles.buttonPosition}>
+                    <Button>Calcular média</Button>
+                </View>
             </ScrollView>
         </MainBox>
         <DevLogo />
     </>
 }
+
+const styles = StyleSheet.create({
+    buttonPosition: {
+        marginVertical: "10%"
+    }
+})
 
 export default InputGraduationTests

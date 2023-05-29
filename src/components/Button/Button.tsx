@@ -12,8 +12,6 @@ const Button = ({ children, action }: any) => {
 const styles = StyleSheet.create({
     content: {
         width: "100%",
-        marginTop: "10%",
-        marginBottom: "5%",
         alignItems: "center"
     },
     button: {

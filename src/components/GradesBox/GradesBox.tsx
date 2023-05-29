@@ -1,8 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import MaskInput, { createNumberMask } from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
 
 type Props = {
     title: string,
@@ -32,6 +33,7 @@ const Item = ({ title, isEmpty }: Props) => {
         <MaskInput
             style={styles.input}
             value={text}
+            editable={!isEmpty ? true : false}
             onChangeText={onChange}
             maxLength={4}
             keyboardType="numeric"
@@ -120,10 +122,14 @@ const GradesBox = () => {
         return data
     }
 
-
+    const [isConfiguring, setIsConfiguring] = useState<boolean>(false)
 
     return <View style={styles.content}>
-        <MaterialIcons name="settings" style={{ fontSize: getFontSize(20), position: "absolute", right: 0 }} />
+        <Pressable onPress={() => setIsConfiguring(true)}>
+            <View>
+                <MaterialIcons name="settings" style={{ fontSize: getFontSize(30), position: "absolute", right: 0, }} />
+            </View>
+        </Pressable>
         <View style={styles.subareas}>
             <Text style={styles.title}>Provas</Text>
             <FlatList
@@ -144,6 +150,7 @@ const GradesBox = () => {
                 renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />}
             />
         </View>
+        <TargetSubjectModal isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
 }
 
