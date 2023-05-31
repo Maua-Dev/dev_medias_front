@@ -1,5 +1,8 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import MaskInput from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
 
@@ -9,6 +12,17 @@ type Props = {
 }
 
 const TargetSubjectModal = ({ isConfiguring, setIsConfiguring }: Props) => {
+
+    const [text, setText] = useState<string>('');
+
+    const onChange = (newText: string) => {
+        const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
+
+        if (isValidInput || newText === '') {
+            setText(newText);
+        }
+    }
+
     return <View>
         <ModalBox headerText="Configurações da Matéria" condition={isConfiguring} conditionClose={setIsConfiguring}>
             <View style={styles.content}>
@@ -22,7 +36,15 @@ const TargetSubjectModal = ({ isConfiguring, setIsConfiguring }: Props) => {
                 </View>
                 <View style={styles.targetContent}>
                     <Text style={styles.title}>Meta Final:</Text>
-                    <TextInput style={styles.targetInput} editable={true} />
+                    <MaskInput
+                        style={styles.targetInput}
+                        value={text}
+                        editable={true}
+                        onChangeText={onChange}
+                        maxLength={4}
+                        keyboardType="numeric"
+                        mask={maskParemeters()}
+                    />
                 </View>
                 <View style={styles.buttonPosition}>
                     <Button>Salvar</Button>
@@ -62,6 +84,8 @@ const styles = StyleSheet.create({
         gap: 10
     },
     targetInput: {
+        textAlign: "center",
+        fontSize: getFontSize(18),
         borderWidth: 1,
         width: "20%",
         height: 40,

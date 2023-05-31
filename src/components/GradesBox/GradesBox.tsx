@@ -1,8 +1,10 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import MaskInput, { createNumberMask } from "react-native-mask-input";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import MaskInput from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import { maskParemeters } from "../../utils/maskHandlers";
+import Button from "../Button/Button";
+import FinalAverage from "../FinalAverage/FinalAverage";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
 
 type Props = {
@@ -13,12 +15,6 @@ type Props = {
 const Item = ({ title, isEmpty }: Props) => {
 
     const [text, setText] = useState('');
-
-    const mask = createNumberMask({
-        delimiter: '.',
-        separator: ',',
-        precision: 1,
-    });
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
@@ -37,7 +33,7 @@ const Item = ({ title, isEmpty }: Props) => {
             onChangeText={onChange}
             maxLength={4}
             keyboardType="numeric"
-            mask={mask}
+            mask={maskParemeters()}
         />
     </View>
 }
@@ -125,11 +121,6 @@ const GradesBox = () => {
     const [isConfiguring, setIsConfiguring] = useState<boolean>(false)
 
     return <View style={styles.content}>
-        <Pressable onPress={() => setIsConfiguring(true)}>
-            <View>
-                <MaterialIcons name="settings" style={{ fontSize: getFontSize(30), position: "absolute", right: 0, }} />
-            </View>
-        </Pressable>
         <View style={styles.subareas}>
             <Text style={styles.title}>Provas</Text>
             <FlatList
@@ -149,6 +140,11 @@ const GradesBox = () => {
                 data={createRows(AssignmentData, 3)}
                 renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />}
             />
+        </View>
+        <FinalAverage finalAverage={8} />
+        <View style={styles.buttonPosition}>
+            <Button action={() => alert()}>Calcular média</Button>
+            <Button action={() => setIsConfiguring(true)}>Definir meta</Button>
         </View>
         <TargetSubjectModal isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
@@ -187,6 +183,11 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         height: "70%",
         fontSize: getFontSize(20)
+    },
+    buttonPosition: {
+        marginVertical: "10%",
+        flexDirection: "row",
+        justifyContent: "space-around"
     }
 })
 

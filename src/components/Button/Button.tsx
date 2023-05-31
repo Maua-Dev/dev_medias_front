@@ -11,13 +11,18 @@ const Button = ({ children, action }: any) => {
 
 const styles = StyleSheet.create({
     content: {
-        width: "100%",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: "5%",
+        flex: 1
     },
     button: {
         textAlign: "center",
+        flexDirection: "row",
         backgroundColor: "#BA2512",
-        width: "40%",
+        paddingTop: 10,
+        paddingHorizontal: 20,
+        height: 40,
         borderRadius: 10,
         overflow: "hidden",
         paddingVertical: "3%",
