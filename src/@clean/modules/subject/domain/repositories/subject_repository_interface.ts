@@ -5,4 +5,5 @@ export interface ISubjectRepository {
     getAllSubjects(): Promise<Subject[]>;
     saveStudentSubject(code: string, subject: Subject): Promise<void>;
     deleteStudentSubject(code: string): Promise<void>;
+    calculateFinalAverage(subject: Subject): Promise<void>;
 }

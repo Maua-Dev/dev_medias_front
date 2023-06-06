@@ -6,6 +6,7 @@ import { DeleteStudentSubjectUsecase } from '../@clean/modules/subject/usecases/
 import { GetAllSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsUsecase'
 import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase'
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
+import { CalculateFinalAverageUsecase } from '../@clean/modules/subject/usecases/calculateFinalAverageUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
 
 
@@ -16,6 +17,7 @@ export type SubjectContextType = {
     getSubjects: () => Promise<void>;
     getAllSubjects: () => Promise<void>;
     deleteSubject: (code: string) => Promise<void>;
+    calculateFinalAverage: (subject: Subject) => Promise<void>;
 }
 
 const defaultSubjectContext: SubjectContextType = {
@@ -25,6 +27,7 @@ const defaultSubjectContext: SubjectContextType = {
     getSubjects: async () => { },
     getAllSubjects: async () => { },
     deleteSubject: async (code: string) => { },
+    calculateFinalAverage: async (subject: Subject) => { }
 }
 
 export const SubjectContext = createContext<SubjectContextType>(defaultSubjectContext);
@@ -33,6 +36,7 @@ const getStudentSubjectsUsecase = subjectsContainer.get<GetStudentSubjectsUsecas
 const getAllSubjectsUsecase = subjectsContainer.get<GetAllSubjectsUsecase>(Registry.GetAllSubjectsUsecase)
 const saveStudentSubjectUsecase = subjectsContainer.get<SaveStudentSubjectUsecase>(Registry.SaveStudentSubjectUsecase)
 const deleteStudentSubjectUsecase = subjectsContainer.get<DeleteStudentSubjectUsecase>(Registry.DeleteStudentSubjectUsecase)
+const calculateFinalAverageUsecase = subjectsContainer.get<CalculateFinalAverageUsecase>(Registry.CalculateFinalAverageUsecase)
 
 export function SubjectProvider({ children }: PropsWithChildren) {
     const [subjects, setSubjects] = useState<Subject[]>([])
@@ -63,9 +67,18 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         await getSubjects()
     }
 
+    async function calculateFinalAverage(subject: Subject) {
+        await calculateFinalAverageUsecase.execute(subject)
+    }
     return (
         <SubjectContext.Provider value={{
-            subjects, allSubjects, saveSubject, getSubjects, deleteSubject, getAllSubjects
+            subjects, 
+            allSubjects, 
+            saveSubject, 
+            getSubjects, 
+            deleteSubject, 
+            getAllSubjects,
+            calculateFinalAverage,
         }}>
             {children}
         </SubjectContext.Provider>
