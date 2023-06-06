@@ -5,7 +5,7 @@ import DevLogo from "../../components/DevLogo/DevLogo"
 import Header from "../../components/Header/Header"
 import MainBox from "../../components/MainBox/MainBox"
 import SubjectCard from "../../components/SubjectCard/SubjectCard"
-import {SubjectContext} from "../../contexts/subjectContext"
+import { SubjectContext } from "../../contexts/subjectContext"
 
 const MainPage = () => {
     const { subjects } = useContext(SubjectContext)
@@ -15,7 +15,11 @@ const MainPage = () => {
         <MainBox>
             <ScrollView>
                 {subjects.map((value, index) => {
+<<<<<<< HEAD
                     return <SubjectCard key={index} subject={value}/>
+=======
+                    return <SubjectCard key={index} list={subjects} title={value.name} subtitle={value.code} grade={value.average} />
+>>>>>>> origin/subject-modal
                 })}
                 <CreationSubjectCard />
             </ScrollView>

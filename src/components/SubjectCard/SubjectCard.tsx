@@ -1,34 +1,60 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
-import { getFontSize } from "../../utils/fontSizeHandlers"
-import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers"
-import { useNavigation } from "@react-navigation/native"
-import { Subject } from "../../@clean/shared/domain/entities/subject"
-import { propsStack } from "../../routes/stack/models"
+import { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { getFontSize } from "../../utils/fontSizeHandlers";
+import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
+import DeleteButton from "../DeleteButton/DeleteButton";
 
 type Props = {
-    subject: Subject
+    list: any[],
+    grade: number,
+    title: string,
+    subtitle: string
 }
 
-const SubjectCard = ({ subject }: Props) => {
-    const navigation = useNavigation<propsStack>()
-    return <TouchableOpacity onPress={
-        () => navigation.navigate('InputGraduationTests', 
-        { subject }
-    )}>
-    <View style={styles.content}>
-        <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(subject.average) }]}>
-            <Text style={[styles.grade, { fontSize: getFontSize(20) }]}>{handleGradeFormat(subject.average)}</Text>
+const SubjectCard = ({ list, title, subtitle, grade }: Props) => {
+
+    const [press, setPress] = useState<boolean>(false)
+    const [longPress, setLongPress] = useState<boolean>(false)
+
+    useEffect(() => {
+        setLongPress(false)
+    }, [list])
+
+    return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={() => setPress(!press)}>
+        <View style={[styles.content, !longPress ? null : { width: "99%" }]}>
+            <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(grade) }]}>
+                <View>
+                    {!longPress ?
+                        <Text style={styles.grade}>{handleGradeFormat(grade)}</Text>
+                        :
+                        <DeleteButton code={subtitle} />
+                    }
+                </View>
+            </View>
+            <View style={styles.subjectBox}>
+                <Text style={styles.subjectTitle}>{title}</Text>
+                <Text style={styles.subjectSubtitle}>{subtitle}</Text>
+            </View>
         </View>
-        <View style={styles.subjectBox}>
-            <Text style={[styles.subjectTitle, { fontSize: getFontSize(16) }]}>{subject.name}</Text>
-            <Text style={[styles.subjectSubtitle, { fontSize: getFontSize(13) }]}>{subject.code}</Text>
-        </View>
-    </View>
-    </TouchableOpacity>
+        <View style={longPress ? styles.secondLayer : null} />
+    </Pressable>
 }
 
 const styles = StyleSheet.create({
+    secondLayer: {
+        width: "99%",
+        backgroundColor: "red",
+        height: "90%",
+        zIndex: 0,
+        position: "absolute",
+        top: "10%",
+        left: "1%",
+        borderRadius: 10
+    },
     content: {
+        borderRadius: 10,
+        zIndex: 1,
+        backgroundColor: "#fff",
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
@@ -42,16 +68,31 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     grade: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: getFontSize(20)
     },
     subjectBox: {
         marginLeft: "2%",
     },
     subjectTitle: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: getFontSize(16)
     },
     subjectSubtitle: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: getFontSize(13)
+    },
+    shadowIOS: {
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        shadowOffset: { width: 0, height: 3 },
+        shadowColor: '#171717',
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
+    },
+    shadowAndroid: {
+        shadowColor: '#52006A',
+        elevation: 20,
     }
 })
 

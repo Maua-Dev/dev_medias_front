@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+=======
+import { MaterialIcons } from "@expo/vector-icons"
+import { Pressable, StyleSheet, Text, View } from "react-native"
+>>>>>>> origin/subject-modal
 import { getFontSize } from "../../utils/fontSizeHandlers"
 import { useNavigation, RouteProp } from "@react-navigation/native"
 import { useRoute } from "@react-navigation/native"
@@ -47,13 +52,19 @@ const Header = ({ isHomePage }: Props) => {
             {
                 isHomePage ?
                     null :
+<<<<<<< HEAD
                     <TouchableOpacity onPress={() => navigation.goBack()}>
+=======
+                    <Pressable onPress={() => alert('volta pagina')}>
+>>>>>>> origin/subject-modal
                         <View style={styles.buttonExitContainer}>
-                            <Text style={[styles.buttonExit, { fontSize: getFontSize(30) }]}>
-                                X
-                            </Text>
+                            <MaterialIcons name="close" size={getFontSize(32)} color="#fff" />
                         </View>
+<<<<<<< HEAD
                     </TouchableOpacity>
+=======
+                    </Pressable>
+>>>>>>> origin/subject-modal
             }
         </View>
         <View style={styles.redlayer} />
