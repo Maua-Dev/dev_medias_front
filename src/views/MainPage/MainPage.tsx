@@ -15,11 +15,7 @@ const MainPage = () => {
         <MainBox>
             <ScrollView>
                 {subjects.map((value, index) => {
-<<<<<<< HEAD
-                    return <SubjectCard key={index} subject={value}/>
-=======
-                    return <SubjectCard key={index} list={subjects} title={value.name} subtitle={value.code} grade={value.average} />
->>>>>>> origin/subject-modal
+                    return <SubjectCard key={index} list={subjects} subject={value}/>
                 })}
                 <CreationSubjectCard />
             </ScrollView>

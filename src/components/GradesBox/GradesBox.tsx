@@ -2,16 +2,13 @@ import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
-<<<<<<< HEAD
 import { ParamListBase } from "@react-navigation/routers";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { Subject } from "../../@clean/shared/domain/entities/subject";
-=======
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import FinalAverage from "../FinalAverage/FinalAverage";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
->>>>>>> origin/subject-modal
 
 type Props = {
     title: string,
