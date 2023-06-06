@@ -5,6 +5,7 @@ import { SaveStudentSubjectUsecase } from "../../../modules/subject/usecases/sav
 import { GetStudentSubjectsUsecase } from "../../../modules/subject/usecases/getStudentSubjectsUsecase";
 import { GetAllSubjectsUsecase } from "../../../modules/subject/usecases/getAllSubjectsUsecase";
 import { DeleteStudentSubjectUsecase } from "../../../modules/subject/usecases/deleteStudentSubjectUsecase";
+import { CalculateFinalAverageUsecase } from "../../../modules/subject/usecases/calculateFinalAverageUsecase";
 
 export const Registry = {
     SubjectRepositoryMock: Symbol.for("SubjectRepositoryMock"),
@@ -13,6 +14,7 @@ export const Registry = {
     GetStudentSubjectsUsecase: Symbol.for("GetStudentSubjectsUsecase"),
     GetAllSubjectsUsecase: Symbol.for("GetAllSubjectsUsecase"),
     DeleteStudentSubjectUsecase: Symbol.for("DeleteStudentSubjectUsecase"),
+    CalculateFinalAverageUsecase: Symbol.for("CalculateFinalAverageUsecase"),
 }
 
 export const subjectsContainer = new Container();
@@ -30,4 +32,7 @@ subjectsContainer.bind(Registry.GetStudentSubjectsUsecase).toDynamicValue((conte
 })
 subjectsContainer.bind(Registry.DeleteStudentSubjectUsecase).toDynamicValue((context) => {
     return new DeleteStudentSubjectUsecase(context.container.get(Registry.SubjectRepositoryMock));
+})
+subjectsContainer.bind(Registry.CalculateFinalAverageUsecase).toDynamicValue((context) => {
+    return new CalculateFinalAverageUsecase(context.container.get(Registry.SubjectRepositoryMock));
 })

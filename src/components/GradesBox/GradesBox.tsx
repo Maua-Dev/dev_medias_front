@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
@@ -9,6 +9,7 @@ import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import FinalAverage from "../FinalAverage/FinalAverage";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
+import { SubjectContext } from "../../contexts/subjectContext";
 
 type Props = {
     title: string,
@@ -115,6 +116,10 @@ const GradesBox = () => {
         title: string,
         id: string,
     }
+    const routeParams = useRoute<GradesRouteProp>()
+    const subjectFromParams = routeParams?.params?.subject
+
+    const { calculateFinalAverage } = useContext(SubjectContext)
 
     const createRows = (data: { id: string, title: string, empty: boolean }[], columns: number) => {
         const rows = Math.floor(data.length / columns)
@@ -157,7 +162,7 @@ const GradesBox = () => {
         </View>
         <FinalAverage finalAverage={8} />
         <View style={styles.buttonPosition}>
-            <Button action={() => alert()}>Calcular média</Button>
+            <Button action={() => calculateFinalAverage(subjectFromParams)}>Calcular média</Button>
             <Button action={() => setIsConfiguring(true)}>Definir meta</Button>
         </View>
         <TargetSubjectModal isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />

@@ -21,6 +21,28 @@ export class SubjectRepositoryMock implements ISubjectRepository {
     async deleteStudentSubject(code: string): Promise<void> {
         delete this.subjects[code]
     }
+
+    async calculateFinalAverage(subject: Subject): Promise<void> {
+        let examsSum = 0;
+        let examsWeightSum = 0;
+        subject.exams.forEach((exam) => {
+            examsSum = examsSum + exam.value * exam.weight;
+            examsWeightSum = examsWeightSum + exam.weight;
+        })
+        let examAverage = examsSum / examsWeightSum;
+
+        let assignmentSum = 0;
+        let assignmentWeightSum = 0;
+        subject.assignments.forEach((assignment) => {
+            assignmentSum = examsSum + assignment.value * assignment.weight;
+            assignmentWeightSum = examsWeightSum + assignment.weight;
+        })
+        let assignmentAverage = assignmentSum / assignmentWeightSum;
+
+        let finalAverage = examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight;
+        subject.average = finalAverage;
+        this.saveStudentSubject(subject.code, subject);
+    }
 }
 
 decorate(injectable(), SubjectRepositoryMock);
