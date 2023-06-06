@@ -15,7 +15,7 @@ const MainPage = () => {
         <MainBox>
             <ScrollView>
                 {subjects.map((value, index) => {
-                    return <SubjectCard key={index} title={value.name} subtitle={value.code} grade={value.average} />
+                    return <SubjectCard key={index} subject={value}/>
                 })}
                 <CreationSubjectCard />
             </ScrollView>

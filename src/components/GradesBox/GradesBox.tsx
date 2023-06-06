@@ -2,13 +2,27 @@ import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import MaskInput, { createNumberMask } from "react-native-mask-input";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import { ParamListBase } from "@react-navigation/routers";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { Subject } from "../../@clean/shared/domain/entities/subject";
 
 type Props = {
     title: string,
     isEmpty: boolean,
 }
 
+type RouteParams = {
+    subject: Subject;
+  };
+  
+type GradesRouteProp = RouteProp<ParamListBase, string> & {
+    params: RouteParams;
+  };
+
 const Item = ({ title, isEmpty }: Props) => {
+    const routeParams = useRoute<GradesRouteProp>()
+
+    const subjectFromParams = routeParams?.params?.subject
 
     const [text, setText] = useState('');
 

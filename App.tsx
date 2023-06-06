@@ -1,14 +1,11 @@
-import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import { SubjectProvider } from "./src/contexts/subjectContext";
-import MainPage from "./src/views/MainPage/MainPage";
+import Routes from "./src/routes";
 
 export default function App() {
   return <SubjectProvider>
-  <SafeAreaView style={styles.container}>
     <StatusBar barStyle={'light-content'} />
-    <MainPage />
-    {/* <InputGraduationTests /> */}
-  </SafeAreaView>
+    <Routes />
   </SubjectProvider>
 }
 

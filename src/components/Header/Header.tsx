@@ -1,22 +1,41 @@
-import { StyleSheet, Text, TouchableHighlight, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { getFontSize } from "../../utils/fontSizeHandlers"
+import { useNavigation, RouteProp } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native"
+import { Subject } from "../../@clean/shared/domain/entities/subject"
+import { ParamListBase } from "@react-navigation/routers";
 
 type Props = {
     isHomePage: boolean,
 }
 
+type RouteParams = {
+    subject: Subject;
+  };
+  
+type HeaderRouteProp = RouteProp<ParamListBase, string> & {
+    params: RouteParams;
+  };
+
+
 const Header = ({ isHomePage }: Props) => {
+    const navigation = useNavigation()
+    const routeParams = useRoute<HeaderRouteProp>()
+
+    const subject = routeParams?.params?.subject
+
+    console.log(routeParams?.params?.subject.name)
 
     const handleTitle = () => {
         return isHomePage ?
             "Bem vindo ao DevMédias!" :
-            "Teoria das estruturas"
+            `${subject.name}`
     }
 
     const handleSubtitle = () => {
         return isHomePage ?
             "Adicione as suas matérias abaixo" :
-            "ETC314"
+            `${subject.code}`
     }
 
     return <View style={styles.content}>
@@ -28,13 +47,13 @@ const Header = ({ isHomePage }: Props) => {
             {
                 isHomePage ?
                     null :
-                    <TouchableHighlight onPress={() => alert('volta pagina')}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <View style={styles.buttonExitContainer}>
                             <Text style={[styles.buttonExit, { fontSize: getFontSize(30) }]}>
                                 X
                             </Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
             }
         </View>
         <View style={styles.redlayer} />

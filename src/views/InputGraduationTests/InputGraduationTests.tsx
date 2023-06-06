@@ -7,6 +7,7 @@ import Header from "../../components/Header/Header"
 import MainBox from "../../components/MainBox/MainBox"
 
 const InputGraduationTests = () => {
+    
     return <>
         <Header isHomePage={false} />
         <MainBox>
