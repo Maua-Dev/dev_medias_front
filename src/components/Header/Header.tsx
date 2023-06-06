@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, Pressable } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
-import { getFontSize } from "../../utils/fontSizeHandlers"
-import { useNavigation, RouteProp } from "@react-navigation/native"
-import { useRoute } from "@react-navigation/native"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { ParamListBase } from "@react-navigation/routers"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import { Subject } from "../../@clean/shared/domain/entities/subject"
-import { ParamListBase } from "@react-navigation/routers";
+import { getFontSize } from "../../utils/fontSizeHandlers"
 
 type Props = {
     isHomePage: boolean,
@@ -12,11 +11,11 @@ type Props = {
 
 type RouteParams = {
     subject: Subject;
-  };
-  
+};
+
 type HeaderRouteProp = RouteProp<ParamListBase, string> & {
     params: RouteParams;
-  };
+};
 
 
 const Header = ({ isHomePage }: Props) => {
@@ -24,8 +23,6 @@ const Header = ({ isHomePage }: Props) => {
     const routeParams = useRoute<HeaderRouteProp>()
 
     const subject = routeParams?.params?.subject
-
-    console.log(routeParams?.params?.subject.name)
 
     const handleTitle = () => {
         return isHomePage ?

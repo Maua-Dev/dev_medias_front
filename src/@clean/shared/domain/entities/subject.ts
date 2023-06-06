@@ -12,7 +12,7 @@ export type SubjectProps = {
 }
 
 export class Subject {
-    constructor (private props: SubjectProps) {
+    constructor(private props: SubjectProps) {
         this.props.name = props.name;
         this.props.code = props.code;
         this.props.period = props.period;
@@ -27,7 +27,7 @@ export class Subject {
     }
     set name(name: string) {
         this.props.name = name;
-    }  
+    }
     get code(): string {
         return this.props.code;
     }
@@ -37,25 +37,32 @@ export class Subject {
     get average(): number {
         return this.props.average;
     }
+    get exams(): Grade[] {
+        return this.props.exams
+    }
+    get assignments(): Grade[] {
+        return this.props.assignments
+    }
 
-    static fromDataJson(data: Record<string, any>): Subject[]{
+
+    static fromDataJson(data: Record<string, any>): Subject[] {
         const subjects: Subject[] = [];
 
         for (const subjectCode in data) {
             if (Object.prototype.hasOwnProperty.call(data, subjectCode)) {
-            const { name, code, period, examWeight, assignmentWeight, exams, assignments } = data[subjectCode];
-            const subjectProps: SubjectProps = {
-                name,
-                code,
-                period,
-                average: 0,
-                examWeight,
-                assignmentWeight,
-                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 0, weight: exam.weight })),
-                assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: 0, weight: assignment.weight })),
-            };
-            const subject = new Subject(subjectProps);
-            subjects.push(subject);
+                const { name, code, period, examWeight, assignmentWeight, exams, assignments } = data[subjectCode];
+                const subjectProps: SubjectProps = {
+                    name,
+                    code,
+                    period,
+                    average: 0,
+                    examWeight,
+                    assignmentWeight,
+                    exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 0, weight: exam.weight })),
+                    assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: 0, weight: assignment.weight })),
+                };
+                const subject = new Subject(subjectProps);
+                subjects.push(subject);
             }
         }
 

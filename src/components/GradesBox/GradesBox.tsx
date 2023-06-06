@@ -1,10 +1,10 @@
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { ParamListBase } from "@react-navigation/routers";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
-import { getFontSize } from "../../utils/fontSizeHandlers";
-import { ParamListBase } from "@react-navigation/routers";
-import { useRoute, RouteProp } from "@react-navigation/native";
 import { Subject } from "../../@clean/shared/domain/entities/subject";
+import { getFontSize } from "../../utils/fontSizeHandlers";
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import FinalAverage from "../FinalAverage/FinalAverage";
@@ -17,16 +17,13 @@ type Props = {
 
 type RouteParams = {
     subject: Subject;
-  };
-  
+};
+
 type GradesRouteProp = RouteProp<ParamListBase, string> & {
     params: RouteParams;
-  };
+};
 
 const Item = ({ title, isEmpty }: Props) => {
-    const routeParams = useRoute<GradesRouteProp>()
-
-    const subjectFromParams = routeParams?.params?.subject
 
     const [text, setText] = useState('');
 
@@ -116,6 +113,26 @@ const GradesBox = () => {
         id: string,
     }
 
+    const routeParams = useRoute<GradesRouteProp>()
+
+    const subjectFromParams = routeParams?.params?.subject
+
+    const grades = subjectFromParams.exams.map((value, index) => {
+        return {
+            id: `${index}`,
+            title: value.name,
+            empty: false
+        }
+    })
+
+    const assignments = subjectFromParams.assignments.map((value, index) => {
+        return {
+            id: `${index}`,
+            title: value.name,
+            empty: false
+        }
+    })
+
     const createRows = (data: { id: string, title: string, empty: boolean }[], columns: number) => {
         const rows = Math.floor(data.length / columns)
         let lastRowElements = data.length - (rows * columns)
@@ -141,7 +158,7 @@ const GradesBox = () => {
                 numColumns={3}
                 scrollEnabled={false}
                 keyExtractor={(item: IProduct) => item.id}
-                data={createRows(GradeData, 3)}
+                data={createRows(grades, 3)}
                 renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />
                 }
             />
@@ -151,11 +168,11 @@ const GradesBox = () => {
             <FlatList
                 numColumns={3}
                 scrollEnabled={false}
-                data={createRows(AssignmentData, 3)}
+                data={createRows(assignments, 3)}
                 renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />}
             />
         </View>
-        <FinalAverage finalAverage={8} />
+        <FinalAverage finalAverage={5} />
         <View style={styles.buttonPosition}>
             <Button action={() => alert()}>Calcular média</Button>
             <Button action={() => setIsConfiguring(true)}>Definir meta</Button>
