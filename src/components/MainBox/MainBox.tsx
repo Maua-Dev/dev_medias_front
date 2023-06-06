@@ -26,7 +26,10 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "90%",
         zIndex: 1,
-        padding: "3%"
+        padding: "3%",
+        borderWidth: 1,
+        borderColor: "#000",
+        overflow: "hidden",
     },
     redlayer: {
         backgroundColor: "#BA2512",
@@ -36,7 +39,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         position: "absolute",
         top: "1.2%",
-        right: "2.9%"
+        right: "2.9%",
     }
 })
 

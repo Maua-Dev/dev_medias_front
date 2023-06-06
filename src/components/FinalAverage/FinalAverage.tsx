@@ -1,12 +1,28 @@
-import { StyleSheet, Text, TextInput, View } from "react-native"
-import { getFontSize } from "../../utils/fontSizeHandlers"
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { getFontSize } from "../../utils/fontSizeHandlers";
+import { handleFinalAverageColor, handleGradeFormat } from "../../utils/gradeHandlers";
 
-const FinalAverage = () => {
+type Props = {
+    finalAverage: number
+}
+
+const FinalAverage = ({ finalAverage }: Props) => {
+
+    useEffect(() => {
+        const formatFinalAverage = handleGradeFormat(finalAverage)
+        setText(`${formatFinalAverage}`)
+    }, [finalAverage])
+
+    const [text, setText] = useState<string>();
+
     return <View style={styles.content}>
         <View style={styles.subarea}>
             <Text style={styles.title}>Média Final</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: handleFinalAverageColor(finalAverage) }]}
+                value={text}
+                editable={false}
                 maxLength={4}
                 keyboardType="numeric"
             />
@@ -33,6 +49,8 @@ const styles = StyleSheet.create({
         width: 120
     },
     input: {
+        fontWeight: "bold",
+        textAlign: 'center',
         fontSize: getFontSize(20),
         width: "25%",
         height: "70%",

@@ -1,25 +1,28 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native"
 import { getFontSize } from "../../utils/fontSizeHandlers"
 
-const Button = () => {
-    return <TouchableOpacity style={styles.content} onPress={() => alert('sem nota ainda otario')}>
+const Button = ({ children, action }: any) => {
+    return <TouchableOpacity style={styles.content} onPress={action}>
         <Text style={styles.button}>
-            Calcular média
+            {children}
         </Text>
     </TouchableOpacity>
 }
 
 const styles = StyleSheet.create({
     content: {
-        width: "100%",
-        marginTop: "10%",
-        marginBottom: "5%",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: "5%",
+        flex: 1
     },
     button: {
         textAlign: "center",
+        flexDirection: "row",
         backgroundColor: "#BA2512",
-        width: "40%",
+        paddingTop: 10,
+        paddingHorizontal: 20,
+        height: 40,
         borderRadius: 10,
         overflow: "hidden",
         paddingVertical: "3%",
