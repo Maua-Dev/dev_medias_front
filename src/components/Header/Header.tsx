@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { ParamListBase } from "@react-navigation/routers"
 import { Pressable, StyleSheet, Text, View } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Subject } from "../../@clean/shared/domain/entities/subject"
 import { getFontSize } from "../../utils/fontSizeHandlers"
 
@@ -21,7 +22,7 @@ type HeaderRouteProp = RouteProp<ParamListBase, string> & {
 const Header = ({ isHomePage }: Props) => {
     const navigation = useNavigation()
     const routeParams = useRoute<HeaderRouteProp>()
-
+    const insets = useSafeAreaInsets();
     const subject = routeParams?.params?.subject
 
     const handleTitle = () => {
@@ -36,7 +37,7 @@ const Header = ({ isHomePage }: Props) => {
             `${subject.code}`
     }
 
-    return <View style={styles.content}>
+    return <View style={[styles.content, { paddingTop: insets.top }]}>
         <View style={styles.bluelayer}>
             <View style={styles.texts}>
                 <Text style={[styles.title, { fontSize: getFontSize(22) }]}>{handleTitle()}</Text>
@@ -52,7 +53,7 @@ const Header = ({ isHomePage }: Props) => {
                     </Pressable>
             }
         </View>
-        <View style={styles.redlayer} />
+        <View style={[styles.redlayer, { paddingTop: insets.top, top: insets.top }]} />
     </View >
 }
 
@@ -100,9 +101,9 @@ const styles = StyleSheet.create({
         width: "90%",
         height: "100%",
         zIndex: 0,
+        marginTop: "1.3%",
         borderRadius: 20,
         position: "absolute",
-        top: "8%",
         right: "2.9%"
     }
 })

@@ -10,6 +10,10 @@ export const handleFinalAverageColor = (grade: number) => {
     return grade >= 6 ? "#0F5F88" : "#BA2512"
 }
 
+export const handleDeleteBarColor = (grade: number) => {
+    return grade >= 6 ? "#0F5F88" : "#BA2512"
+}
+
 export const handlePercentageWeight = (value: number, size: number) => {
     const hasOneSub = 3
     const hasTwoSubs = 6
