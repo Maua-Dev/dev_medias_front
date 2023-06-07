@@ -8,14 +8,17 @@ import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/ge
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
 import { CalculateFinalAverageUsecase } from '../@clean/modules/subject/usecases/calculateFinalAverageUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
+import { GetAllSubjectsWithoutStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase'
 
 
 export type SubjectContextType = {
     subjects: Subject[];
     allSubjects: Subject[];
+    allSubjectsWithoutStudentSubjects: Subject[];
     saveSubject: (subject: Subject) => Promise<void>;
     getSubjects: () => Promise<void>;
     getAllSubjects: () => Promise<void>;
+    getAllSubjectsWithoutStudentSubjects: () => Promise<void>;
     deleteSubject: (code: string) => Promise<void>;
     calculateFinalAverage: (subject: Subject) => Promise<void>;
 }
@@ -23,9 +26,11 @@ export type SubjectContextType = {
 const defaultSubjectContext: SubjectContextType = {
     subjects: [] as Subject[],
     allSubjects: [] as Subject[],
+    allSubjectsWithoutStudentSubjects: [] as Subject[],
     saveSubject: async (subject: Subject) => { },
     getSubjects: async () => { },
     getAllSubjects: async () => { },
+    getAllSubjectsWithoutStudentSubjects: async () => { },
     deleteSubject: async (code: string) => { },
     calculateFinalAverage: async (subject: Subject) => { }
 }
@@ -34,6 +39,7 @@ export const SubjectContext = createContext<SubjectContextType>(defaultSubjectCo
 
 const getStudentSubjectsUsecase = subjectsContainer.get<GetStudentSubjectsUsecase>(Registry.GetStudentSubjectsUsecase)
 const getAllSubjectsUsecase = subjectsContainer.get<GetAllSubjectsUsecase>(Registry.GetAllSubjectsUsecase)
+const getAllSubjectsWithoutStudentSubjectsUsecase = subjectsContainer.get<GetAllSubjectsWithoutStudentSubjectsUsecase>(Registry.GetAllSubjectsWithoutStudentSubjectsUsecase)
 const saveStudentSubjectUsecase = subjectsContainer.get<SaveStudentSubjectUsecase>(Registry.SaveStudentSubjectUsecase)
 const deleteStudentSubjectUsecase = subjectsContainer.get<DeleteStudentSubjectUsecase>(Registry.DeleteStudentSubjectUsecase)
 const calculateFinalAverageUsecase = subjectsContainer.get<CalculateFinalAverageUsecase>(Registry.CalculateFinalAverageUsecase)
@@ -41,11 +47,19 @@ const calculateFinalAverageUsecase = subjectsContainer.get<CalculateFinalAverage
 export function SubjectProvider({ children }: PropsWithChildren) {
     const [subjects, setSubjects] = useState<Subject[]>([])
     const [allSubjects, setAllSubjects] = useState<Subject[]>([])
+    const [
+        allSubjectsWithoutStudentSubjects, 
+        setAllSubjectsWithoutStudentSubjects
+    ] = useState<Subject[]>([])
 
     useEffect(() => {
         getSubjects()
         getAllSubjects()
     }, [])
+
+    useEffect(() => {
+        getAllSubjectsWithoutStudentSubjects()
+    }, [subjects])
 
     async function getSubjects() {
         const subjects = await getStudentSubjectsUsecase.execute()
@@ -55,6 +69,11 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     async function getAllSubjects() {
         const allSubjects = await getAllSubjectsUsecase.execute()
         setAllSubjects(allSubjects)
+    }
+
+    async function getAllSubjectsWithoutStudentSubjects() {
+        const allSubjectsWithoutStudentSubjects = await getAllSubjectsWithoutStudentSubjectsUsecase.execute()
+        setAllSubjectsWithoutStudentSubjects(allSubjectsWithoutStudentSubjects)
     }
 
     async function saveSubject(subject: Subject) {
@@ -74,10 +93,12 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         <SubjectContext.Provider value={{
             subjects, 
             allSubjects, 
+            allSubjectsWithoutStudentSubjects,
             saveSubject, 
             getSubjects, 
             deleteSubject, 
             getAllSubjects,
+            getAllSubjectsWithoutStudentSubjects,
             calculateFinalAverage,
         }}>
             {children}
