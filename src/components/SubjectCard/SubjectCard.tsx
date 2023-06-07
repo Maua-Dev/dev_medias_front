@@ -23,16 +23,16 @@ const SubjectCard = ({ list, subject }: Props) => {
     }, [list])
 
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={
-        () => navigation.navigate('InputGraduationTests', 
-        { subject }
-    )}>
+        () => navigation.navigate('InputGraduationTests',
+            { subject }
+        )}>
         <View style={[styles.content, !longPress ? null : { width: "99%" }]}>
             <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(subject.average) }]}>
                 <View>
                     {!longPress ?
                         <Text style={styles.grade}>{handleGradeFormat(subject.average)}</Text>
                         :
-                        <DeleteButton code={subject.name} />
+                        <DeleteButton code={subject.code} />
                     }
                 </View>
             </View>

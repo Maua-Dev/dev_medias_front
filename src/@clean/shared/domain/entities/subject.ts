@@ -43,6 +43,12 @@ export class Subject {
     get assignments(): Grade[] {
         return this.props.assignments
     }
+    get examWeight(): number {
+        return this.props.examWeight
+    }
+    get assignmentWeight(): number {
+        return this.props.assignmentWeight
+    }
 
 
     static fromDataJson(data: Record<string, any>): Subject[] {

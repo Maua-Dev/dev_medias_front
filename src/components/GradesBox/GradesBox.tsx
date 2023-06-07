@@ -49,63 +49,6 @@ const Item = ({ title, isEmpty }: Props) => {
     </View>
 }
 
-const GradeData = [
-    {
-        id: '0',
-        title: "P1",
-        empty: false
-    },
-    {
-        id: '1',
-        title: "P2",
-        empty: false
-    },
-    {
-        id: '2',
-        title: "PSUB1",
-        empty: false
-    },
-    {
-        id: '3',
-        title: "P3",
-        empty: false
-    },
-    {
-        id: '4',
-        title: "P4",
-        empty: false
-    },
-    {
-        id: '5',
-        title: "PSUB2",
-        empty: false
-    }
-]
-
-const AssignmentData = [
-    {
-        title: 'T1',
-        id: 'string',
-        empty: false
-    },
-    {
-        id: '1',
-        title: "T2",
-        empty: false
-    },
-    {
-        id: '2',
-        title: "T3",
-        empty: false
-    },
-    {
-        id: '3',
-        title: "T4",
-        empty: false
-    }
-
-]
-
 const GradesBox = () => {
     interface IProduct {
         empty: boolean,
@@ -177,7 +120,7 @@ const GradesBox = () => {
             <Button action={() => alert()}>Calcular média</Button>
             <Button action={() => setIsConfiguring(true)}>Definir meta</Button>
         </View>
-        <TargetSubjectModal isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
+        <TargetSubjectModal subjectDetails={subjectFromParams} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
 }
 
