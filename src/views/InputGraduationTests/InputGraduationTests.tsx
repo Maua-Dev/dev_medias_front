@@ -1,20 +1,36 @@
-import { ScrollView } from "react-native"
+import { useState } from "react"
+import { ScrollView, StyleSheet, View } from "react-native"
+import Button from "../../components/Button/Button"
 import DevLogo from "../../components/DevLogo/DevLogo"
 import GradesBox from "../../components/GradesBox/GradesBox"
 import Header from "../../components/Header/Header"
 import MainBox from "../../components/MainBox/MainBox"
 
 const InputGraduationTests = () => {
-    
+
+    const [target, setTarget] = useState<boolean>(false);
+
     return <>
         <Header isHomePage={false} />
         <MainBox>
             <ScrollView>
-                <GradesBox />
+                <GradesBox isConfiguring={target} setIsConfiguring={(val: boolean) => setTarget(val)} />
             </ScrollView>
+            <View style={styles.buttonPosition}>
+                <Button action={() => alert()}>Calcular média</Button>
+                <Button action={() => setTarget(true)}>Definir meta</Button>
+            </View>
         </MainBox>
         <DevLogo />
     </>
 }
+
+const styles = StyleSheet.create({
+    buttonPosition: {
+        flexDirection: "row",
+        justifyContent: "space-around"
+    }
+})
+
 
 export default InputGraduationTests
