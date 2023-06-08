@@ -22,7 +22,7 @@ export const Registry = {
 
 export const subjectsContainer = new Container();
 
-let useAsyncStorage = false;
+let useAsyncStorage = true;
 if(useAsyncStorage) {
     subjectsContainer.bind(Registry.SubjectRepository).to(SubjectRepositoryAsyncStorage).inSingletonScope();
 }else{
