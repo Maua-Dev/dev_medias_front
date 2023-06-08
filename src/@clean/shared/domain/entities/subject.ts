@@ -52,6 +52,9 @@ export class Subject {
     get assignmentWeight(): number {
         return this.props.assignmentWeight;
     }
+    get period(): string {
+        return this.props.period;
+    }
 
     static fromDataJson(data: Record<string, any>): Subject[]{
         const subjects: Subject[] = [];
@@ -66,8 +69,8 @@ export class Subject {
                 average: 0,
                 examWeight,
                 assignmentWeight,
-                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 0, weight: exam.weight })),
-                assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: 0, weight: assignment.weight })),
+                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 10, weight: exam.weight })),
+                assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: 8, weight: assignment.weight })),
             };
             const subject = new Subject(subjectProps);
             subjects.push(subject);

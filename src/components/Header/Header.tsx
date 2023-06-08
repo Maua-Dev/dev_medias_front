@@ -25,8 +25,6 @@ const Header = ({ isHomePage }: Props) => {
 
     const subject = routeParams?.params?.subject
 
-    console.log(routeParams?.params?.subject.name)
-
     const handleTitle = () => {
         return isHomePage ?
             "Bem vindo ao DevMédias!" :

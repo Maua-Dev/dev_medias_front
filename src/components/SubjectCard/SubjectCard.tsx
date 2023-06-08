@@ -32,7 +32,7 @@ const SubjectCard = ({ list, subject }: Props) => {
                     {!longPress ?
                         <Text style={styles.grade}>{handleGradeFormat(subject.average)}</Text>
                         :
-                        <DeleteButton code={subject.name} />
+                        <DeleteButton code={subject.code} />
                     }
                 </View>
             </View>

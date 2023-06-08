@@ -17,14 +17,14 @@ type Item = {
 
 const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
 
-    const { allSubjects, saveSubject } = useContext(SubjectContext)
+    const { allSubjectsWithoutStudentSubjects, saveSubject } = useContext(SubjectContext)
     const [selectedCode, setSelectedCode] = useState<string>()
     const [dataFormatted, setDataFormatted] = useState<any>({ key: '0', value: 'a' })
     const [select, setSelect] = useState<any>()
 
     useEffect(() => {
         const requestData = async () => {
-            const subjectsFormatToList: Item[] = allSubjects.map(item => {
+            const subjectsFormatToList: Item[] = allSubjectsWithoutStudentSubjects.map(item => {
                 return {
                     key: item.code,
                     value: `${item.code} - ${item.name}`
@@ -35,12 +35,12 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
         }
 
         requestData()
-    }, [allSubjects])
+    }, [allSubjectsWithoutStudentSubjects])
 
 
     useEffect(() => {
         const handleChoice = async () => {
-            allSubjects.map(item => {
+            allSubjectsWithoutStudentSubjects.map(item => {
                 if (item.code === selectedCode) {
                     setSelect(item)
                 }

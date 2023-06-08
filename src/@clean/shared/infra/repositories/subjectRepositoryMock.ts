@@ -14,6 +14,11 @@ export class SubjectRepositoryMock implements ISubjectRepository {
         return Subject.fromDataJson(allSubjects);
     }
 
+    async getAllSubjectsWithoutStudentSubjects(): Promise<Subject[]> {
+        let studentSubjects = (await this.getStudentSubjects()).map((subject) => subject.code);
+        return Subject.fromDataJson(allSubjects).filter((subject) => !studentSubjects.includes(subject.code));
+    }
+
     async saveStudentSubject(code: string, subject: Subject): Promise<void> {
         this.subjects[code] = subject;
     }
