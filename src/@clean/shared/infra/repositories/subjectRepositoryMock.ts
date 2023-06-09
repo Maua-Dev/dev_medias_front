@@ -21,6 +21,21 @@ export class SubjectRepositoryMock implements ISubjectRepository {
     async deleteStudentSubject(code: string): Promise<void> {
         delete this.subjects[code]
     }
+
+    async setStudentSubjectValue(isExam: boolean, code: string, name: string, value: number) {
+        if (isExam) {
+            this.subjects[code].exams.map(item => {
+                if (item.name === name)
+                    item.value = value
+            })
+        }
+        else {
+            this.subjects[code].assignments.map(item => {
+                if (item.name === name)
+                    item.value = value
+            })
+        }
+    }
 }
 
 decorate(injectable(), SubjectRepositoryMock);

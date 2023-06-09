@@ -7,7 +7,8 @@ export default allSubjects = {
         "assignmentWeight": 0.4,
         "exams": [
             { "name": "P1", "weight": 1 },
-            { "name": "P2", "weight": 1 }
+            { "name": "P2", "weight": 1 },
+            { "name": "PSUB1", "weight": 1 },
         ],
         "assignments": [{
             "name": "T1", "weight": 1

@@ -5,4 +5,5 @@ export interface ISubjectRepository {
     getAllSubjects(): Promise<Subject[]>;
     saveStudentSubject(code: string, subject: Subject): Promise<void>;
     deleteStudentSubject(code: string): Promise<void>;
+    setStudentSubjectValue(isExam: boolean, code: string, name: string, value: number): Promise<void>;
 }

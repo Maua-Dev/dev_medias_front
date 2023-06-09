@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
+import { SubjectContext } from "../../contexts/subjectContext";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 import { maskParemeters } from "../../utils/maskHandlers";
 
 type Props = {
+    code: string,
     title: string,
     isEmpty: boolean,
+    isExam: boolean,
 }
 
-const Item = ({ title, isEmpty }: Props) => {
+const Item = ({ code, title, isEmpty, isExam }: Props) => {
+
+    const { setStudentSubjectValue } = useContext(SubjectContext)
 
     const [text, setText] = useState('');
 
@@ -17,10 +22,14 @@ const Item = ({ title, isEmpty }: Props) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
 
         if (isValidInput || newText === '') {
+            const value = newText === '' ? 0 : parseInt(newText)
+
+            setStudentSubjectValue(isExam, code, title, value)
+
             setText(newText);
         }
-    }
 
+    }
     return <View style={isEmpty ? [styles.inputBox, { opacity: 0 }] : styles.inputBox}>
         <Text style={styles.inputTitle}>{title}</Text>
         <MaskInput

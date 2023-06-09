@@ -9,13 +9,12 @@ import { SubjectContext } from "../../contexts/subjectContext"
 
 const MainPage = () => {
     const { subjects } = useContext(SubjectContext)
-
     return <>
         <Header isHomePage={true} />
         <MainBox>
             <ScrollView>
-                {subjects.map((value, index) => {
-                    return <SubjectCard key={index} list={subjects} subject={value}/>
+                {subjects.map((value) => {
+                    return <SubjectCard key={value.code} list={subjects} subject={value} />
                 })}
                 <CreationSubjectCard />
             </ScrollView>

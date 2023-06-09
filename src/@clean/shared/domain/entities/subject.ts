@@ -50,7 +50,6 @@ export class Subject {
         return this.props.assignmentWeight
     }
 
-
     static fromDataJson(data: Record<string, any>): Subject[] {
         const subjects: Subject[] = [];
 

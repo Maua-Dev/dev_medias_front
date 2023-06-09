@@ -6,6 +6,7 @@ import { DeleteStudentSubjectUsecase } from '../@clean/modules/subject/usecases/
 import { GetAllSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsUsecase'
 import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase'
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
+import { SetStudentSubjectValueUsecase } from '../@clean/modules/subject/usecases/setStudentSubjectValueUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
 
 
@@ -16,6 +17,7 @@ export type SubjectContextType = {
     getSubjects: () => Promise<void>;
     getAllSubjects: () => Promise<void>;
     deleteSubject: (code: string) => Promise<void>;
+    setStudentSubjectValue: (isExam: boolean, code: string, name: string, value: number) => Promise<void>;
 }
 
 const defaultSubjectContext: SubjectContextType = {
@@ -25,6 +27,8 @@ const defaultSubjectContext: SubjectContextType = {
     getSubjects: async () => { },
     getAllSubjects: async () => { },
     deleteSubject: async (code: string) => { },
+    setStudentSubjectValue: async (isExam: boolean, code: string, name: string, value: number) => { }
+
 }
 
 export const SubjectContext = createContext<SubjectContextType>(defaultSubjectContext);
@@ -33,6 +37,7 @@ const getStudentSubjectsUsecase = subjectsContainer.get<GetStudentSubjectsUsecas
 const getAllSubjectsUsecase = subjectsContainer.get<GetAllSubjectsUsecase>(Registry.GetAllSubjectsUsecase)
 const saveStudentSubjectUsecase = subjectsContainer.get<SaveStudentSubjectUsecase>(Registry.SaveStudentSubjectUsecase)
 const deleteStudentSubjectUsecase = subjectsContainer.get<DeleteStudentSubjectUsecase>(Registry.DeleteStudentSubjectUsecase)
+const setStudentSubjectUsecase = subjectsContainer.get<SetStudentSubjectValueUsecase>(Registry.SetStudentSubjectValueUsecase)
 
 export function SubjectProvider({ children }: PropsWithChildren) {
     const [subjects, setSubjects] = useState<Subject[]>([])
@@ -63,9 +68,13 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         await getSubjects()
     }
 
+    async function setStudentSubjectValue(isExam: boolean, code: string, name: string, value: number) {
+        await setStudentSubjectUsecase.execute(isExam, code, name, value)
+    }
+
     return (
         <SubjectContext.Provider value={{
-            subjects, allSubjects, saveSubject, getSubjects, deleteSubject, getAllSubjects
+            subjects, allSubjects, saveSubject, getSubjects, deleteSubject, getAllSubjects, setStudentSubjectValue
         }}>
             {children}
         </SubjectContext.Provider>

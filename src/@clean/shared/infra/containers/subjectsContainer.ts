@@ -1,10 +1,11 @@
-import "reflect-metadata";
 import { Container } from "inversify";
-import { SubjectRepositoryMock } from "../repositories/subjectRepositoryMock";
-import { SaveStudentSubjectUsecase } from "../../../modules/subject/usecases/saveStudentSubjectUsecase";
-import { GetStudentSubjectsUsecase } from "../../../modules/subject/usecases/getStudentSubjectsUsecase";
-import { GetAllSubjectsUsecase } from "../../../modules/subject/usecases/getAllSubjectsUsecase";
+import "reflect-metadata";
 import { DeleteStudentSubjectUsecase } from "../../../modules/subject/usecases/deleteStudentSubjectUsecase";
+import { GetAllSubjectsUsecase } from "../../../modules/subject/usecases/getAllSubjectsUsecase";
+import { GetStudentSubjectsUsecase } from "../../../modules/subject/usecases/getStudentSubjectsUsecase";
+import { SaveStudentSubjectUsecase } from "../../../modules/subject/usecases/saveStudentSubjectUsecase";
+import { SetStudentSubjectValueUsecase } from "../../../modules/subject/usecases/setStudentSubjectValueUsecase";
+import { SubjectRepositoryMock } from "../repositories/subjectRepositoryMock";
 
 export const Registry = {
     SubjectRepositoryMock: Symbol.for("SubjectRepositoryMock"),
@@ -13,6 +14,7 @@ export const Registry = {
     GetStudentSubjectsUsecase: Symbol.for("GetStudentSubjectsUsecase"),
     GetAllSubjectsUsecase: Symbol.for("GetAllSubjectsUsecase"),
     DeleteStudentSubjectUsecase: Symbol.for("DeleteStudentSubjectUsecase"),
+    SetStudentSubjectValueUsecase: Symbol.for("SetStudentSubjectValueUsecase")
 }
 
 export const subjectsContainer = new Container();
@@ -30,4 +32,8 @@ subjectsContainer.bind(Registry.GetStudentSubjectsUsecase).toDynamicValue((conte
 })
 subjectsContainer.bind(Registry.DeleteStudentSubjectUsecase).toDynamicValue((context) => {
     return new DeleteStudentSubjectUsecase(context.container.get(Registry.SubjectRepositoryMock));
+})
+
+subjectsContainer.bind(Registry.SetStudentSubjectValueUsecase).toDynamicValue((context) => {
+    return new SetStudentSubjectValueUsecase(context.container.get(Registry.SubjectRepositoryMock));
 })

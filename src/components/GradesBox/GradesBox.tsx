@@ -22,39 +22,45 @@ type Props = {
 }
 
 const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
-    interface IProduct {
-        empty: boolean,
-        title: string,
+    interface IGrade {
         id: string,
+        title: string,
+        isExam: boolean,
+        empty: boolean,
     }
 
     const routeParams = useRoute<GradesRouteProp>()
 
     const subjectFromParams = routeParams?.params?.subject
 
-    const grades = subjectFromParams.exams.map((value, index) => {
+    const subjectCode = routeParams?.params?.subject.code
+
+    const grades = subjectFromParams.exams.map(item => {
         return {
-            id: `${index}`,
-            title: value.name,
+            id: subjectCode,
+            title: item.name,
+            isExam: true,
             empty: false
         }
     })
 
-    const assignments = subjectFromParams.assignments.map((value, index) => {
+    const assignments = subjectFromParams.assignments.map(item => {
         return {
-            id: `${index}`,
-            title: value.name,
+            id: subjectCode,
+            title: item.name,
+            isExam: false,
             empty: false
         }
     })
 
-    const createRows = (data: { id: string, title: string, empty: boolean }[], columns: number) => {
+    const createRows = (data: { id: string, title: string, isExam: boolean, empty: boolean }[], columns: number) => {
         const rows = Math.floor(data.length / columns)
         let lastRowElements = data.length - (rows * columns)
         while (lastRowElements !== columns && lastRowElements !== 0) {
             data.push({
                 id: `empty-${lastRowElements}`,
                 title: `empty-${lastRowElements}`,
+                isExam: false,
                 empty: true,
             })
 
@@ -70,9 +76,8 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
             <FlatList
                 numColumns={3}
                 scrollEnabled={false}
-                keyExtractor={(item: IProduct) => item.id}
                 data={createRows(grades, 3)}
-                renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />
+                renderItem={({ item }: { item: IGrade }) => <Item code={item.id} isExam={item.isExam} title={item.title} isEmpty={item.empty} />
                 }
             />
         </View>
@@ -82,7 +87,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 numColumns={3}
                 scrollEnabled={false}
                 data={createRows(assignments, 3)}
-                renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />}
+                renderItem={({ item }: { item: IGrade }) => <Item code={item.id} isExam={item.isExam} title={item.title} isEmpty={item.empty ? true : false} />}
             />
         </View>
         <FinalAverage finalAverage={5} />
