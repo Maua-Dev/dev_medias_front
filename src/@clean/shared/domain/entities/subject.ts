@@ -9,6 +9,7 @@ export type SubjectProps = {
     assignmentWeight: number;
     exams: Grade[];
     assignments: Grade[];
+    target: number;
 }
 
 export class Subject {
@@ -55,6 +56,9 @@ export class Subject {
     get period(): string {
         return this.props.period;
     }
+    get target(): number {
+        return this.props.target;
+    }
 
     static fromDataJson(data: Record<string, any>): Subject[]{
         const subjects: Subject[] = [];
@@ -63,6 +67,7 @@ export class Subject {
             if (Object.prototype.hasOwnProperty.call(data, subjectCode)) {
             const { name, code, period, examWeight, assignmentWeight, exams, assignments } = data[subjectCode];
             const subjectProps: SubjectProps = {
+                target: 6,
                 name,
                 code,
                 period,

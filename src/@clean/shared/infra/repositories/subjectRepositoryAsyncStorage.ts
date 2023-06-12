@@ -13,7 +13,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     }
     const subjectDataArray = await Promise.all(JSON.parse(keys).map((key: string) => SecureStore.getItemAsync(key)));
     const subjects = subjectDataArray.map((data: string) => {
-      const {code, name, period, average, examWeight, assignmentWeight, exams, assignments } = JSON.parse(data);
+      const {code, name, period, average, examWeight, assignmentWeight, exams, assignments, target } = JSON.parse(data);
       const subjectProps: SubjectProps = {
         code,
         name,
@@ -23,6 +23,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         assignmentWeight,
         exams: exams.map((exam: any) => new Grade({ name: exam.name, value: exam.value, weight: exam.weight })),
         assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: assignment.value, weight: assignment.weight })),
+        target
       };
       return new Subject(subjectProps);
     });
