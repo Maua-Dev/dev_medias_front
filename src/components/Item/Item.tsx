@@ -22,10 +22,8 @@ const Item = ({ code, title, isEmpty, isExam }: Props) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
 
         if (isValidInput || newText === '') {
-            const value = newText === '' ? 0 : parseInt(newText)
-
+            const value = newText === '' ? -1 : parseFloat(newText.replace(",", '.'))
             setStudentSubjectValue(isExam, code, title, value)
-
             setText(newText);
         }
 
