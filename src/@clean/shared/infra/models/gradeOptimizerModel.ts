@@ -16,6 +16,10 @@ export type GradeOptimizerModelProps = {
   media_desejada: number;
 };
 
+export type GradeOptimizerResponse = {
+  notas: NotasQueTenhoProps[]
+}
+
 export class GradeOptimizerModel {
   constructor(private props: GradeOptimizerModelProps) {}
 
@@ -54,23 +58,76 @@ export class GradeOptimizerModel {
   static fromSubject(subject: Subject): GradeOptimizerModel {
     let notas_que_tenho: NotasQueTenhoProps[] = []
     let notas_que_quero: NotasQueQueroProps[] = [] 
+    let soma_pesos_provas: number = subject.exams.reduce((total, exam) => {
+      return total + exam.value
+    }, 0)
+    let soma_pesos_trabalhos: number = subject.exams.reduce((total, assignment) => {
+      return total + assignment.value
+    }, 0)
     subject.exams.forEach((grade: Grade) => {
-        if(grade.value !== null){
+        if(grade.value !== -1){
             notas_que_tenho.push({
                 valor: grade.value,
-                peso: grade.weight,
+                peso: grade.weight / soma_pesos_provas * subject.examWeight,
             })
         }else{
             notas_que_quero.push({
-                peso: grade.weight,
+                peso: grade.weight / soma_pesos_provas * subject.examWeight,
             })
         }
-    });
+      }
+    );
+      subject.assignments.forEach((grade: Grade) => {
+        if(grade.value !== -1){
+            notas_que_tenho.push({
+                valor: grade.value,
+                peso: grade.weight / soma_pesos_trabalhos * subject.assignmentWeight,
+            })
+        }else{
+            notas_que_quero.push({
+                peso: grade.weight / soma_pesos_trabalhos * subject.assignmentWeight,
+            })
+        }
+      }
+    );
 
     return new GradeOptimizerModel({
       notas_que_tenho,
       notas_que_quero,
       media_desejada: subject.target,
+    });
+  }
+
+  static fromResApiGradeOptimizer(res: GradeOptimizerResponse, subject: Subject): Subject{
+    let newExams: Grade[] = []
+    let newAssignments: Grade[] = [] 
+    let counterReponseIndex : number = 0
+    subject.exams.forEach((grade: Grade) => {
+      newExams.push(new Grade({
+            value: grade.value === -1 ? res.notas[counterReponseIndex].valor : grade.value,
+            weight: grade.weight,
+            name: grade.name
+        })
+      )
+    })
+    subject.assignments.forEach((grade: Grade) => {
+      newAssignments.push(new Grade({
+            value: grade.value === -1 ? res.notas[counterReponseIndex].valor : grade.value,
+            weight: grade.weight,
+            name: grade.name
+        })
+      )
+    })
+    return new Subject({
+      name: subject.name,
+      code: subject.code,
+      period: subject.period,
+      average: subject.average,
+      examWeight: subject.examWeight,
+      assignmentWeight: subject.assignmentWeight,
+      exams: newExams,
+      assignments: newAssignments,
+      target: subject.target,
     });
   }
 }

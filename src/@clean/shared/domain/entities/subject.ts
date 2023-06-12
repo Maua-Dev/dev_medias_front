@@ -74,7 +74,7 @@ export class Subject {
                 average: 0,
                 examWeight,
                 assignmentWeight,
-                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 10, weight: exam.weight })),
+                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: -1, weight: exam.weight })),
                 assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: 8, weight: assignment.weight })),
             };
             const subject = new Subject(subjectProps);
