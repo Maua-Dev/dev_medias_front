@@ -37,17 +37,23 @@ export class Subject {
     get average(): number {
         return this.props.average;
     }
+    set average(average: number) {
+        this.props.average = average;
+    }
     get exams(): Grade[] {
-        return this.props.exams
+        return this.props.exams;
     }
     get assignments(): Grade[] {
-        return this.props.assignments
+        return this.props.assignments;
     }
     get examWeight(): number {
-        return this.props.examWeight
+        return this.props.examWeight;
     }
     get assignmentWeight(): number {
-        return this.props.assignmentWeight
+        return this.props.assignmentWeight;
+    }
+    get period(): string {
+        return this.props.period;
     }
 
     static fromDataJson(data: Record<string, any>): Subject[] {
