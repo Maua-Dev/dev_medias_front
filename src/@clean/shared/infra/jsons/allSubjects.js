@@ -6,14 +6,16 @@ export default allSubjects = {
         "examWeight": 0.6,
         "assignmentWeight": 0.4,
         "exams": [
-            {"name": "P1", "weight": 1},
-             {"name": "P2", "weight": 1}
+            { "name": "P1", "weight": 1 },
+            { "name": "P2", "weight": 1 },
+            { "name": "PSUB1", "weight": 1 },
         ],
         "assignments": [{
-            "name": "T1", "weight": 1}, 
-            {"name": "T2", "weight": 1}
+            "name": "T1", "weight": 1
+        },
+        { "name": "T2", "weight": 1 }
         ]
-    },   
+    },
     "EFB205": {
         "name": "Cálculo Diferencial Integral II",
         "code": "EFB205",
@@ -21,12 +23,17 @@ export default allSubjects = {
         "examWeight": 0.6,
         "assignmentWeight": 0.4,
         "exams": [
-            {"name": "P1", "weight": 1},
-             {"name": "P2", "weight": 1}
+            { "name": "P1", "weight": 1 },
+            { "name": "P2", "weight": 1 },
+            { "name": "PSUB1", "weight": 1 },
+            { "name": "P3", "weight": 1 },
+            { "name": "P4", "weight": 1 },
+            { "name": "PSUB2", "weight": 1 }
         ],
         "assignments": [{
-            "name": "T1", "weight": 1}, 
-            {"name": "T2", "weight": 1}
+            "name": "T1", "weight": 1
+        },
+        { "name": "T2", "weight": 1 }
         ]
-    }  
+    }
 }

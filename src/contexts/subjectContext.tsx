@@ -2,14 +2,19 @@
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react'
 import { Registry, subjectsContainer } from '../@clean/shared/infra/containers/subjectsContainer'
 
+import { CalculateFinalAverageUsecase } from '../@clean/modules/subject/usecases/calculateFinalAverageUsecase'
 import { DeleteStudentSubjectUsecase } from '../@clean/modules/subject/usecases/deleteStudentSubjectUsecase'
 import { GetAllSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsUsecase'
+import { GetAllSubjectsWithoutStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase'
 import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase'
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
-import { CalculateFinalAverageUsecase } from '../@clean/modules/subject/usecases/calculateFinalAverageUsecase'
+import { SetStudentSubjectValueUsecase } from '../@clean/modules/subject/usecases/setStudentSubjectValueUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
+<<<<<<< HEAD
 import { GetAllSubjectsWithoutStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase'
 import { GradeOptimizerUsecase } from '../@clean/modules/subject/usecases/gradeOptimizerUsecase'
+=======
+>>>>>>> 4687f0b8c644746ca415ad428fd9e7c0e87764d7
 
 
 export type SubjectContextType = {
@@ -21,6 +26,7 @@ export type SubjectContextType = {
     getAllSubjects: () => Promise<void>;
     getAllSubjectsWithoutStudentSubjects: () => Promise<void>;
     deleteSubject: (code: string) => Promise<void>;
+    setStudentSubjectValue: (isExam: boolean, code: string, name: string, value: number) => Promise<void>;
     calculateFinalAverage: (subject: Subject) => Promise<void>;
     optimizeGrades: (subject: Subject) => Promise<void>;
 }
@@ -34,8 +40,13 @@ const defaultSubjectContext: SubjectContextType = {
     getAllSubjects: async () => { },
     getAllSubjectsWithoutStudentSubjects: async () => { },
     deleteSubject: async (code: string) => { },
+<<<<<<< HEAD
     calculateFinalAverage: async (subject: Subject) => { },
     optimizeGrades: async (subject: Subject) => { }
+=======
+    setStudentSubjectValue: async (isExam: boolean, code: string, name: string, value: number) => { },
+    calculateFinalAverage: async (subject: Subject) => { }
+>>>>>>> 4687f0b8c644746ca415ad428fd9e7c0e87764d7
 }
 
 export const SubjectContext = createContext<SubjectContextType>(defaultSubjectContext);
@@ -45,6 +56,7 @@ const getAllSubjectsUsecase = subjectsContainer.get<GetAllSubjectsUsecase>(Regis
 const getAllSubjectsWithoutStudentSubjectsUsecase = subjectsContainer.get<GetAllSubjectsWithoutStudentSubjectsUsecase>(Registry.GetAllSubjectsWithoutStudentSubjectsUsecase)
 const saveStudentSubjectUsecase = subjectsContainer.get<SaveStudentSubjectUsecase>(Registry.SaveStudentSubjectUsecase)
 const deleteStudentSubjectUsecase = subjectsContainer.get<DeleteStudentSubjectUsecase>(Registry.DeleteStudentSubjectUsecase)
+const setStudentSubjectUsecase = subjectsContainer.get<SetStudentSubjectValueUsecase>(Registry.SetStudentSubjectValueUsecase)
 const calculateFinalAverageUsecase = subjectsContainer.get<CalculateFinalAverageUsecase>(Registry.CalculateFinalAverageUsecase)
 const gradeOptimizerUsecase = subjectsContainer.get<GradeOptimizerUsecase>(Registry.GradeOptimizerUsecase)
 
@@ -52,7 +64,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     const [subjects, setSubjects] = useState<Subject[]>([])
     const [allSubjects, setAllSubjects] = useState<Subject[]>([])
     const [
-        allSubjectsWithoutStudentSubjects, 
+        allSubjectsWithoutStudentSubjects,
         setAllSubjectsWithoutStudentSubjects
     ] = useState<Subject[]>([])
 
@@ -90,25 +102,33 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         await getSubjects()
     }
 
+    async function setStudentSubjectValue(isExam: boolean, code: string, name: string, value: number) {
+        await setStudentSubjectUsecase.execute(isExam, code, name, value)
+    }
+
     async function calculateFinalAverage(subject: Subject) {
         await calculateFinalAverageUsecase.execute(subject)
     }
 
+<<<<<<< HEAD
     async function optimizeGrades(subject: Subject) {
         let subjectOptimized = await gradeOptimizerUsecase.execute(subject)
         await saveStudentSubjectUsecase.execute(subjectOptimized.code, subjectOptimized)
     }
 
+=======
+>>>>>>> 4687f0b8c644746ca415ad428fd9e7c0e87764d7
     return (
         <SubjectContext.Provider value={{
-            subjects, 
-            allSubjects, 
+            subjects,
+            allSubjects,
             allSubjectsWithoutStudentSubjects,
-            saveSubject, 
-            getSubjects, 
-            deleteSubject, 
+            saveSubject,
+            getSubjects,
+            deleteSubject,
             getAllSubjects,
             getAllSubjectsWithoutStudentSubjects,
+            setStudentSubjectValue,
             calculateFinalAverage,
             optimizeGrades,
         }}>

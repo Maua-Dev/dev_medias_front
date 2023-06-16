@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Subject } from "../../@clean/shared/domain/entities/subject";
 import { propsStack } from "../../routes/stack/models";
 import { getFontSize } from "../../utils/fontSizeHandlers";
-import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
+import { handleDeleteBarColor, handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
 import DeleteButton from "../DeleteButton/DeleteButton";
 
 type Props = {
@@ -23,9 +23,9 @@ const SubjectCard = ({ list, subject }: Props) => {
     }, [list])
 
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={
-        () => navigation.navigate('InputGraduationTests', 
-        { subject }
-    )}>
+        () => navigation.navigate('InputGraduationTests',
+            { subject }
+        )}>
         <View style={[styles.content, !longPress ? null : { width: "99%" }]}>
             <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(subject.average) }]}>
                 <View>
@@ -41,7 +41,7 @@ const SubjectCard = ({ list, subject }: Props) => {
                 <Text style={styles.subjectSubtitle}>{subject.code}</Text>
             </View>
         </View>
-        <View style={longPress ? styles.secondLayer : null} />
+        <View style={longPress ? [styles.secondLayer, { backgroundColor: handleDeleteBarColor(subject.average) }] : null} />
     </Pressable>
 }
 

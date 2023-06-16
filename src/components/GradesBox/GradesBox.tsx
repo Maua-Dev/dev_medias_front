@@ -1,133 +1,66 @@
-import React, { useContext, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import MaskInput from "react-native-mask-input";
-import { getFontSize } from "../../utils/fontSizeHandlers";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { ParamListBase } from "@react-navigation/routers";
-import { useRoute, RouteProp } from "@react-navigation/native";
+import React from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { Subject } from "../../@clean/shared/domain/entities/subject";
-import { maskParemeters } from "../../utils/maskHandlers";
-import Button from "../Button/Button";
+import { getFontSize } from "../../utils/fontSizeHandlers";
 import FinalAverage from "../FinalAverage/FinalAverage";
+import Item from "../Item/Item";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
-import { SubjectContext } from "../../contexts/subjectContext";
-
-type Props = {
-    title: string,
-    isEmpty: boolean,
-}
 
 type RouteParams = {
     subject: Subject;
-  };
-  
+};
+
 type GradesRouteProp = RouteProp<ParamListBase, string> & {
     params: RouteParams;
-  };
+};
 
-const Item = ({ title, isEmpty }: Props) => {
-    const routeParams = useRoute<GradesRouteProp>()
-
-    const subjectFromParams = routeParams?.params?.subject
-
-    const [text, setText] = useState('');
-
-    const onChange = (newText: string) => {
-        const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
-
-        if (isValidInput || newText === '') {
-            setText(newText);
-        }
-    }
-
-    return <View style={isEmpty ? [styles.inputBox, { opacity: 0 }] : styles.inputBox}>
-        <Text style={styles.inputTitle}>{title}</Text>
-        <MaskInput
-            style={styles.input}
-            value={text}
-            editable={!isEmpty ? true : false}
-            onChangeText={onChange}
-            maxLength={4}
-            keyboardType="numeric"
-            mask={maskParemeters()}
-        />
-    </View>
+type Props = {
+    isConfiguring: boolean,
+    setIsConfiguring: any
 }
 
-const GradeData = [
-    {
-        id: '0',
-        title: "P1",
-        empty: false
-    },
-    {
-        id: '1',
-        title: "P2",
-        empty: false
-    },
-    {
-        id: '2',
-        title: "PSUB1",
-        empty: false
-    },
-    {
-        id: '3',
-        title: "P3",
-        empty: false
-    },
-    {
-        id: '4',
-        title: "P4",
-        empty: false
-    },
-    {
-        id: '5',
-        title: "PSUB2",
-        empty: false
-    }
-]
-
-const AssignmentData = [
-    {
-        title: 'T1',
-        id: 'string',
-        empty: false
-    },
-    {
-        id: '1',
-        title: "T2",
-        empty: false
-    },
-    {
-        id: '2',
-        title: "T3",
-        empty: false
-    },
-    {
-        id: '3',
-        title: "T4",
-        empty: false
-    }
-
-]
-
-const GradesBox = () => {
-    interface IProduct {
-        empty: boolean,
-        title: string,
+const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
+    interface IGrade {
         id: string,
+        title: string,
+        isExam: boolean,
+        empty: boolean,
     }
+
     const routeParams = useRoute<GradesRouteProp>()
+
     const subjectFromParams = routeParams?.params?.subject
 
-    const { calculateFinalAverage } = useContext(SubjectContext)
+    const subjectCode = routeParams?.params?.subject.code
 
-    const createRows = (data: { id: string, title: string, empty: boolean }[], columns: number) => {
+    const grades = subjectFromParams.exams.map(item => {
+        return {
+            id: subjectCode,
+            title: item.name,
+            isExam: true,
+            empty: false
+        }
+    })
+
+    const assignments = subjectFromParams.assignments.map(item => {
+        return {
+            id: subjectCode,
+            title: item.name,
+            isExam: false,
+            empty: false
+        }
+    })
+
+    const createRows = (data: { id: string, title: string, isExam: boolean, empty: boolean }[], columns: number) => {
         const rows = Math.floor(data.length / columns)
         let lastRowElements = data.length - (rows * columns)
         while (lastRowElements !== columns && lastRowElements !== 0) {
             data.push({
                 id: `empty-${lastRowElements}`,
                 title: `empty-${lastRowElements}`,
+                isExam: false,
                 empty: true,
             })
 
@@ -137,17 +70,14 @@ const GradesBox = () => {
         return data
     }
 
-    const [isConfiguring, setIsConfiguring] = useState<boolean>(false)
-
     return <View style={styles.content}>
         <View style={styles.subareas}>
             <Text style={styles.title}>Provas</Text>
             <FlatList
                 numColumns={3}
                 scrollEnabled={false}
-                keyExtractor={(item: IProduct) => item.id}
-                data={createRows(GradeData, 3)}
-                renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />
+                data={createRows(grades, 3)}
+                renderItem={({ item }: { item: IGrade }) => <Item code={item.id} isExam={item.isExam} title={item.title} isEmpty={item.empty} />
                 }
             />
         </View>
@@ -156,23 +86,18 @@ const GradesBox = () => {
             <FlatList
                 numColumns={3}
                 scrollEnabled={false}
-                data={createRows(AssignmentData, 3)}
-                renderItem={({ item }: { item: IProduct }) => <Item title={item.title} isEmpty={item.empty ? true : false} />}
+                data={createRows(assignments, 3)}
+                renderItem={({ item }: { item: IGrade }) => <Item code={item.id} isExam={item.isExam} title={item.title} isEmpty={item.empty ? true : false} />}
             />
         </View>
-        <FinalAverage finalAverage={8} />
-        <View style={styles.buttonPosition}>
-            <Button action={() => calculateFinalAverage(subjectFromParams)}>Calcular média</Button>
-            <Button action={() => setIsConfiguring(true)}>Definir meta</Button>
-        </View>
-        <TargetSubjectModal isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
+        <FinalAverage finalAverage={5} />
+        <TargetSubjectModal subjectDetails={subjectFromParams} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
 }
 
 const styles = StyleSheet.create({
     content: {
-        height: "100%",
-        flex: 1
+        flex: 1,
     },
     subareas: {
         marginVertical: "2.5%",
@@ -181,32 +106,6 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(20),
         fontWeight: "bold",
         textAlign: "center"
-    },
-    inputBox: {
-        height: 70,
-        width: "30%",
-        flex: 1,
-        marginHorizontal: "5%",
-        marginVertical: "3%",
-        justifyContent: "center",
-    },
-    inputTitle: {
-        fontSize: getFontSize(16),
-        marginBottom: "4%",
-        textAlign: "center",
-        fontWeight: "bold"
-    },
-    input: {
-        textAlign: "center",
-        borderWidth: 1,
-        borderRadius: 7,
-        height: "70%",
-        fontSize: getFontSize(20)
-    },
-    buttonPosition: {
-        marginVertical: "10%",
-        flexDirection: "row",
-        justifyContent: "space-around"
     }
 })
 
