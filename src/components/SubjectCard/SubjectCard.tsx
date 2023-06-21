@@ -26,7 +26,6 @@ const SubjectCard = ({ list, subject }: Props) => {
 
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={
             () => {
-                console.log("SUBJECT.CODE: ", subject.code)
                 setActualSubjectCode(subject.code)
                 navigation.navigate('InputGraduationTests')
             }

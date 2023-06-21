@@ -8,22 +8,23 @@ import { maskParemeters } from "../../utils/maskHandlers";
 type Props = {
     code: string,
     title: string,
+    value: number,
     isEmpty: boolean,
     isExam: boolean,
 }
 
-const Item = ({ code, title, isEmpty, isExam }: Props) => {
+const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
 
     const { setStudentSubjectValue } = useContext(SubjectContext)
 
-    const [text, setText] = useState('');
+    const [text, setText] = useState(value === -1 ? '' : value.toString());
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
 
         if (isValidInput || newText === '') {
-            const value = newText === '' ? -1 : parseFloat(newText.replace(",", '.'))
-            setStudentSubjectValue(isExam, code, title, value)
+            const newValue = newText === '' ? -1 : parseFloat(newText.replace(",", '.'))
+            setStudentSubjectValue(isExam, code, title, newValue)
             setText(newText);
         }
 

@@ -85,7 +85,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
             setActualSubject(subject)
         } 
         
-    }, [actualSubjectCode])
+    }, [actualSubjectCode, subjects])
 
     async function getSubjects() {
         const subjects = await getStudentSubjectsUsecase.execute()
@@ -113,12 +113,16 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     }
 
     async function setStudentSubjectValue(isExam: boolean, code: string, name: string, value: number) {
-        await setStudentSubjectUsecase.execute(isExam, code, name, value)
+        let oldActualSubject = actualSubject
+        oldActualSubject?.exams.map((exam) => exam.name === name ? exam.value = value: '')
+        oldActualSubject?.assignments.map((assignment) => assignment.name === name ? assignment.value = value: '')
+        console.log("oldActualSubject:", oldActualSubject?.exams)
+        setActualSubject(oldActualSubject)
     }
 
     async function calculateFinalAverage() {
-        let subject = subjects.find((subject) => subject.code === actualSubjectCode)
-        await calculateFinalAverageUsecase.execute(subject!)
+        await calculateFinalAverageUsecase.execute(actualSubject!)
+        await getSubjects()
     }
 
     async function optimizeGrades(subject: Subject) {
