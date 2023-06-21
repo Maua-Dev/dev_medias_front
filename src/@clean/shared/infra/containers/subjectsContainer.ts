@@ -8,7 +8,6 @@ import { GradeOptimizerUsecase } from "../../../modules/subject/usecases/gradeOp
 import { GradeOptimizerRepositoryHttp } from "../repositories/gradeOptimizerRepositoryHttp";
 import { GetStudentSubjectsUsecase } from "../../../modules/subject/usecases/getStudentSubjectsUsecase";
 import { SaveStudentSubjectUsecase } from "../../../modules/subject/usecases/saveStudentSubjectUsecase";
-import { SetStudentSubjectValueUsecase } from "../../../modules/subject/usecases/setStudentSubjectValueUsecase";
 import { SubjectRepositoryAsyncStorage } from "../repositories/subjectRepositoryAsyncStorage";
 import { SubjectRepositoryMock } from "../repositories/subjectRepositoryMock";
 
@@ -21,7 +20,6 @@ export const Registry = {
     GetAllSubjectsUsecase: Symbol.for("GetAllSubjectsUsecase"),
     GetAllSubjectsWithoutStudentSubjectsUsecase: Symbol.for("GetAllSubjectsWithoutStudentSubjectsUsecase"),
     DeleteStudentSubjectUsecase: Symbol.for("DeleteStudentSubjectUsecase"),
-    SetStudentSubjectValueUsecase: Symbol.for("SetStudentSubjectValueUsecase"),
     CalculateFinalAverageUsecase: Symbol.for("CalculateFinalAverageUsecase"),
     GradeOptimizerUsecase: Symbol.for("GradeOptimizerUsecase"),
 }
@@ -52,9 +50,6 @@ subjectsContainer.bind(Registry.GetStudentSubjectsUsecase).toDynamicValue((conte
 })
 subjectsContainer.bind(Registry.DeleteStudentSubjectUsecase).toDynamicValue((context) => {
     return new DeleteStudentSubjectUsecase(context.container.get(Registry.SubjectRepository));
-})
-subjectsContainer.bind(Registry.SetStudentSubjectValueUsecase).toDynamicValue((context) => {
-    return new SetStudentSubjectValueUsecase(context.container.get(Registry.SubjectRepository));
 })
 subjectsContainer.bind(Registry.CalculateFinalAverageUsecase).toDynamicValue((context) => {
     return new CalculateFinalAverageUsecase(context.container.get(Registry.SubjectRepository));
