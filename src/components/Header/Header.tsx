@@ -1,3 +1,4 @@
+import {useContext} from 'react'
 import { MaterialIcons } from "@expo/vector-icons"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { ParamListBase } from "@react-navigation/routers"
@@ -5,6 +6,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Subject } from "../../@clean/shared/domain/entities/subject"
 import { getFontSize } from "../../utils/fontSizeHandlers"
+import { SubjectContext } from "../../contexts/subjectContext"
 
 type Props = {
     isHomePage: boolean,
@@ -20,21 +22,21 @@ type HeaderRouteProp = RouteProp<ParamListBase, string> & {
 
 
 const Header = ({ isHomePage }: Props) => {
+    const {actualSubject} = useContext(SubjectContext)
+
     const navigation = useNavigation()
-    const routeParams = useRoute<HeaderRouteProp>()
     const insets = useSafeAreaInsets();
-    const subject = routeParams?.params?.subject
 
     const handleTitle = () => {
         return isHomePage ?
             "Bem vindo ao DevMédias!" :
-            `${subject.name}`
+            `${actualSubject?.name ?? "" }`
     }
 
     const handleSubtitle = () => {
         return isHomePage ?
             "Adicione as suas matérias abaixo" :
-            `${subject.code}`
+            `${actualSubject?.code ?? ""}`
     }
 
     return <View style={[styles.content, { paddingTop: insets.top }]}>

@@ -3,9 +3,7 @@ import { Subject } from "../../../@clean/shared/domain/entities/subject";
 
 export type propsNavigationStack = {
     MainPage: undefined
-    InputGraduationTests: {
-        subject: Subject
-    }
+    InputGraduationTests: undefined
 }
 
 export type propsStack = NativeStackNavigationProp<propsNavigationStack>

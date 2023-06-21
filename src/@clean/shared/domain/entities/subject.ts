@@ -65,7 +65,6 @@ export class Subject {
 
         for (const subjectCode in data) {
             if (Object.prototype.hasOwnProperty.call(data, subjectCode)) {
-<<<<<<< HEAD
             const { name, code, period, examWeight, assignmentWeight, exams, assignments } = data[subjectCode];
             const subjectProps: SubjectProps = {
                 target: 6,
@@ -80,24 +79,24 @@ export class Subject {
             };
             const subject = new Subject(subjectProps);
             subjects.push(subject);
-=======
-                const { name, code, period, examWeight, assignmentWeight, exams, assignments } = data[subjectCode];
-                const subjectProps: SubjectProps = {
-                    name,
-                    code,
-                    period,
-                    average: 0,
-                    examWeight,
-                    assignmentWeight,
-                    exams: exams.map((exam: any) => new Grade({ name: exam.name, value: -1, weight: exam.weight })),
-                    assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: -1, weight: assignment.weight })),
-                };
-                const subject = new Subject(subjectProps);
-                subjects.push(subject);
->>>>>>> 4687f0b8c644746ca415ad428fd9e7c0e87764d7
             }
         }
 
         return subjects;
+    }
+
+    static createEmptySubject(): Subject {
+        const subjectProps: SubjectProps = {
+            target: 6,
+            name: "",
+            code: "",
+            period: "",
+            average: 0,
+            examWeight: 0,
+            assignmentWeight: 0,
+            exams: [],
+            assignments: [],
+        };
+        return new Subject(subjectProps);
     }
 }

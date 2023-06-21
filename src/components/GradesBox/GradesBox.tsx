@@ -1,57 +1,55 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { ParamListBase } from "@react-navigation/routers";
-import React from "react";
+import React, {useContext, useState, useEffect} from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { Subject } from "../../@clean/shared/domain/entities/subject";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 import FinalAverage from "../FinalAverage/FinalAverage";
 import Item from "../Item/Item";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
-
-type RouteParams = {
-    subject: Subject;
-};
-
-type GradesRouteProp = RouteProp<ParamListBase, string> & {
-    params: RouteParams;
-};
+import { SubjectContext } from "../../contexts/subjectContext";
 
 type Props = {
     isConfiguring: boolean,
     setIsConfiguring: any
 }
 
+interface IGrade {
+    id: string,
+    title: string,
+    isExam: boolean,
+    empty: boolean,
+}
+
 const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
-    interface IGrade {
-        id: string,
-        title: string,
-        isExam: boolean,
-        empty: boolean,
-    }
+    const {actualSubject} = useContext(SubjectContext)
+    const [grades, setGrades] = useState<IGrade[]>([])
+    const [assignments, setAssignments] = useState<IGrade[]>([])
 
-    const routeParams = useRoute<GradesRouteProp>()
-
-    const subjectFromParams = routeParams?.params?.subject
-
-    const subjectCode = routeParams?.params?.subject.code
-
-    const grades = subjectFromParams.exams.map(item => {
-        return {
-            id: subjectCode,
-            title: item.name,
-            isExam: true,
-            empty: false
+    useEffect(() => {
+        if(actualSubject){
+            console.log('actualSubject:', actualSubject)
+            let newActualSubjectsExams = actualSubject?.exams.map((exam) => {
+                console.log("EXAM:", exam)
+                return {
+                    id: exam!.name,
+                    title: exam!.name,
+                    isExam: true,
+                    empty: false
+                }
+            })
+            setGrades([...newActualSubjectsExams!])
+            
+            let newActualSubjectsAssignments = actualSubject?.assignments.map((assignment) => {
+                return{
+                    id: assignment!.name,
+                    title: assignment!.name,
+                    isExam: false,
+                    empty: false
+                }
+            })
+            setAssignments([...newActualSubjectsAssignments!])
         }
-    })
 
-    const assignments = subjectFromParams.assignments.map(item => {
-        return {
-            id: subjectCode,
-            title: item.name,
-            isExam: false,
-            empty: false
-        }
-    })
+    }, [actualSubject])
+    
 
     const createRows = (data: { id: string, title: string, isExam: boolean, empty: boolean }[], columns: number) => {
         const rows = Math.floor(data.length / columns)
@@ -90,8 +88,8 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 renderItem={({ item }: { item: IGrade }) => <Item code={item.id} isExam={item.isExam} title={item.title} isEmpty={item.empty ? true : false} />}
             />
         </View>
-        <FinalAverage finalAverage={5} />
-        <TargetSubjectModal subjectDetails={subjectFromParams} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
+        <FinalAverage finalAverage={actualSubject?.average? actualSubject!.average: 0} />
+        <TargetSubjectModal subjectDetails={actualSubject} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
 }
 
