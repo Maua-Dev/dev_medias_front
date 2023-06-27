@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Grade } from "../../@clean/shared/domain/entities/grade";
@@ -7,6 +7,7 @@ import { handlePercentageWeight, handlePercentageWeightAll } from "../../utils/g
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
+import { SubjectContext } from "../../contexts/subjectContext";
 
 type Props = {
     isConfiguring: boolean;
@@ -15,12 +16,14 @@ type Props = {
 }
 
 const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }: Props) => {
+    const {optimizeGrades, setStudentSubjectValue} = useContext(SubjectContext)
     const [text, setText] = useState<string>('');
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
 
         if (isValidInput || newText === '') {
+            setStudentSubjectValue('target', newText === '' ? 0 : parseFloat(newText.replace(",", '.')))
             setText(newText);
         }
     }
@@ -59,7 +62,8 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                     />
                 </View>
                 <View style={styles.buttonPosition}>
-                    <Button>Salvar</Button>
+                    <Button action={() => optimizeGrades()}>Atingir meta</Button>
+
                 </View>
             </View>
         </ModalBox>

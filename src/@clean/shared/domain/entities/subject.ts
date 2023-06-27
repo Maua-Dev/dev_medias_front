@@ -59,6 +59,9 @@ export class Subject {
     get target(): number {
         return this.props.target;
     }
+    set target(target: number) {
+        this.props.target = target
+    }
 
     static fromDataJson(data: Record<string, any>): Subject[] {
         const subjects: Subject[] = [];

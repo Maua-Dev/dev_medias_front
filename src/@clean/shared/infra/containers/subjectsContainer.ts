@@ -1,5 +1,5 @@
-import { Container } from "inversify";
 import "reflect-metadata";
+import { Container, injectable } from "inversify";
 import { CalculateFinalAverageUsecase } from "../../../modules/subject/usecases/calculateFinalAverageUsecase";
 import { DeleteStudentSubjectUsecase } from "../../../modules/subject/usecases/deleteStudentSubjectUsecase";
 import { GetAllSubjectsUsecase } from "../../../modules/subject/usecases/getAllSubjectsUsecase";
@@ -10,8 +10,11 @@ import { GetStudentSubjectsUsecase } from "../../../modules/subject/usecases/get
 import { SaveStudentSubjectUsecase } from "../../../modules/subject/usecases/saveStudentSubjectUsecase";
 import { SubjectRepositoryAsyncStorage } from "../repositories/subjectRepositoryAsyncStorage";
 import { SubjectRepositoryMock } from "../repositories/subjectRepositoryMock";
+import { http } from "../http";
 
 export const Registry = {
+    AxiosAdapter: Symbol.for("AxiosAdapter"),
+
     SubjectRepository: Symbol.for("SubjectRepository"),
     GradeOptimizerRepository: Symbol.for("GradeOptimizerRepository"),
 
@@ -25,6 +28,9 @@ export const Registry = {
 }
 
 export const subjectsContainer = new Container();
+
+// HTTP
+subjectsContainer.bind(Registry.AxiosAdapter).toConstantValue(http);
 
 // Repositories
 let useAsyncStorage = true;
@@ -56,5 +62,5 @@ subjectsContainer.bind(Registry.CalculateFinalAverageUsecase).toDynamicValue((co
 })
 
 subjectsContainer.bind(Registry.GradeOptimizerUsecase).toDynamicValue((context) => {
-    return new GradeOptimizerUsecase(context.container.get(Registry.SubjectRepository));
+    return new GradeOptimizerUsecase(context.container.get(Registry.AxiosAdapter));
 })

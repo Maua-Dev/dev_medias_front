@@ -23,9 +23,9 @@ export type SubjectContextType = {
     getAllSubjects: () => Promise<void>;
     getAllSubjectsWithoutStudentSubjects: () => Promise<void>;
     deleteSubject: (code: string) => Promise<void>;
-    setStudentSubjectValue: (isExam: boolean, code: string, name: string, value: number) => Promise<void>;
+    setStudentSubjectValue: (name: string, value: number) => Promise<void>;
     calculateFinalAverage: () => Promise<void>;
-    optimizeGrades: (subject: Subject) => Promise<void>;
+    optimizeGrades: () => Promise<void>;
     setActualSubjectCode: (code: string) => void;
 }
 
@@ -40,8 +40,8 @@ const defaultSubjectContext: SubjectContextType = {
     getAllSubjects: async () => { },
     getAllSubjectsWithoutStudentSubjects: async () => { },
     deleteSubject: async (code: string) => { },
-    optimizeGrades: async (subject: Subject) => { },
-    setStudentSubjectValue: async (isExam: boolean, code: string, name: string, value: number) => { },
+    optimizeGrades: async () => { },
+    setStudentSubjectValue: async (name: string, value: number) => { },
     calculateFinalAverage: async () => { },
     setActualSubjectCode: (code: string) => { }
 }
@@ -77,9 +77,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
 
     useEffect(() => {
         if(actualSubjectCode !== ''){
-            console.log("CODE:", actualSubjectCode)
             let subject = subjects.find((subject) => subject.code === actualSubjectCode)
-            console.log(subject)
             setActualSubject(subject)
         } 
         
@@ -110,11 +108,14 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         await getSubjects()
     }
 
-    async function setStudentSubjectValue(isExam: boolean, code: string, name: string, value: number) {
+    async function setStudentSubjectValue(name: string, value: number) {
         let oldActualSubject = actualSubject
-        oldActualSubject?.exams.map((exam) => exam.name === name ? exam.value = value: '')
-        oldActualSubject?.assignments.map((assignment) => assignment.name === name ? assignment.value = value: '')
-        console.log("oldActualSubject:", oldActualSubject?.exams)
+        if(name === 'target'){
+            oldActualSubject!.target = value
+        }else{
+            oldActualSubject?.exams.map((exam) => exam.name === name ? exam.value = value: '')
+            oldActualSubject?.assignments.map((assignment) => assignment.name === name ? assignment.value = value: '')
+        }
         setActualSubject(oldActualSubject)
     }
 
@@ -123,8 +124,8 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         await getSubjects()
     }
 
-    async function optimizeGrades(subject: Subject) {
-        let subjectOptimized = await gradeOptimizerUsecase.execute(subject)
+    async function optimizeGrades() {
+        let subjectOptimized = await gradeOptimizerUsecase.execute(actualSubject!)
         await saveStudentSubjectUsecase.execute(subjectOptimized.code, subjectOptimized)
     }
 

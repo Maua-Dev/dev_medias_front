@@ -26,9 +26,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
 
     useEffect(() => {
         if(actualSubject){
-            console.log('actualSubject:', actualSubject)
             let newActualSubjectsExams = actualSubject?.exams.map((exam) => {
-                console.log("EXAM:", exam)
                 return {
                     id: exam!.name,
                     title: exam!.name,

@@ -1,5 +1,7 @@
+import 'reflect-metadata';
 import { IGradeOptmizerRepository } from "../../../modules/subject/domain/repositories/grade_optmizer_repository_interface";
 import { Subject } from "../../domain/entities/subject";
+import { decorate, injectable } from 'inversify';
 import { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { GradeOptimizerModel, GradeOptimizerResponse } from "../models/gradeOptimizerModel";
 
@@ -17,3 +19,5 @@ export class GradeOptimizerRepositoryHttp implements IGradeOptmizerRepository {
         });
     }
 }
+
+decorate(injectable(), GradeOptimizerRepositoryHttp);

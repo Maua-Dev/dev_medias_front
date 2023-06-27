@@ -24,7 +24,7 @@ const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
 
         if (isValidInput || newText === '') {
             const newValue = newText === '' ? -1 : parseFloat(newText.replace(",", '.'))
-            setStudentSubjectValue(isExam, code, title, newValue)
+            setStudentSubjectValue(title, newValue)
             setText(newText);
         }
 
