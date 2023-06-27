@@ -1,24 +1,29 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
+import { Grade } from "../../@clean/shared/domain/entities/grade";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import { handlePercentageWeight, handlePercentageWeightAll } from "../../utils/gradeHandlers";
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
+import { SubjectContext } from "../../contexts/subjectContext";
 
 type Props = {
     isConfiguring: boolean;
     setIsConfiguring: any;
+    subjectDetails: any
 }
 
-const TargetSubjectModal = ({ isConfiguring, setIsConfiguring }: Props) => {
-
+const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }: Props) => {
+    const {optimizeGrades, setStudentSubjectValue} = useContext(SubjectContext)
     const [text, setText] = useState<string>('');
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
 
         if (isValidInput || newText === '') {
+            setStudentSubjectValue('target', newText === '' ? 0 : parseFloat(newText.replace(",", '.')))
             setText(newText);
         }
     }
@@ -28,11 +33,21 @@ const TargetSubjectModal = ({ isConfiguring, setIsConfiguring }: Props) => {
             <View style={styles.content}>
                 <View style={styles.titleContent}>
                     <Text style={styles.title}>Plano de Ensino:</Text>
-                    <Text style={styles.subtitle}>Provas: 70% Trabalho: 30%</Text>
+                    <Text style={styles.subtitle}>Provas: {handlePercentageWeightAll(subjectDetails?.examWeight)} Trabalho: {handlePercentageWeightAll(subjectDetails?.assignmentWeight)}</Text>
                 </View>
                 <View style={styles.subjectInfoContent}>
-                    <Text style={styles.infos}>P1: 25% P2: 25% P3: 25% P4: 25%</Text>
-                    <Text style={styles.infos}>T1: 25% T2: 25% T3: 25% T4: 25%</Text>
+                    <View style={{ flexDirection: "row" }}>
+                        {subjectDetails?.exams.map((value: Grade) => {
+                            if (!value.name.toUpperCase().includes('SUB'))
+                                return <Text style={styles.infos}>{value.name}: {handlePercentageWeight(value.weight, subjectDetails?.exams.length)}</Text>
+                        })}
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                        {subjectDetails?.assignments.map((value: Grade) => {
+                            if (!value.name.toUpperCase().includes('SUB'))
+                                return <Text style={styles.infos}>{value.name}: {handlePercentageWeight(value.weight, subjectDetails?.assignments.length)}</Text>
+                        })}
+                    </View>
                 </View>
                 <View style={styles.targetContent}>
                     <Text style={styles.title}>Meta Final:</Text>
@@ -47,7 +62,8 @@ const TargetSubjectModal = ({ isConfiguring, setIsConfiguring }: Props) => {
                     />
                 </View>
                 <View style={styles.buttonPosition}>
-                    <Button>Salvar</Button>
+                    <Button action={() => optimizeGrades()}>Atingir meta</Button>
+
                 </View>
             </View>
         </ModalBox>
@@ -75,6 +91,7 @@ const styles = StyleSheet.create({
     infos: {
         color: "#505050",
         fontWeight: "700",
+        paddingHorizontal: "2%",
         fontSize: getFontSize(15)
     },
     targetContent: {

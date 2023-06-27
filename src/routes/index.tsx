@@ -1,11 +1,14 @@
-import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import Stack from "./stack"
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import Stack from "./stack";
 
-export default function() {
-    return(
-        <NavigationContainer>
-            <Stack/>
-        </NavigationContainer>
+export default function () {
+    return (
+        <SafeAreaProvider>
+            <NavigationContainer>
+                <Stack />
+            </NavigationContainer>
+        </SafeAreaProvider>
     )
 }

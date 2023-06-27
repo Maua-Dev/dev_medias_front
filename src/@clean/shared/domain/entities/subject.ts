@@ -9,10 +9,11 @@ export type SubjectProps = {
     assignmentWeight: number;
     exams: Grade[];
     assignments: Grade[];
+    target: number;
 }
 
 export class Subject {
-    constructor (private props: SubjectProps) {
+    constructor(private props: SubjectProps) {
         this.props.name = props.name;
         this.props.code = props.code;
         this.props.period = props.period;
@@ -27,7 +28,7 @@ export class Subject {
     }
     set name(name: string) {
         this.props.name = name;
-    }  
+    }
     get code(): string {
         return this.props.code;
     }
@@ -55,21 +56,28 @@ export class Subject {
     get period(): string {
         return this.props.period;
     }
+    get target(): number {
+        return this.props.target;
+    }
+    set target(target: number) {
+        this.props.target = target
+    }
 
-    static fromDataJson(data: Record<string, any>): Subject[]{
+    static fromDataJson(data: Record<string, any>): Subject[] {
         const subjects: Subject[] = [];
 
         for (const subjectCode in data) {
             if (Object.prototype.hasOwnProperty.call(data, subjectCode)) {
             const { name, code, period, examWeight, assignmentWeight, exams, assignments } = data[subjectCode];
             const subjectProps: SubjectProps = {
+                target: 6,
                 name,
                 code,
                 period,
                 average: 0,
                 examWeight,
                 assignmentWeight,
-                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: 10, weight: exam.weight })),
+                exams: exams.map((exam: any) => new Grade({ name: exam.name, value: -1, weight: exam.weight })),
                 assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: 8, weight: assignment.weight })),
             };
             const subject = new Subject(subjectProps);
@@ -78,5 +86,20 @@ export class Subject {
         }
 
         return subjects;
+    }
+
+    static createEmptySubject(): Subject {
+        const subjectProps: SubjectProps = {
+            target: 6,
+            name: "",
+            code: "",
+            period: "",
+            average: 0,
+            examWeight: 0,
+            assignmentWeight: 0,
+            exams: [],
+            assignments: [],
+        };
+        return new Subject(subjectProps);
     }
 }

@@ -1,11 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Subject } from "../../@clean/shared/domain/entities/subject";
 import { propsStack } from "../../routes/stack/models";
 import { getFontSize } from "../../utils/fontSizeHandlers";
-import { handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
+import { handleDeleteBarColor, handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
 import DeleteButton from "../DeleteButton/DeleteButton";
+import { SubjectContext } from "../../contexts/subjectContext";
 
 type Props = {
     list: Subject[],
@@ -13,6 +14,7 @@ type Props = {
 }
 
 const SubjectCard = ({ list, subject }: Props) => {
+    const {setActualSubjectCode} = useContext(SubjectContext)
     const navigation = useNavigation<propsStack>()
 
     // const [press, setPress] = useState<boolean>(false)
@@ -23,9 +25,11 @@ const SubjectCard = ({ list, subject }: Props) => {
     }, [list])
 
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={
-        () => navigation.navigate('InputGraduationTests', 
-        { subject }
-    )}>
+            () => {
+                setActualSubjectCode(subject.code)
+                navigation.navigate('InputGraduationTests')
+            }
+        }>
         <View style={[styles.content, !longPress ? null : { width: "99%" }]}>
             <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(subject.average) }]}>
                 <View>
@@ -41,7 +45,7 @@ const SubjectCard = ({ list, subject }: Props) => {
                 <Text style={styles.subjectSubtitle}>{subject.code}</Text>
             </View>
         </View>
-        <View style={longPress ? styles.secondLayer : null} />
+        <View style={longPress ? [styles.secondLayer, { backgroundColor: handleDeleteBarColor(subject.average) }] : null} />
     </Pressable>
 }
 

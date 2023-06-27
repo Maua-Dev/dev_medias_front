@@ -5,10 +5,10 @@ export type gradeProps = {
 }
 
 export class Grade {
-    constructor (private props: gradeProps) {
+    constructor(private props: gradeProps) {
         this.props.name = props.name;
         this.props.value = props.value;
-        this.props.name = props.name;
+        this.props.weight = props.weight;
     }
 
     get name(): string {
