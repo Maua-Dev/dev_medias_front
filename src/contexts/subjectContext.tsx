@@ -126,7 +126,9 @@ export function SubjectProvider({ children }: PropsWithChildren) {
 
     async function optimizeGrades() {
         let subjectOptimized = await gradeOptimizerUsecase.execute(actualSubject!)
-        await saveStudentSubjectUsecase.execute(subjectOptimized.code, subjectOptimized)
+        await calculateFinalAverageUsecase.execute(subjectOptimized)
+        await getSubjects()
+        setActualSubjectCode(subjectOptimized.code)
     }
 
     return (

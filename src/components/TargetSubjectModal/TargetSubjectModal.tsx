@@ -62,7 +62,12 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                     />
                 </View>
                 <View style={styles.buttonPosition}>
-                    <Button action={() => optimizeGrades()}>Atingir meta</Button>
+                    <Button action={async() => {
+                        await optimizeGrades()
+                        setIsConfiguring(false)
+                    }}>
+                        Atingir meta
+                    </Button>
 
                 </View>
             </View>
