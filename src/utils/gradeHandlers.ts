@@ -21,5 +21,5 @@ export const handlePercentageWeight = (value: number, size: number) => {
 }
 
 export const handlePercentageWeightAll = (value: number) => {
-    return `${100 * value}%`
+    return `${value}%`
 }
