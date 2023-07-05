@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { SubjectContext } from "../../contexts/subjectContext";
@@ -18,6 +18,10 @@ const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
     const { setStudentSubjectValue } = useContext(SubjectContext)
 
     const [text, setText] = useState(value === -1 ? '' : value.toString());
+
+    useEffect(() => {
+        setText(value === -1 ? '' : value.toString())
+    }, [value])
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);

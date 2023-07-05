@@ -77,6 +77,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 numColumns={3}
                 scrollEnabled={false}
                 data={createRows(grades, 3)}
+                keyExtractor={(item) => String(item.id)}
                 renderItem={({ item }: { item: IGrade }) => {
                     return (<Item key={item.id} code={item.id} value={item.value} isExam={item.isExam} title={item.title} isEmpty={item.empty} />)
                 }}
@@ -88,6 +89,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 numColumns={3}
                 scrollEnabled={false}
                 data={createRows(assignments, 3)}
+                keyExtractor={(item) => String(item.id)}
                 renderItem={({ item }: { item: IGrade }) => {
                     return (<Item key={item.id} code={item.id} isExam={item.isExam} value={item.value} title={item.title} isEmpty={item.empty ? true : false} />)
                 }}
