@@ -33,7 +33,7 @@ const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
         }
 
     }
-    return <View style={isEmpty ? [styles.inputBox, { opacity: 0 }] : styles.inputBox}>
+    return <View key={code} style={isEmpty ? [styles.inputBox, { opacity: 0 }] : styles.inputBox}>
         <Text style={styles.inputTitle}>{title}</Text>
         <MaskInput
             style={styles.input}
