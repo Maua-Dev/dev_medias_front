@@ -111,7 +111,7 @@ export class GradeOptimizerModel {
                 peso: Number((grade.weight * subject.assignmentWeight / soma_pesos_trabalhos).toFixed(2))/100,
             })
         }else{
-            provas_que_quero.push({
+            trabalhos_que_quero.push({
                 peso: Number((grade.weight * subject.assignmentWeight / soma_pesos_trabalhos).toFixed(2))/100,
             })
         }
@@ -128,6 +128,7 @@ export class GradeOptimizerModel {
   }
 
   static fromResApiGradeOptimizer(res: GradeOptimizerResponse, subject: Subject): Subject{
+    console.log(res)
     let newExams: Grade[] = []
     let newAssignments: Grade[] = [] 
     let counterReponseIndex : number = 0
