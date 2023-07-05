@@ -5,6 +5,9 @@ import FinalAverage from "../FinalAverage/FinalAverage";
 import Item from "../Item/Item";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
 import { SubjectContext } from "../../contexts/subjectContext";
+import { Dimensions } from 'react-native';
+
+const windowHeight = Dimensions.get('window').height;
 
 type Props = {
     isConfiguring: boolean,
@@ -103,6 +106,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
+        paddingBottom: windowHeight * 0.05,
     },
     subareas: {
         marginVertical: "2.5%",
