@@ -15,13 +15,13 @@ type Props = {
 
 const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
 
-    const { setStudentSubjectValue } = useContext(SubjectContext)
+    const { setStudentSubjectValue, actualSubject } = useContext(SubjectContext)
 
     const [text, setText] = useState(value === -1 ? '' : value.toString());
 
     useEffect(() => {
         setText(value === -1 ? '' : value.toString())
-    }, [value])
+    }, [value, actualSubject])
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);

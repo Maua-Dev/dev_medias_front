@@ -52,7 +52,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
             setAssignments([...newActualSubjectsAssignments!])
         }
 
-    }, [actualSubject])
+    }, [actualSubject, actualSubject?.exams, actualSubject?.assignments])
     
 
     const createRows = (data: { id: string, title: string, value: number, isExam: boolean, empty: boolean }[], columns: number) => {

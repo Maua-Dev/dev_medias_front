@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Grade } from "../../@clean/shared/domain/entities/grade";
@@ -16,8 +16,12 @@ type Props = {
 }
 
 const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }: Props) => {
-    const {optimizeGrades, setStudentSubjectValue} = useContext(SubjectContext)
-    const [text, setText] = useState<string>('');
+    const {optimizeGrades, setStudentSubjectValue, actualSubject} = useContext(SubjectContext)
+    const [text, setText] = useState<string>(subjectDetails ? String(subjectDetails.target) : '');
+
+    useEffect(() => {
+        setText(subjectDetails ? String(subjectDetails.target) : '')
+    }, [actualSubject, subjectDetails, actualSubject?.exams, actualSubject?.assignments, actualSubject?.target])
 
     const onChange = (newText: string) => {
         const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
