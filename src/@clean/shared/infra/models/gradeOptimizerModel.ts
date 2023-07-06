@@ -1,5 +1,5 @@
-import { Subject } from '../../domain/entities/subject';
 import { Grade } from '../../domain/entities/grade';
+import { Subject } from '../../domain/entities/subject';
 
 export type NotasQueTenhoProps = {
   valor: number;
@@ -19,13 +19,15 @@ export type GradeOptimizerModelProps = {
 };
 
 export type GradeOptimizerResponse = {
-  notas:{provas: NotasQueTenhoProps[]
-    trabalhos: NotasQueTenhoProps[]}
-  
+  notas: {
+    provas: NotasQueTenhoProps[]
+    trabalhos: NotasQueTenhoProps[]
+  }
+
 }
 
 export class GradeOptimizerModel {
-  constructor(private props: GradeOptimizerModelProps) {}
+  constructor(private props: GradeOptimizerModelProps) { }
 
   get provas_que_tenho(): NotasQueTenhoProps[] {
     return this.props.provas_que_tenho;
@@ -81,7 +83,7 @@ export class GradeOptimizerModel {
     let provas_que_tenho: NotasQueTenhoProps[] = []
     let provas_que_quero: NotasQueQueroProps[] = []
     let trabalhos_que_tenho: NotasQueTenhoProps[] = []
-    let trabalhos_que_quero: NotasQueQueroProps[] = [] 
+    let trabalhos_que_quero: NotasQueQueroProps[] = []
 
     let soma_pesos_provas: number = subject.exams.reduce((total, exam) => {
       return total + exam.weight
@@ -90,32 +92,32 @@ export class GradeOptimizerModel {
     let soma_pesos_trabalhos: number = subject.assignments.reduce((total, assignment) => {
       return total + assignment.weight
     }, 0)
-    
+
     subject.exams.forEach((grade: Grade) => {
-        if(grade.value !== -1){
-            provas_que_tenho.push({
-                valor: grade.value,
-                peso: Number((grade.weight * subject.examWeight / soma_pesos_provas).toFixed(2))/100,
-            })
-        }else{
-            provas_que_quero.push({
-                peso: Number((grade.weight * subject.examWeight / soma_pesos_provas).toFixed(2))/100,
-            })
-        }
+      if (grade.value !== -1) {
+        provas_que_tenho.push({
+          valor: grade.value,
+          peso: Number((grade.weight * subject.examWeight / soma_pesos_provas).toFixed(2)) / 100,
+        })
+      } else {
+        provas_que_quero.push({
+          peso: Number((grade.weight * subject.examWeight / soma_pesos_provas).toFixed(2)) / 100,
+        })
       }
+    }
     );
-      subject.assignments.forEach((grade: Grade) => {
-        if(grade.value !== -1){
-            trabalhos_que_tenho.push({
-                valor: grade.value,
-                peso: Number((grade.weight * subject.assignmentWeight / soma_pesos_trabalhos).toFixed(2))/100,
-            })
-        }else{
-            trabalhos_que_quero.push({
-                peso: Number((grade.weight * subject.assignmentWeight / soma_pesos_trabalhos).toFixed(2))/100,
-            })
-        }
+    subject.assignments.forEach((grade: Grade) => {
+      if (grade.value !== -1) {
+        trabalhos_que_tenho.push({
+          valor: grade.value,
+          peso: Number((grade.weight * subject.assignmentWeight / soma_pesos_trabalhos).toFixed(2)) / 100,
+        })
+      } else {
+        trabalhos_que_quero.push({
+          peso: Number((grade.weight * subject.assignmentWeight / soma_pesos_trabalhos).toFixed(2)) / 100,
+        })
       }
+    }
     );
 
     return new GradeOptimizerModel({
@@ -127,32 +129,33 @@ export class GradeOptimizerModel {
     });
   }
 
-  static fromResApiGradeOptimizer(res: GradeOptimizerResponse, subject: Subject): Subject{
-    console.log(res)
+  static fromResApiGradeOptimizer(res: GradeOptimizerResponse, subject: Subject): Subject {
     let newExams: Grade[] = []
-    let newAssignments: Grade[] = [] 
-    let counterReponseIndex : number = 0
+    let newAssignments: Grade[] = []
+    let counterReponseIndex: number = 0
     subject.exams.forEach((grade: Grade) => {
       newExams.push(new Grade({
-            value: grade.value === -1 ? res.notas.provas[counterReponseIndex].valor : grade.value,
-            weight: grade.weight,
-            name: grade.name
-        })
+        value: grade.value === -1 ? res.notas.provas[counterReponseIndex].valor : grade.value,
+        weight: grade.weight,
+        name: grade.name,
+        generated: grade.value === -1
+      })
       )
-      if(grade.value === -1){
+      if (grade.value === -1) {
         counterReponseIndex++
       }
-      
+
     })
     counterReponseIndex = 0
     subject.assignments.forEach((grade: Grade) => {
       newAssignments.push(new Grade({
-            value: grade.value === -1 ? res.notas.trabalhos[counterReponseIndex].valor : grade.value,
-            weight: grade.weight,
-            name: grade.name
-        })
+        value: grade.value === -1 ? res.notas.trabalhos[counterReponseIndex].valor : grade.value,
+        weight: grade.weight,
+        name: grade.name,
+        generated: grade.value === -1
+      })
       )
-      if(grade.value === -1){
+      if (grade.value === -1) {
         counterReponseIndex++
       }
     })

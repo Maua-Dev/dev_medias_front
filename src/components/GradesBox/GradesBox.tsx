@@ -1,11 +1,10 @@
-import React, {useContext, useState, useEffect} from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import { SubjectContext } from "../../contexts/subjectContext";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 import FinalAverage from "../FinalAverage/FinalAverage";
 import Item from "../Item/Item";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
-import { SubjectContext } from "../../contexts/subjectContext";
-import { Dimensions } from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -20,42 +19,45 @@ interface IGrade {
     value: number,
     isExam: boolean,
     empty: boolean,
+    generated: boolean,
 }
 
 const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
-    const {actualSubject} = useContext(SubjectContext)
+    const { actualSubject } = useContext(SubjectContext)
     const [grades, setGrades] = useState<IGrade[]>([])
     const [assignments, setAssignments] = useState<IGrade[]>([])
 
     useEffect(() => {
-        if(actualSubject){
+        if (actualSubject) {
             let newActualSubjectsExams = actualSubject?.exams.map((exam) => {
                 return {
                     id: exam!.name,
                     title: exam!.name,
                     value: exam!.value,
                     isExam: true,
-                    empty: false
+                    empty: false,
+                    generated: exam?.generated
                 }
             })
             setGrades([...newActualSubjectsExams!])
-            
+
             let newActualSubjectsAssignments = actualSubject?.assignments.map((assignment) => {
-                return{
+                return {
                     id: assignment!.name,
                     title: assignment!.name,
                     value: assignment!.value,
                     isExam: false,
-                    empty: false
+                    empty: false,
+                    generated: assignment?.generated
                 }
             })
             setAssignments([...newActualSubjectsAssignments!])
         }
 
     }, [actualSubject, actualSubject?.exams, actualSubject?.assignments])
-    
 
-    const createRows = (data: { id: string, title: string, value: number, isExam: boolean, empty: boolean }[], columns: number) => {
+
+    const createRows = (data: { id: string, title: string, value: number, isExam: boolean, empty: boolean, generated: boolean }[], columns: number) => {
         const rows = Math.floor(data.length / columns)
         let lastRowElements = data.length - (rows * columns)
         while (lastRowElements !== columns && lastRowElements !== 0) {
@@ -65,6 +67,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 value: -1,
                 isExam: false,
                 empty: true,
+                generated: false
             })
 
             lastRowElements += 1
@@ -82,7 +85,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 data={createRows(grades, 3)}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={({ item }: { item: IGrade }) => {
-                    return (<Item key={item.id} code={item.id} value={item.value} isExam={item.isExam} title={item.title} isEmpty={item.empty} />)
+                    return (<Item key={item.id} code={item.id} value={item.value} isExam={item.isExam} title={item.title} isEmpty={item.empty} generated={item.generated} />)
                 }}
             />
         </View>
@@ -94,11 +97,11 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
                 data={createRows(assignments, 3)}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={({ item }: { item: IGrade }) => {
-                    return (<Item key={item.id} code={item.id} isExam={item.isExam} value={item.value} title={item.title} isEmpty={item.empty ? true : false} />)
+                    return (<Item key={item.id} code={item.id} isExam={item.isExam} value={item.value} title={item.title} isEmpty={item.empty} generated={item.generated} />)
                 }}
             />
         </View>
-        <FinalAverage finalAverage={actualSubject?.average? actualSubject!.average: 0} />
+        <FinalAverage finalAverage={actualSubject?.average ? actualSubject!.average : 0} />
         <TargetSubjectModal subjectDetails={actualSubject} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
 }

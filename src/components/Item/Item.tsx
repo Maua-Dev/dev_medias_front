@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { SubjectContext } from "../../contexts/subjectContext";
 import { getFontSize } from "../../utils/fontSizeHandlers";
+import { handleGeneratedGradeColors } from "../../utils/gradeHandlers";
 import { maskParemeters } from "../../utils/maskHandlers";
 
 type Props = {
@@ -11,13 +12,19 @@ type Props = {
     value: number,
     isEmpty: boolean,
     isExam: boolean,
+    generated: boolean
 }
 
-const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
+const Item = ({ code, title, value, isEmpty, isExam, generated }: Props) => {
 
     const { setStudentSubjectValue, actualSubject } = useContext(SubjectContext)
 
     const [text, setText] = useState(value === -1 ? '' : value.toString());
+    const [generatedValue, setGeneratedValue] = useState(false);
+
+    useEffect(() => {
+        setGeneratedValue(generated)
+    }, [actualSubject, generated])
 
     useEffect(() => {
         setText(value === -1 ? '' : value.toString())
@@ -33,10 +40,13 @@ const Item = ({ code, title, value, isEmpty, isExam }: Props) => {
         }
 
     }
+
     return <View key={code} style={isEmpty ? [styles.inputBox, { opacity: 0 }] : styles.inputBox}>
         <Text style={styles.inputTitle}>{title}</Text>
         <MaskInput
-            style={styles.input}
+            style={[styles.input, generatedValue ? {
+                color: handleGeneratedGradeColors(text), fontWeight: "bold",
+            } : null]}
             value={text}
             editable={!isEmpty ? true : false}
             onChangeText={onChange}

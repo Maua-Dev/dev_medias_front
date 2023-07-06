@@ -1,9 +1,9 @@
+import * as SecureStore from 'expo-secure-store';
 import { decorate, injectable } from "inversify";
 import { ISubjectRepository } from "../../../modules/subject/domain/repositories/subject_repository_interface";
+import { Grade } from "../../domain/entities/grade";
 import { Subject, SubjectProps } from "../../domain/entities/subject";
 import allSubjects from "../jsons/allSubjects";
-import * as SecureStore from 'expo-secure-store';
-import { Grade } from "../../domain/entities/grade";
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   async getStudentSubjects(): Promise<Subject[]> {
@@ -13,7 +13,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     }
     const subjectDataArray = await Promise.all(JSON.parse(keys).map((key: string) => SecureStore.getItemAsync(key)));
     const subjects = subjectDataArray.map((data: string) => {
-      const {code, name, period, average, examWeight, assignmentWeight, exams, assignments, target } = JSON.parse(data);
+      const { code, name, period, average, examWeight, assignmentWeight, exams, assignments, target } = JSON.parse(data);
       const subjectProps: SubjectProps = {
         code,
         name,
@@ -21,8 +21,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         average,
         examWeight,
         assignmentWeight,
-        exams: exams.map((exam: any) => new Grade({ name: exam.name, value: exam.value, weight: exam.weight })),
-        assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: assignment.value, weight: assignment.weight })),
+        exams: exams.map((exam: any) => new Grade({ name: exam.name, value: exam.value, weight: exam.weight, generated: exam.generated })),
+        assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: assignment.value, weight: assignment.weight, generated: assignment.generated })),
         target
       };
       return new Subject(subjectProps);
@@ -43,8 +43,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   async saveStudentSubject(code: String, subject: Subject): Promise<void> {
     const keys = await SecureStore.getItemAsync('keys');
     const keyArray = keys ? JSON.parse(keys) : [];
-    if(!keyArray.includes(code)) {
-        keyArray.push(subject.code);
+    if (!keyArray.includes(code)) {
+      keyArray.push(subject.code);
     }
     await SecureStore.setItemAsync('keys', JSON.stringify(keyArray));
     const subjectData = {
@@ -54,8 +54,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
       average: subject.average,
       examWeight: subject.examWeight,
       assignmentWeight: subject.assignmentWeight,
-      exams: subject.exams.map((exam) => ({ name: exam.name, value: exam.value, weight: exam.weight })),
-      assignments: subject.assignments.map((assignment) => ({ name: assignment.name, value: assignment.value, weight: assignment.weight })),
+      exams: subject.exams.map((exam) => ({ name: exam.name, value: exam.value, weight: exam.weight, generated: exam.generated })),
+      assignments: subject.assignments.map((assignment) => ({ name: assignment.name, value: assignment.value, weight: assignment.weight, generated: assignment.generated })),
     };
     await SecureStore.setItemAsync(subject.code, JSON.stringify(subjectData));
   }
