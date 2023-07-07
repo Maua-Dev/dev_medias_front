@@ -51,7 +51,7 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
                     value: `${item.code} - ${item.name}`
                 }
             })
-
+                .filter(item => item.key.includes(selectedCode!))
             setDataFormatted(subjectsFormatToList)
         }
 
@@ -68,7 +68,6 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
             .filter(item => item.key.includes(selectedCode!))
         setDataFormatted(subjectsFormatToList)
     }, [selectedCode])
-
 
     useEffect(() => {
         const handleChoice = async () => {
