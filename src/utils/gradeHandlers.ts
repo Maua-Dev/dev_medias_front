@@ -1,5 +1,6 @@
 export const handleGradeFormat = (grade: number) => {
-    return grade.toFixed(1).replace(".", ",")
+    const gradeFormat = grade ? grade : 0
+    return gradeFormat.toFixed(1).replace(".", ",")
 }
 
 export const handleGradeBoxBackgroundColor = (grade: number) => {
