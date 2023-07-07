@@ -10,6 +10,11 @@ export const handleFinalAverageColor = (grade: number) => {
     return grade >= 6 ? "#0F5F88" : "#BA2512"
 }
 
+export const handleGeneratedGradeColors = (grade: string) => {
+    const gradeNumber = parseFloat(grade.replace(",", '.'))
+    return gradeNumber >= 6 ? "#0F5F88" : "#BA2512"
+}
+
 export const handleDeleteBarColor = (grade: number) => {
     return grade >= 6 ? "#0F5F88" : "#BA2512"
 }
@@ -21,5 +26,5 @@ export const handlePercentageWeight = (value: number, size: number) => {
 }
 
 export const handlePercentageWeightAll = (value: number) => {
-    return `${100 * value}%`
+    return `${value}%`
 }

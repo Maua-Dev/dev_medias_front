@@ -39,7 +39,9 @@ if (useAsyncStorage) {
 } else {
     subjectsContainer.bind(Registry.SubjectRepository).to(SubjectRepositoryMock).inSingletonScope();
 }
-subjectsContainer.bind(Registry.GradeOptimizerRepository).to(GradeOptimizerRepositoryHttp).inSingletonScope();
+subjectsContainer.bind(Registry.GradeOptimizerRepository).toDynamicValue((context) => {
+    return new GradeOptimizerRepositoryHttp(context.container.get(Registry.AxiosAdapter));
+});
 
 // Usecases
 subjectsContainer.bind(Registry.SaveStudentSubjectUsecase).toDynamicValue((context) => {
@@ -62,5 +64,5 @@ subjectsContainer.bind(Registry.CalculateFinalAverageUsecase).toDynamicValue((co
 })
 
 subjectsContainer.bind(Registry.GradeOptimizerUsecase).toDynamicValue((context) => {
-    return new GradeOptimizerUsecase(context.container.get(Registry.AxiosAdapter));
+    return new GradeOptimizerUsecase(context.container.get(Registry.GradeOptimizerRepository));
 })

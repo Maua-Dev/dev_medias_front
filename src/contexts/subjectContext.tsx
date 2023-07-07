@@ -7,9 +7,9 @@ import { DeleteStudentSubjectUsecase } from '../@clean/modules/subject/usecases/
 import { GetAllSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsUsecase'
 import { GetAllSubjectsWithoutStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase'
 import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase'
+import { GradeOptimizerUsecase } from '../@clean/modules/subject/usecases/gradeOptimizerUsecase'
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
-import { GradeOptimizerUsecase } from '../@clean/modules/subject/usecases/gradeOptimizerUsecase'
 
 
 export type SubjectContextType = {
@@ -76,11 +76,11 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     }, [subjects])
 
     useEffect(() => {
-        if(actualSubjectCode !== ''){
+        if (actualSubjectCode !== '') {
             let subject = subjects.find((subject) => subject.code === actualSubjectCode)
             setActualSubject(subject)
-        } 
-        
+        }
+
     }, [actualSubjectCode, subjects])
 
     async function getSubjects() {
@@ -110,11 +110,11 @@ export function SubjectProvider({ children }: PropsWithChildren) {
 
     async function setStudentSubjectValue(name: string, value: number) {
         let oldActualSubject = actualSubject
-        if(name === 'target'){
+        if (name === 'target') {
             oldActualSubject!.target = value
-        }else{
-            oldActualSubject?.exams.map((exam) => exam.name === name ? exam.value = value: '')
-            oldActualSubject?.assignments.map((assignment) => assignment.name === name ? assignment.value = value: '')
+        } else {
+            oldActualSubject?.exams.map((exam) => exam.name === name ? exam.value = value : '')
+            oldActualSubject?.assignments.map((assignment) => assignment.name === name ? assignment.value = value : '')
         }
         setActualSubject(oldActualSubject)
     }
@@ -126,7 +126,9 @@ export function SubjectProvider({ children }: PropsWithChildren) {
 
     async function optimizeGrades() {
         let subjectOptimized = await gradeOptimizerUsecase.execute(actualSubject!)
-        await saveStudentSubjectUsecase.execute(subjectOptimized.code, subjectOptimized)
+        await calculateFinalAverageUsecase.execute(subjectOptimized)
+        await getSubjects()
+        setActualSubjectCode(subjectOptimized.code)
     }
 
     return (
@@ -142,8 +144,8 @@ export function SubjectProvider({ children }: PropsWithChildren) {
             getAllSubjectsWithoutStudentSubjects,
             setStudentSubjectValue,
             calculateFinalAverage,
-            optimizeGrades, 
-            actualSubjectCode, 
+            optimizeGrades,
+            actualSubjectCode,
             setActualSubjectCode
         }}>
             {children}

@@ -2,6 +2,7 @@ export type gradeProps = {
     name: string;
     value: number;
     weight: number;
+    generated: boolean;
 }
 
 export class Grade {
@@ -9,6 +10,7 @@ export class Grade {
         this.props.name = props.name;
         this.props.value = props.value;
         this.props.weight = props.weight;
+        this.props.generated = props.generated;
     }
 
     get name(): string {
@@ -33,5 +35,13 @@ export class Grade {
 
     set weight(weight: number) {
         this.props.weight = weight;
+    }
+
+    get generated(): boolean {
+        return this.props.generated;
+    }
+
+    set generated(generated: boolean) {
+        this.props.generated = generated;
     }
 }
