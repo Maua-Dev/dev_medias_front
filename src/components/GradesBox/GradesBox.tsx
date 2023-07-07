@@ -102,7 +102,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
             />
         </View>
         <FinalAverage finalAverage={actualSubject?.average ? actualSubject!.average : 0} />
-        <TargetSubjectModal subjectDetails={actualSubject} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
+        <TargetSubjectModal key={actualSubject?.code} subjectDetails={actualSubject} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
     </View>
 }
 
