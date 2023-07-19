@@ -75,8 +75,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async calculateFinalAverage(subject: Subject): Promise<void> {
-    const examTotal = subject.exams.reduce((accumulator, exam) => accumulator + exam.value * exam.weight, 0);
-    const assignmentTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + assignment.value * assignment.weight, 0);
+    const examTotal = subject.exams.reduce((accumulator, exam) => accumulator + (exam.value !== -1 ? exam.value : 0) * exam.weight, 0);
+    const assignmentTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + (assignment.value !== -1 ? assignment.value : 0) * assignment.weight, 0);
     const examWeightTotal = subject.exams.reduce((accumulator, exam) => accumulator + exam.weight, 0);
     const assignmentWeightTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + assignment.weight, 0);
     const totalWeight = examWeightTotal + assignmentWeightTotal;
