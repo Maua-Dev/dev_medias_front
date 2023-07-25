@@ -7,7 +7,6 @@ jobs:
   fastlane-deploy_play_store:
     name: Build & Deploy to Play Store
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
