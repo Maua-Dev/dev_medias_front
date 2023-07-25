@@ -10,7 +10,7 @@ platform :android do
   lane :dev do
     upload_to_play_store(
       track: 'internal',
-      aab: '../app/build/outputs/bundle/release/app.aab',
+      aab: '../app/build/outputs/bundle/release/app-release.aab',
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
       
@@ -20,7 +20,7 @@ platform :android do
   lane :homolog do
     upload_to_play_store(
       track: 'alpha',
-      aab: '../app/build/outputs/bundle/release/app.aab',
+      aab: '../app/build/outputs/bundle/release/app-release.aab',
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
   end
@@ -29,7 +29,7 @@ platform :android do
   lane :prod do
     upload_to_play_store(
       track: 'beta',
-      aab: '../app/build/outputs/bundle/release/app.aab',
+      aab: '../app/build/outputs/bundle/release/app-release.aab',
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
   end

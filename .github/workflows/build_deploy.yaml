@@ -49,7 +49,8 @@ jobs:
 
 
       - name: Build appbundle
-        run: npx react-native build-android --mode=release
+        run: ./gradlew bundleRelease
+        working-directory: android   
 
       - name: Exec fastlane
         run: bundle exec fastlane dev
