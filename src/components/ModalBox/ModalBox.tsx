@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 
@@ -24,7 +24,7 @@ const ModalBox = ({ headerText, children, condition, conditionClose }: Props) =>
                             onPress={conditionClose}
                             style={styles.closeButton}
                         >
-                            <MaterialIcons name="close" size={getFontSize(32)} color="#fff" />
+                            <Icon name="close" size={getFontSize(32)} color="#fff" />
                         </Pressable>
                     </View>
                     <View style={styles.modalContent}>
