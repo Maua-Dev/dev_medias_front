@@ -50,7 +50,7 @@ const Header = ({ isHomePage }: Props) => {
                     null :
                     <Pressable onPress={() => navigation.goBack()}>
                         <View style={styles.buttonExitContainer}>
-                            <Icon name="close" size={getFontSize(32)} color="#fff" />
+                            <Icon name="times" size={getFontSize(26)} color="#fff" />
                         </View>
                     </Pressable>
             }

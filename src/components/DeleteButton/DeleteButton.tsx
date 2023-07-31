@@ -14,7 +14,7 @@ const DeleteButton = ({ code }: Props) => {
 
     return <View>
         <Pressable onPress={() => deleteSubject(code)} style={styles.buttonContainer}>
-            <Icon name="trash" size={getFontSize(32)} />
+            <Icon name="trash" size={getFontSize(26)} />
         </Pressable>
     </View>
 }
