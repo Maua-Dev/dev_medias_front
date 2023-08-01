@@ -2,6 +2,8 @@ name: Check & Create PR
 
 on:
   push:
+    paths-ignore:
+      - 'package.json'
     branches:
       - dev
       - homolog

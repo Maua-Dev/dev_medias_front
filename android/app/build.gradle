@@ -84,8 +84,8 @@ android {
         applicationId "com.dev_medias_front_rn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
     signingConfigs {
         debug {
