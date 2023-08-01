@@ -1,8 +1,6 @@
 name: Build & Deploy to Play Store
 on:
   push:
-    paths:
-      - 'package.json'
     branches:
       - dev
       - homolog
@@ -51,7 +49,11 @@ jobs:
           KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASS }}
           KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASS }}
         working-directory: android
-
+      - name: Set Versions
+        run: |
+          current_version=$(perl -ne 'print "$1" if /"version":\s*"(.*?)"/' package.json)
+          echo "versionName=$current_version" >> android/gradle.properties
+          echo "versionCode=${{ github.run_number }}" >> android/gradle.properties
 
       - name: Build appbundle
         run: ./gradlew bundleRelease
