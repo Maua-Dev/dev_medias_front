@@ -24,6 +24,7 @@
 		3B4392A12AC88292D35C810B /* Pods-dev_medias_front_rn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dev_medias_front_rn.debug.xcconfig"; path = "Target Support Files/Pods-dev_medias_front_rn/Pods-dev_medias_front_rn.debug.xcconfig"; sourceTree = "<group>"; };
 		436859C02A7966180061F760 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		436859C12A79668A0061F760 /* Generate.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Generate.xcconfig; sourceTree = "<group>"; };
+		43E788312A7B0136007FCAF2 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-dev_medias_front_rn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dev_medias_front_rn.release.xcconfig"; path = "Target Support Files/Pods-dev_medias_front_rn/Pods-dev_medias_front_rn.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-dev_medias_front_rn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dev_medias_front_rn.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = dev_medias_front_rn/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 		436859BF2A79657C0061F760 /* ReactNative */ = {
 			isa = PBXGroup;
 			children = (
+				43E788312A7B0136007FCAF2 /* Debug.xcconfig */,
 				436859C12A79668A0061F760 /* Generate.xcconfig */,
 				436859C02A7966180061F760 /* Release.xcconfig */,
 			);
@@ -289,12 +291,11 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-dev_medias_front_rn.debug.xcconfig */;
+			baseConfigurationReference = 43E788312A7B0136007FCAF2 /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6MRWQRWLPX;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = dev_medias_front_rn/Info.plist;
@@ -304,7 +305,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -325,7 +325,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6MRWQRWLPX;
 				INFOPLIST_FILE = dev_medias_front_rn/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Dev Médias";
@@ -334,7 +333,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
