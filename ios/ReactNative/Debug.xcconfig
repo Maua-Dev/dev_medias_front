@@ -1,0 +1,2 @@
+#include? "Pods/Target Support Files/Pods-dev_medias_front_rn/Pods-dev_medias_front_rn.debug.xcconfig"
+#include "Generate.xcconfig"

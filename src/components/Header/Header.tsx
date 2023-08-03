@@ -1,5 +1,5 @@
 import {useContext} from 'react'
-import { MaterialIcons } from "@expo/vector-icons"
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { ParamListBase } from "@react-navigation/routers"
 import { Pressable, StyleSheet, Text, View } from "react-native"
@@ -50,7 +50,7 @@ const Header = ({ isHomePage }: Props) => {
                     null :
                     <Pressable onPress={() => navigation.goBack()}>
                         <View style={styles.buttonExitContainer}>
-                            <MaterialIcons name="close" size={getFontSize(32)} color="#fff" />
+                            <Icon name="close" size={getFontSize(32)} color="#fff" />
                         </View>
                     </Pressable>
             }

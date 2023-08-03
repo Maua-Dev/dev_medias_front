@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { getFontSize } from "../../utils/fontSizeHandlers";
@@ -12,7 +12,7 @@ const CreationSubjectCard = () => {
         <Pressable style={styles.content} onPress={() => setIsAddingSubject(true)}>
             <View style={styles.gradeBox}>
                 <Text style={styles.grade}>
-                    <MaterialIcons name="add-circle" size={getFontSize(26)} color="#0F5F88" />
+                    <Icon name="plus" size={getFontSize(26)} color="#0F5F88"/>
                 </Text>
             </View>
             <View style={styles.subjectBox}>

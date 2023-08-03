@@ -1,17 +1,17 @@
-import * as SecureStore from 'expo-secure-store';
-import { decorate, injectable } from "inversify";
-import { ISubjectRepository } from "../../../modules/subject/domain/repositories/subject_repository_interface";
-import { Grade } from "../../domain/entities/grade";
-import { Subject, SubjectProps } from "../../domain/entities/subject";
-import allSubjects from "../jsons/allSubjects";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { decorate, injectable } from 'inversify';
+import { ISubjectRepository } from '../../../modules/subject/domain/repositories/subject_repository_interface';
+import { Grade } from '../../domain/entities/grade';
+import { Subject, SubjectProps } from '../../domain/entities/subject';
+import allSubjects from '../jsons/allSubjects';
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   async getStudentSubjects(): Promise<Subject[]> {
-    const keys = await SecureStore.getItemAsync('keys');
+    const keys = await AsyncStorage.getItem('keys');
     if (!keys) {
       return [];
     }
-    const subjectDataArray = await Promise.all(JSON.parse(keys).map((key: string) => SecureStore.getItemAsync(key)));
+    const subjectDataArray = await Promise.all(JSON.parse(keys).map((key: string) => AsyncStorage.getItem(key)));
     const subjects = subjectDataArray.map((data: string) => {
       const { code, name, period, average, examWeight, assignmentWeight, exams, assignments, target } = JSON.parse(data);
       const subjectProps: SubjectProps = {
@@ -41,12 +41,12 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async saveStudentSubject(code: String, subject: Subject): Promise<void> {
-    const keys = await SecureStore.getItemAsync('keys');
+    const keys = await AsyncStorage.getItem('keys');
     const keyArray = keys ? JSON.parse(keys) : [];
     if (!keyArray.includes(code)) {
       keyArray.push(subject.code);
     }
-    await SecureStore.setItemAsync('keys', JSON.stringify(keyArray));
+    await AsyncStorage.setItem('keys', JSON.stringify(keyArray));
     const subjectData = {
       code: subject.code,
       name: subject.name,
@@ -57,11 +57,11 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
       exams: subject.exams.map((exam) => ({ name: exam.name, value: exam.value, weight: exam.weight, generated: exam.generated })),
       assignments: subject.assignments.map((assignment) => ({ name: assignment.name, value: assignment.value, weight: assignment.weight, generated: assignment.generated })),
     };
-    await SecureStore.setItemAsync(subject.code, JSON.stringify(subjectData));
+    await AsyncStorage.setItem(subject.code, JSON.stringify(subjectData));
   }
 
   async deleteStudentSubject(code: string): Promise<void> {
-    const keys = await SecureStore.getItemAsync('keys');
+    const keys = await AsyncStorage.getItem('keys');
     if (!keys) {
       return;
     }
@@ -69,15 +69,14 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     const index = keyArray.indexOf(code);
     if (index > -1) {
       keyArray.splice(index, 1);
-      await SecureStore.setItemAsync('keys', JSON.stringify(keyArray));
-      await SecureStore.deleteItemAsync(code);
+      await AsyncStorage.setItem('keys', JSON.stringify(keyArray));
+      await AsyncStorage.removeItem(code);
     }
   }
 
   async calculateFinalAverage(subject: Subject): Promise<void> {
-    if (subject.exams.every(exam => exam.value === -1) && subject.assignments.every(assignment => assignment.value === -1)) return;
-    const examTotal = subject.exams.reduce((accumulator, exam) => accumulator + exam.value * exam.weight, 0);
-    const assignmentTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + assignment.value * assignment.weight, 0);
+    const examTotal = subject.exams.reduce((accumulator, exam) => accumulator + (exam.value !== -1 ? exam.value : 0) * exam.weight, 0);
+    const assignmentTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + (assignment.value !== -1 ? assignment.value : 0) * assignment.weight, 0);
     const examWeightTotal = subject.exams.reduce((accumulator, exam) => accumulator + exam.weight, 0);
     const assignmentWeightTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + assignment.weight, 0);
     const totalWeight = examWeightTotal + assignmentWeightTotal;

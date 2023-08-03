@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useContext } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SubjectContext } from "../../contexts/subjectContext";
@@ -14,7 +14,7 @@ const DeleteButton = ({ code }: Props) => {
 
     return <View>
         <Pressable onPress={() => deleteSubject(code)} style={styles.buttonContainer}>
-            <MaterialIcons name="delete-outline" style={styles.icon} />
+            <Icon name="trash" size={getFontSize(32)} />
         </Pressable>
     </View>
 }
