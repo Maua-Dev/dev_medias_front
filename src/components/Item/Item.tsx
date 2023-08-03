@@ -27,7 +27,7 @@ const Item = ({ code, title, value, isEmpty, isExam, generated }: Props) => {
     }, [actualSubject, generated])
 
     useEffect(() => {
-        setText(value === -1 ? '' : value.toString())
+        setText(value === -1 ? '' : value === 10 ? '100' : value.toString())
     }, [value, actualSubject])
 
     const onChange = (newText: string) => {
