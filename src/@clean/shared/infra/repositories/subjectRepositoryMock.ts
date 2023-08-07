@@ -46,7 +46,7 @@ export class SubjectRepositoryMock implements ISubjectRepository {
         let examsSum = 0;
         let examsWeightSum = 0;
         subject.exams.forEach((exam) => {
-            examsSum = examsSum + exam.value * exam.weight;
+            examsSum = examsSum + (exam.value !== -1 ? exam.value : 0) * exam.weight;
             examsWeightSum = examsWeightSum + exam.weight;
         })
         let examAverage = examsSum / examsWeightSum;
@@ -54,12 +54,12 @@ export class SubjectRepositoryMock implements ISubjectRepository {
         let assignmentSum = 0;
         let assignmentWeightSum = 0;
         subject.assignments.forEach((assignment) => {
-            assignmentSum = examsSum + assignment.value * assignment.weight;
-            assignmentWeightSum = examsWeightSum + assignment.weight;
+            assignmentSum = assignmentSum + (assignment.value !== -1 ? assignment.value : 0) * assignment.weight;
+            assignmentWeightSum = assignmentWeightSum + assignment.weight;
         })
         let assignmentAverage = assignmentSum / assignmentWeightSum;
-
-        let finalAverage = examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight;
+        let finalAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight)  / (subject.examWeight + subject.assignmentWeight);;
+        finalAverage = Math.round(finalAverage * 10) / 10;
         subject.average = finalAverage;
         this.saveStudentSubject(subject.code, subject);
     }

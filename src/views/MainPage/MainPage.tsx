@@ -14,7 +14,7 @@ const MainPage = () => {
         <MainBox>
             <ScrollView>
                 {subjects.map((value) => {
-                    return <SubjectCard key={value.code} list={subjects} subject={value} />
+                    return <SubjectCard key={value.code} subject={value} />
                 })}
                 <CreationSubjectCard />
             </ScrollView>
