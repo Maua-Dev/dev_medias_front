@@ -10,6 +10,7 @@ import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/ge
 import { GradeOptimizerUsecase } from '../@clean/modules/subject/usecases/gradeOptimizerUsecase'
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
+import { Alert } from 'react-native'
 
 
 export type SubjectContextType = {
@@ -99,8 +100,19 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     }
 
     async function saveSubject(subject: Subject) {
-        await saveStudentSubjectUsecase.execute(subject.code, subject)
-        await getSubjects()
+        try{
+            await saveStudentSubjectUsecase.execute(subject.code, subject)
+            await getSubjects()
+        }catch (error){
+            if (error instanceof Error) {
+                Alert.alert(
+                    'Ops! Ocorreu um erro...',
+                    error.message,
+                    [{ text: 'OK'}],
+                    { cancelable: false }
+                  ); 
+            } 
+        }
     }
 
     async function deleteSubject(code: string) {
@@ -125,10 +137,21 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     }
 
     async function optimizeGrades() {
-        let subjectOptimized = await gradeOptimizerUsecase.execute(actualSubject!)
-        await calculateFinalAverageUsecase.execute(subjectOptimized)
-        await getSubjects()
-        setActualSubjectCode(subjectOptimized.code)
+        try {
+            let subjectOptimized = await gradeOptimizerUsecase.execute(actualSubject!)
+            await calculateFinalAverageUsecase.execute(subjectOptimized)
+            await getSubjects()
+            setActualSubjectCode(subjectOptimized.code)
+        } catch (error) {
+            if (error instanceof Error) {
+                Alert.alert(
+                    'Ops! Ocorreu um erro...',
+                    error.message,
+                    [{ text: 'OK'}],
+                    { cancelable: false }
+                  ); 
+            } 
+        }   
     }
 
     return (
