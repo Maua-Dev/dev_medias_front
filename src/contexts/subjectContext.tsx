@@ -19,6 +19,7 @@ export type SubjectContextType = {
     allSubjects: Subject[];
     allSubjectsWithoutStudentSubjects: Subject[];
     actualSubject: Subject | undefined;
+    isLoading: boolean;
     saveSubject: (subject: Subject) => Promise<void>;
     getSubjects: () => Promise<void>;
     getAllSubjects: () => Promise<void>;
@@ -28,6 +29,7 @@ export type SubjectContextType = {
     calculateFinalAverage: () => Promise<void>;
     optimizeGrades: () => Promise<void>;
     setActualSubjectCode: (code: string) => void;
+    setIsLoading: (isLoading: boolean) => void;
 }
 
 const defaultSubjectContext: SubjectContextType = {
@@ -36,6 +38,7 @@ const defaultSubjectContext: SubjectContextType = {
     allSubjects: [] as Subject[],
     allSubjectsWithoutStudentSubjects: [] as Subject[],
     actualSubject: Subject.createEmptySubject(),
+    isLoading: false,
     saveSubject: async (subject: Subject) => { },
     getSubjects: async () => { },
     getAllSubjects: async () => { },
@@ -44,7 +47,8 @@ const defaultSubjectContext: SubjectContextType = {
     optimizeGrades: async () => { },
     setStudentSubjectValue: async (name: string, value: number) => { },
     calculateFinalAverage: async () => { },
-    setActualSubjectCode: (code: string) => { }
+    setActualSubjectCode: (code: string) => { },
+    setIsLoading: (isLoading: boolean) => { }
 }
 
 export const SubjectContext = createContext<SubjectContextType>(defaultSubjectContext);
@@ -66,6 +70,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         allSubjectsWithoutStudentSubjects,
         setAllSubjectsWithoutStudentSubjects
     ] = useState<Subject[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
         getSubjects()
@@ -137,6 +142,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
     }
 
     async function optimizeGrades() {
+        setIsLoading(true)
         try {
             let subjectOptimized = await gradeOptimizerUsecase.execute(actualSubject!)
             await calculateFinalAverageUsecase.execute(subjectOptimized)
@@ -152,6 +158,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
                   ); 
             } 
         }   
+        setIsLoading(false)
     }
 
     return (
@@ -160,6 +167,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
             allSubjects,
             allSubjectsWithoutStudentSubjects,
             actualSubject,
+            isLoading,
             saveSubject,
             getSubjects,
             deleteSubject,
@@ -169,7 +177,8 @@ export function SubjectProvider({ children }: PropsWithChildren) {
             calculateFinalAverage,
             optimizeGrades,
             actualSubjectCode,
-            setActualSubjectCode
+            setActualSubjectCode,
+            setIsLoading,
         }}>
             {children}
         </SubjectContext.Provider>
