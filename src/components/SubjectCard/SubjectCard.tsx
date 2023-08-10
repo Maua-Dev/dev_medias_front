@@ -34,7 +34,7 @@ const SubjectCard = ({ subject }: Props) => {
                 </View>
             </View>
             <View style={styles.subjectBox}>
-                <Text style={styles.subjectTitle}>{subject.name}</Text>
+                <Text numberOfLines={2} style={styles.subjectTitle}>{subject.name}</Text>
                 <Text style={styles.subjectSubtitle}>{subject.code}</Text>
             </View>
         </View>
@@ -75,14 +75,16 @@ const styles = StyleSheet.create({
     },
     subjectBox: {
         marginLeft: "2%",
+        width: "83%"
     },
     subjectTitle: {
+        maxWidth: "95%",
         fontWeight: "bold",
-        fontSize: getFontSize(16)
+        fontSize: getFontSize(15)
     },
     subjectSubtitle: {
         fontWeight: "bold",
-        fontSize: getFontSize(13)
+        fontSize: getFontSize(12)
     },
     shadowIOS: {
         backgroundColor: "#fff",
