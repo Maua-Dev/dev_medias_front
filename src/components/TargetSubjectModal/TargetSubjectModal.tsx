@@ -8,8 +8,6 @@ import { handlePercentageWeight, handlePercentageWeightAll, handlePercentageWeig
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
-
-import { SubjectContext } from "../../contexts/subjectContext";
 import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 
 type Props = {
