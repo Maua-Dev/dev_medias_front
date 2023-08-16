@@ -1,12 +1,14 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Grade } from "../../@clean/shared/domain/entities/grade";
+import { SubjectContext } from "../../contexts/subjectContext";
 import { getFontSize } from "../../utils/fontSizeHandlers";
-import { handlePercentageWeight, handlePercentageWeightAll } from "../../utils/gradeHandlers";
+import { handlePercentageWeight, handlePercentageWeightAll, handlePercentageWeightAssignment } from "../../utils/gradeHandlers";
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
+
 import { SubjectContext } from "../../contexts/subjectContext";
 import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 
@@ -17,6 +19,7 @@ type Props = {
 }
 
 const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }: Props) => {
+
     const {optimizeGrades, setStudentSubjectValue, actualSubject, isLoading} = useContext(SubjectContext)
     const [text, setText] = useState<string>(subjectDetails ? String(subjectDetails.target) : '');
 
@@ -41,16 +44,16 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                     <Text style={styles.subtitle}>Provas: {handlePercentageWeightAll(subjectDetails?.examWeight)} Trabalho: {handlePercentageWeightAll(subjectDetails?.assignmentWeight)}</Text>
                 </View>
                 <View style={styles.subjectInfoContent}>
-                    <View style={{ flexDirection: "row" }}>
+                    <View style={styles.gradesContainer}>
                         {subjectDetails?.exams.map((value: Grade) => {
                             if (!value.name.toUpperCase().includes('SUB'))
                                 return <Text style={styles.infos}>{value.name}: {handlePercentageWeight(value.weight, subjectDetails?.exams.length)}</Text>
                         })}
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View style={styles.gradesContainer}>
                         {subjectDetails?.assignments.map((value: Grade) => {
                             if (!value.name.toUpperCase().includes('SUB'))
-                                return <Text style={styles.infos}>{value.name}: {handlePercentageWeight(value.weight, subjectDetails?.assignments.length)}</Text>
+                                return <Text style={styles.infos}>{value.name}: {handlePercentageWeightAssignment(value.weight, subjectDetails?.assignments)}</Text>
                         })}
                     </View>
                 </View>
@@ -67,7 +70,7 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                     />
                 </View>
                 <View style={styles.buttonPosition}>
-                    <Button action={async() => {
+                    <Button action={async () => {
                         await optimizeGrades()
                         setIsConfiguring(false)
                     }}>
@@ -97,10 +100,21 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     subjectInfoContent: {
-        gap: 4
+        marginTop: "3%",
+        gap: 10,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    gradesContainer: {
+        flexDirection: "row",
+        maxWidth: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        flexWrap: "wrap",
     },
     infos: {
         color: "#505050",
+        maxWidth: "90%",
         fontWeight: "700",
         paddingHorizontal: "2%",
         fontSize: getFontSize(15)
