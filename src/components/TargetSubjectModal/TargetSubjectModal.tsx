@@ -9,6 +9,9 @@ import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
 
+import { SubjectContext } from "../../contexts/subjectContext";
+import SpinnerOverlay from 'react-native-loading-spinner-overlay';
+
 type Props = {
     isConfiguring: boolean;
     setIsConfiguring: any;
@@ -16,7 +19,8 @@ type Props = {
 }
 
 const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }: Props) => {
-    const { optimizeGrades, setStudentSubjectValue, actualSubject } = useContext(SubjectContext)
+
+    const {optimizeGrades, setStudentSubjectValue, actualSubject, isLoading} = useContext(SubjectContext)
     const [text, setText] = useState<string>(subjectDetails ? String(subjectDetails.target) : '');
 
     useEffect(() => {
@@ -76,6 +80,7 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                 </View>
             </View>
         </ModalBox>
+        <SpinnerOverlay visible={isLoading} size={getFontSize(60)}/>
     </View>
 }
 

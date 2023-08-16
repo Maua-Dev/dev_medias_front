@@ -5,6 +5,12 @@ export class SaveStudentSubjectUsecase {
     constructor(private subjectRepository: ISubjectRepository) {}
 
     async execute(code: string, subject: Subject): Promise<void> {
-        return await this.subjectRepository.saveStudentSubject(code, subject);
+        let studentSubjects = await this.subjectRepository.getStudentSubjects() as Subject[];
+        let subjectExists = studentSubjects.find((studentSubject) => studentSubject.code === code)
+        if (subjectExists) {
+            throw new Error('Matéria já cadastrada');
+        }else{
+            return await this.subjectRepository.saveStudentSubject(code, subject);
+        }
     }
 }
