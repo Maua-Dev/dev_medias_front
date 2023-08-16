@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 import MaskInput from "react-native-mask-input";
 import { Grade } from "../../@clean/shared/domain/entities/grade";
 import { SubjectContext } from "../../contexts/subjectContext";
@@ -8,7 +9,6 @@ import { handlePercentageWeight, handlePercentageWeightAll, handlePercentageWeig
 import { maskParemeters } from "../../utils/maskHandlers";
 import Button from "../Button/Button";
 import ModalBox from "../ModalBox/ModalBox";
-import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 
 type Props = {
     isConfiguring: boolean;
@@ -18,7 +18,7 @@ type Props = {
 
 const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }: Props) => {
 
-    const {optimizeGrades, setStudentSubjectValue, actualSubject, isLoading} = useContext(SubjectContext)
+    const { optimizeGrades, setStudentSubjectValue, actualSubject, isLoading } = useContext(SubjectContext)
     const [text, setText] = useState<string>(subjectDetails ? String(subjectDetails.target) : '');
 
     useEffect(() => {
@@ -78,7 +78,7 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                 </View>
             </View>
         </ModalBox>
-        <SpinnerOverlay visible={isLoading} size={getFontSize(60)}/>
+        <SpinnerOverlay visible={isLoading} size={getFontSize(60)} />
     </View>
 }
 
