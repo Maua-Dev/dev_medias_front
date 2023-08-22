@@ -48,6 +48,7 @@ const Item = ({ code, title, value, isEmpty, isExam, generated }: Props) => {
                 color: handleGeneratedGradeColors(text), fontWeight: "bold",
             } : null]}
             value={text}
+            returnKeyType="done"
             editable={!isEmpty ? true : false}
             onChangeText={onChange}
             maxLength={4}

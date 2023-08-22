@@ -5,6 +5,11 @@ export class GradeOptimizerUsecase {
     constructor(private repo: IGradeOptmizerRepository) {}
 
     async execute(subject: Subject): Promise<Subject> {
-        return await this.repo.optmizeGrades(subject);
+        try {
+            return await this.repo.optmizeGrades(subject);
+        }
+        catch (err) {
+            throw new Error(`${err}`);
+        }
     }
 }

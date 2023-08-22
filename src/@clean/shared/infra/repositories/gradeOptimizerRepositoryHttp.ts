@@ -11,12 +11,18 @@ export class GradeOptimizerRepositoryHttp implements IGradeOptmizerRepository {
     async optmizeGrades(subject: Subject): Promise<Subject> {
         let subjectData = GradeOptimizerModel.fromSubject(subject)
         let subjectDataJson = subjectData.toJSON()
-        return await this.http.post<GradeOptimizerResponse>('/grade-optmizer', subjectDataJson).then((res: AxiosResponse<GradeOptimizerResponse>) => {
-            return GradeOptimizerModel.fromResApiGradeOptimizer(res.data, subject);
-        }).catch((err: AxiosError) => {
-            console.log(err);
-            throw err.response?.data;
-        });
+        try {
+            return await this.http.post<GradeOptimizerResponse>('/grade-optmizer', subjectDataJson).then((res: AxiosResponse<GradeOptimizerResponse>) => {
+                return GradeOptimizerModel.fromResApiGradeOptimizer(res.data, subject);
+            })
+        } catch (err) {
+            let error = err as AxiosError
+            if (error.response) {
+                throw error.response!.data
+            } else {
+                throw new Error('Erro ao otimizar notas')
+            }
+        }
     }
 }
 

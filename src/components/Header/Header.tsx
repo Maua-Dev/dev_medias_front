@@ -1,12 +1,12 @@
-import {useContext} from 'react'
+import { RouteProp, useNavigation } from "@react-navigation/native";
+import { ParamListBase } from "@react-navigation/routers";
+import { useContext } from 'react';
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
-import { ParamListBase } from "@react-navigation/routers"
-import { Pressable, StyleSheet, Text, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Subject } from "../../@clean/shared/domain/entities/subject"
-import { getFontSize } from "../../utils/fontSizeHandlers"
-import { SubjectContext } from "../../contexts/subjectContext"
+import { Subject } from "../../@clean/shared/domain/entities/subject";
+import { SubjectContext } from "../../contexts/subjectContext";
+import { getFontSize } from "../../utils/fontSizeHandlers";
 
 type Props = {
     isHomePage: boolean,
@@ -22,7 +22,7 @@ type HeaderRouteProp = RouteProp<ParamListBase, string> & {
 
 
 const Header = ({ isHomePage }: Props) => {
-    const {actualSubject} = useContext(SubjectContext)
+    const { actualSubject } = useContext(SubjectContext)
 
     const navigation = useNavigation()
     const insets = useSafeAreaInsets();
@@ -30,7 +30,7 @@ const Header = ({ isHomePage }: Props) => {
     const handleTitle = () => {
         return isHomePage ?
             "Bem vindo ao DevMédias!" :
-            `${actualSubject?.name ?? "" }`
+            `${actualSubject?.name ?? ""}`
     }
 
     const handleSubtitle = () => {
@@ -42,8 +42,8 @@ const Header = ({ isHomePage }: Props) => {
     return <View style={[styles.content, { paddingTop: insets.top }]}>
         <View style={styles.bluelayer}>
             <View style={styles.texts}>
-                <Text style={[styles.title, { fontSize: getFontSize(22) }]}>{handleTitle()}</Text>
-                <Text style={[styles.subtitle, { fontSize: getFontSize(13) }]}>{handleSubtitle()}</Text>
+                <Text numberOfLines={2} style={[styles.title, { fontSize: getFontSize(22) }]}>{handleTitle()}</Text>
+                <Text numberOfLines={1} style={[styles.subtitle, { fontSize: getFontSize(13) }]}>{handleSubtitle()}</Text>
             </View>
             {
                 isHomePage ?
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     title: {
+        maxWidth: "95%",
         color: "#fff",
         fontWeight: "bold",
     },

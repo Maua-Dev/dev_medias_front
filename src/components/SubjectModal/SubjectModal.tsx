@@ -89,6 +89,8 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
     return <ModalBox headerText="Adicionar Matérias" condition={isAdding} conditionClose={handleCloseModal}>
         <SelectList
             boxStyles={{ borderRadius: 0 }}
+            inputStyles={{ color: "#000" }}
+            dropdownTextStyles={{ color: "#000" }}
             dropdownStyles={{ marginTop: 0, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderTopWidth: 0 }}
             setSelected={(value: SetStateAction<string | undefined>) => setSelectCode(value)}
             data={codes}
@@ -98,6 +100,8 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
         />
         <SelectList
             boxStyles={{ borderRadius: 0, marginTop: 10 }}
+            inputStyles={{ color: "#000" }}
+            dropdownTextStyles={{ color: "#000" }}
             dropdownStyles={{ marginTop: 0, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderTopWidth: 0 }}
             setSelected={(value: SetStateAction<string | undefined>) => setSelectedSubject(value)}
             data={dataFormatted}
