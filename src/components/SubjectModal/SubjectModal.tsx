@@ -110,7 +110,10 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
             notFoundText="Disciplina não encontrada"
         />
         <View style={styles.buttonPosition}>
-            <Button action={() => saveSubject(select!)}>Selecionar</Button>
+            <Button action={() => {
+                saveSubject(select!)
+                handleCloseModal()
+            }}>Selecionar</Button>
         </View>
 
     </ModalBox>
