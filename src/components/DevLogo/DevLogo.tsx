@@ -1,9 +1,12 @@
 import { Image, StyleSheet, View } from "react-native"
 import logo from "../../../assets/logo.png"
+import { LinkInstagram } from "./LinkInstagram"
 
 const DevLogo = () => {
     return <View style={styles.content}>
-        <Image source={logo} style={styles.image} />
+        <LinkInstagram url="https://www.instagram.com/devcommunitymaua/">
+            <Image source={logo} style={styles.image} />
+        </LinkInstagram>
     </View>
 }
 
