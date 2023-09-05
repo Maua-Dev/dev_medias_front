@@ -1,16 +1,17 @@
+import { Container } from "inversify";
 import "reflect-metadata";
-import { Container, injectable } from "inversify";
 import { CalculateFinalAverageUsecase } from "../../../modules/subject/usecases/calculateFinalAverageUsecase";
+import { CleanGeneratedGradesUsecase } from "../../../modules/subject/usecases/cleanGeneratedGradesUsecase";
 import { DeleteStudentSubjectUsecase } from "../../../modules/subject/usecases/deleteStudentSubjectUsecase";
 import { GetAllSubjectsUsecase } from "../../../modules/subject/usecases/getAllSubjectsUsecase";
 import { GetAllSubjectsWithoutStudentSubjectsUsecase } from "../../../modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase";
-import { GradeOptimizerUsecase } from "../../../modules/subject/usecases/gradeOptimizerUsecase";
-import { GradeOptimizerRepositoryHttp } from "../repositories/gradeOptimizerRepositoryHttp";
 import { GetStudentSubjectsUsecase } from "../../../modules/subject/usecases/getStudentSubjectsUsecase";
+import { GradeOptimizerUsecase } from "../../../modules/subject/usecases/gradeOptimizerUsecase";
 import { SaveStudentSubjectUsecase } from "../../../modules/subject/usecases/saveStudentSubjectUsecase";
+import { http } from "../http";
+import { GradeOptimizerRepositoryHttp } from "../repositories/gradeOptimizerRepositoryHttp";
 import { SubjectRepositoryAsyncStorage } from "../repositories/subjectRepositoryAsyncStorage";
 import { SubjectRepositoryMock } from "../repositories/subjectRepositoryMock";
-import { http } from "../http";
 
 export const Registry = {
     AxiosAdapter: Symbol.for("AxiosAdapter"),
@@ -25,6 +26,8 @@ export const Registry = {
     DeleteStudentSubjectUsecase: Symbol.for("DeleteStudentSubjectUsecase"),
     CalculateFinalAverageUsecase: Symbol.for("CalculateFinalAverageUsecase"),
     GradeOptimizerUsecase: Symbol.for("GradeOptimizerUsecase"),
+    CleanGeneratedGradesUsecase: Symbol.for("CleanGeneratedGradesUsecase")
+
 }
 
 export const subjectsContainer = new Container();
@@ -61,6 +64,9 @@ subjectsContainer.bind(Registry.DeleteStudentSubjectUsecase).toDynamicValue((con
 })
 subjectsContainer.bind(Registry.CalculateFinalAverageUsecase).toDynamicValue((context) => {
     return new CalculateFinalAverageUsecase(context.container.get(Registry.SubjectRepository));
+})
+subjectsContainer.bind(Registry.CleanGeneratedGradesUsecase).toDynamicValue((context) => {
+    return new CleanGeneratedGradesUsecase(context.container.get(Registry.SubjectRepository));
 })
 
 subjectsContainer.bind(Registry.GradeOptimizerUsecase).toDynamicValue((context) => {

@@ -7,4 +7,5 @@ export interface ISubjectRepository {
     saveStudentSubject(code: string, subject: Subject): Promise<void>;
     deleteStudentSubject(code: string): Promise<void>;
     calculateFinalAverage(subject: Subject): Promise<void>;
+    cleanGeneratedGrades(subject: Subject): Promise<void>;
 }

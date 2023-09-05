@@ -21,8 +21,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         average,
         examWeight,
         assignmentWeight,
-        exams: exams.map((exam: any) => new Grade({ name: exam.name, value: exam.value, weight: exam.weight, generated: exam.generated })),
-        assignments: assignments.map((assignment: any) => new Grade({ name: assignment.name, value: assignment.value, weight: assignment.weight, generated: assignment.generated })),
+        exams: exams?.map((exam: any) => new Grade({ name: exam.name, value: exam.value, weight: exam.weight, generated: exam.generated })),
+        assignments: assignments?.map((assignment: any) => new Grade({ name: assignment.name, value: assignment.value, weight: assignment.weight, generated: assignment.generated })),
         target
       };
       return new Subject(subjectProps);
@@ -88,6 +88,22 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     const weightedAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight) / (subject.examWeight + subject.assignmentWeight);
     const average = Math.round(weightedAverage * 10) / 10;
     subject.average = average;
+    await this.saveStudentSubject(subject.code, subject);
+  }
+
+  async cleanGeneratedGrades(subject: Subject): Promise<void> {
+    subject.exams.forEach(elem => {
+      if (elem.generated) {
+        elem.value = -1;
+      }
+    });
+
+    subject.assignments.forEach(elem => {
+      if (elem.generated) {
+        elem.value = -1;
+      }
+    });
+
     await this.saveStudentSubject(subject.code, subject);
   }
 }

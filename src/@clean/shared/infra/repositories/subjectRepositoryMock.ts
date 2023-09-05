@@ -58,9 +58,25 @@ export class SubjectRepositoryMock implements ISubjectRepository {
             assignmentWeightSum = assignmentWeightSum + assignment.weight;
         })
         let assignmentAverage = assignmentSum / assignmentWeightSum;
-        let finalAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight)  / (subject.examWeight + subject.assignmentWeight);;
+        let finalAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight) / (subject.examWeight + subject.assignmentWeight);;
         finalAverage = Math.round(finalAverage * 10) / 10;
         subject.average = finalAverage;
+        this.saveStudentSubject(subject.code, subject);
+    }
+
+    async cleanGeneratedGrades(subject: Subject): Promise<void> {
+        subject.exams.forEach(elem => {
+            if (elem.generated) {
+                elem.value = -1;
+            }
+        });
+
+        subject.assignments.forEach(elem => {
+            if (elem.generated) {
+                elem.value = -1;
+            }
+        });
+
         this.saveStudentSubject(subject.code, subject);
     }
 }
