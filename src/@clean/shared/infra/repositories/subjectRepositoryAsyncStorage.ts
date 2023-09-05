@@ -85,7 +85,15 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     }
     const examAverage = examTotal / examWeightTotal;
     const assignmentAverage = assignmentTotal / assignmentWeightTotal;
-    const weightedAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight) / (subject.examWeight + subject.assignmentWeight);
+    let weightedAverage = 0
+    if(examAverage && assignmentAverage){
+      weightedAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight) / (subject.examWeight + subject.assignmentWeight);
+    }else if(examAverage){
+      weightedAverage = (examAverage * subject.examWeight)  / (subject.examWeight);
+    }else{
+      weightedAverage = (assignmentAverage * subject.assignmentWeight) / (subject.assignmentWeight);
+    }
+    
     const average = Math.round(weightedAverage * 10) / 10;
     subject.average = average;
     await this.saveStudentSubject(subject.code, subject);
