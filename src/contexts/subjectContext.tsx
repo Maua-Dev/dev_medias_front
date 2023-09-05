@@ -9,8 +9,10 @@ import { GetAllSubjectsWithoutStudentSubjectsUsecase } from '../@clean/modules/s
 import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase'
 import { GradeOptimizerUsecase } from '../@clean/modules/subject/usecases/gradeOptimizerUsecase'
 import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase'
+import { CleanGeneratedGradesUsecase } from '../@clean/modules/subject/usecases/cleanGeneratedGradesUsecase'
 import { Subject } from '../@clean/shared/domain/entities/subject'
 import { Alert } from 'react-native'
+
 
 
 export type SubjectContextType = {
@@ -28,6 +30,7 @@ export type SubjectContextType = {
     setStudentSubjectValue: (name: string, value: number) => Promise<void>;
     calculateFinalAverage: () => Promise<void>;
     optimizeGrades: () => Promise<void>;
+    cleanGeneratedGrades: () => Promise<void>;
     setActualSubjectCode: (code: string) => void;
     setIsLoading: (isLoading: boolean) => void;
 }
@@ -47,6 +50,7 @@ const defaultSubjectContext: SubjectContextType = {
     optimizeGrades: async () => { },
     setStudentSubjectValue: async (name: string, value: number) => { },
     calculateFinalAverage: async () => { },
+    cleanGeneratedGrades: async () => { },
     setActualSubjectCode: (code: string) => { },
     setIsLoading: (isLoading: boolean) => { }
 }
@@ -60,6 +64,7 @@ const saveStudentSubjectUsecase = subjectsContainer.get<SaveStudentSubjectUsecas
 const deleteStudentSubjectUsecase = subjectsContainer.get<DeleteStudentSubjectUsecase>(Registry.DeleteStudentSubjectUsecase)
 const calculateFinalAverageUsecase = subjectsContainer.get<CalculateFinalAverageUsecase>(Registry.CalculateFinalAverageUsecase)
 const gradeOptimizerUsecase = subjectsContainer.get<GradeOptimizerUsecase>(Registry.GradeOptimizerUsecase)
+const cleanGeneratedGradesUsecase = subjectsContainer.get<CleanGeneratedGradesUsecase>(Registry.CleanGeneratedGradesUsecase)
 
 export function SubjectProvider({ children }: PropsWithChildren) {
     const [subjects, setSubjects] = useState<Subject[]>([])
@@ -161,6 +166,11 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         setIsLoading(false)
     }
 
+    async function cleanGeneratedGrades() {
+        await cleanGeneratedGradesUsecase.execute(actualSubject!)
+        await getSubjects()
+    }
+
     return (
         <SubjectContext.Provider value={{
             subjects,
@@ -176,6 +186,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
             setStudentSubjectValue,
             calculateFinalAverage,
             optimizeGrades,
+            cleanGeneratedGrades,
             actualSubjectCode,
             setActualSubjectCode,
             setIsLoading,
