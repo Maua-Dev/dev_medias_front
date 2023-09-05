@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import { Dimensions, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { SubjectContext } from "../../contexts/subjectContext";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 import FinalAverage from "../FinalAverage/FinalAverage";
 import Item from "../Item/Item";
+import SubjectWrongModal from "../SubjectWrongModal/SubjectWrongModal";
 import TargetSubjectModal from "../TargetSubjectModal/TargetSubjectModal";
 
 const windowHeight = Dimensions.get('window').height;
@@ -26,6 +28,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
     const { actualSubject } = useContext(SubjectContext)
     const [grades, setGrades] = useState<IGrade[]>([])
     const [assignments, setAssignments] = useState<IGrade[]>([])
+    const [openWrongSubjectModal, setOpenWrongSubjectModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (actualSubject) {
@@ -78,7 +81,14 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
 
     return <View style={styles.content}>
         <View style={styles.subareas}>
-            <Text style={styles.title}>Provas</Text>
+            <View>
+                <Text style={styles.title}>Provas</Text>
+                <Pressable onPress={() => setOpenWrongSubjectModal(true)} style={{ position: "absolute", right: "3%", paddingBottom: 30, paddingLeft: 30 }} hitSlop={{ top: 50, left: 50, right: 50, bottom: 50 }}>
+                    <View>
+                        <Icon name="exclamation" size={getFontSize(14)} color="#BA2512" />
+                    </View>
+                </Pressable>
+            </View>
             <FlatList
                 numColumns={3}
                 scrollEnabled={false}
@@ -103,6 +113,7 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
         </View>
         <FinalAverage finalAverage={actualSubject?.average ? actualSubject!.average : 0} />
         <TargetSubjectModal key={actualSubject?.code} subjectDetails={actualSubject} isConfiguring={isConfiguring} setIsConfiguring={setIsConfiguring} />
+        <SubjectWrongModal open={openWrongSubjectModal} close={() => setOpenWrongSubjectModal(false)} />
     </View>
 }
 
