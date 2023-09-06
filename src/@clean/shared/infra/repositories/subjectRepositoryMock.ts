@@ -79,12 +79,14 @@ export class SubjectRepositoryMock implements ISubjectRepository {
     subject.exams.forEach(elem => {
       if (elem.generated) {
         elem.value = -1;
+        elem.generated = false;
       }
     });
 
     subject.assignments.forEach(elem => {
       if (elem.generated) {
         elem.value = -1;
+        elem.generated = false;
       }
     });
 
