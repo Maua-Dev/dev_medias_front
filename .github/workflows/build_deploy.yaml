@@ -56,7 +56,7 @@ jobs:
           echo "versionCode=${{ github.run_number }}" >> android/gradle.properties
 
       - name: set env
-        run: echo "REACT_APP_GRADE_OPTIMIZER_URL=$REACT_APP_GRADE_OPTIMIZER_URL" >> .env
+        run: echo "REACT_APP_GRADE_OPTIMIZER_URL=${{ vars.REACT_APP_GRADE_OPTIMIZER_URL }}" >> .env
 
       - name: Build appbundle
         run: ./gradlew bundleRelease
