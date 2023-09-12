@@ -47,7 +47,7 @@ export class SubjectRepositoryMock implements ISubjectRepository {
       });
     }
   }
-  
+
   async cleanGeneratedGrades(subject: Subject): Promise<void> {
     subject.exams.forEach(elem => {
       if (elem.generated) {
@@ -65,31 +65,51 @@ export class SubjectRepositoryMock implements ISubjectRepository {
 
     this.saveStudentSubject(subject.code, subject);
   }
-  
-   async calculateFinalAverage(subject: Subject): Promise<void> {
-        const examTotal = subject.exams.reduce((accumulator, exam) => accumulator + (exam.value !== -1 ? exam.value : 0) * exam.weight, 0);
-        const assignmentTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + (assignment.value !== -1 ? assignment.value : 0) * assignment.weight, 0);
-        const examWeightTotal = subject.exams.reduce((accumulator, exam) => accumulator + exam.weight, 0);
-        const assignmentWeightTotal = subject.assignments.reduce((accumulator, assignment) => accumulator + assignment.weight, 0);
-        const totalWeight = examWeightTotal + assignmentWeightTotal;
-        if (totalWeight === 0) {
-          return;
-        }
-        const examAverage = examTotal / examWeightTotal;
-        const assignmentAverage = assignmentTotal / assignmentWeightTotal;
-        let weightedAverage = 0
-        if(examAverage && assignmentAverage){
-          weightedAverage = (examAverage * subject.examWeight + assignmentAverage * subject.assignmentWeight) / (subject.examWeight + subject.assignmentWeight);
-        }else if(examAverage){
-          weightedAverage = (examAverage * subject.examWeight)  / (subject.examWeight);
-        }else{
-          weightedAverage = (assignmentAverage * subject.assignmentWeight) / (subject.assignmentWeight);
-        }
-        
-        const average = Math.round(weightedAverage * 10) / 10;
-        subject.average = average;
-        await this.saveStudentSubject(subject.code, subject);
-      }
+
+  async calculateFinalAverage(subject: Subject): Promise<void> {
+    const examTotal = subject.exams.reduce(
+      (accumulator, exam) =>
+        accumulator + (exam.value !== -1 ? exam.value : 0) * exam.weight,
+      0,
+    );
+    const assignmentTotal = subject.assignments.reduce(
+      (accumulator, assignment) =>
+        accumulator +
+        (assignment.value !== -1 ? assignment.value : 0) * assignment.weight,
+      0,
+    );
+    const examWeightTotal = subject.exams.reduce(
+      (accumulator, exam) => accumulator + exam.weight,
+      0,
+    );
+    const assignmentWeightTotal = subject.assignments.reduce(
+      (accumulator, assignment) => accumulator + assignment.weight,
+      0,
+    );
+    const totalWeight = examWeightTotal + assignmentWeightTotal;
+    if (totalWeight === 0) {
+      return;
+    }
+    const examAverage = examTotal / examWeightTotal;
+    const assignmentAverage = assignmentTotal / assignmentWeightTotal;
+    let weightedAverage = 0;
+    if (examAverage && assignmentAverage) {
+      weightedAverage =
+        (examAverage * subject.examWeight +
+          assignmentAverage * subject.assignmentWeight) /
+        (subject.examWeight + subject.assignmentWeight);
+    } else if (examAverage) {
+      weightedAverage = (examAverage * subject.examWeight) / subject.examWeight;
+    } else {
+      weightedAverage =
+        (assignmentAverage * subject.assignmentWeight) /
+        subject.assignmentWeight;
+    }
+
+    const average = Math.round(weightedAverage * 10) / 10;
+    subject.average = average;
+    await this.saveStudentSubject(subject.code, subject);
+  }
 }
 
 decorate(injectable(), SubjectRepositoryMock);

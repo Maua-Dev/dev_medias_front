@@ -19,8 +19,10 @@ const SubjectCard = ({ subject }: Props) => {
 
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={
         () => {
-            setActualSubjectCode(subject.code)
-            navigation.navigate('InputGraduationTests')
+            if (!longPress) {
+                setActualSubjectCode(subject.code)
+                navigation.navigate('InputGraduationTests')
+            }
         }
     }>
         <View style={[styles.content, !longPress ? null : { width: "99%" }]}>
