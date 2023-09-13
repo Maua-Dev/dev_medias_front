@@ -25,13 +25,11 @@ jobs:
         with:
           java-version: "12.x"
 
-      - name: Setup Flutter Version
-        uses: subosito/flutter-action@v1
-        with:
-          channel: "stable"
-
       - name: Get dependencies
         run: npm install
+      
+      - name: set env
+        run: echo "REACT_APP_GRADE_OPTIMIZER_URL=${{ vars.REACT_APP_GRADE_OPTIMIZER_URL }}" >> .env
       
       - name: Setup Fastlane
         uses: ruby/setup-ruby@v1
@@ -39,6 +37,12 @@ jobs:
           ruby-version: "2.6"
           bundler-cache: true
           working-directory: ios
+      
+      - name: Set Versions
+        run: |
+          current_version=$(perl -ne 'print "$1" if /"version":\s*"(.*?)"/' package.json)
+          echo "MARKETING_VERSION=$current_version" >> ios/ReactNative/Generate.xcconfig
+          echo "CURRENT_PROJECT_VERSION=${{ github.run_number }}" >> ios/ReactNative/Generate.xcconfig
 
       - name: Pods install
         run: pod install

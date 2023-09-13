@@ -1,5 +1,5 @@
+import { Modal, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 
 type Props = {
@@ -10,40 +10,51 @@ type Props = {
 }
 
 const ModalBox = ({ headerText, children, condition, conditionClose }: Props) => {
+
     return <Modal
+        animationType="fade"
         transparent={true}
         visible={condition}
         onRequestClose={conditionClose}
     >
-        <View style={styles.modalContainer}>
-            <View style={styles.modalBackground}>
-                <View style={styles.modalMain}>
-                    <View style={styles.modalHeader}>
-                        <Text style={styles.textHeader}>{headerText}</Text>
-                        <Pressable
-                            onPress={conditionClose}
-                            style={styles.closeButton}
-                        >
-                            <Icon name="close" size={getFontSize(32)} color="#fff" />
-                        </Pressable>
-                    </View>
-                    <View style={styles.modalContent}>
-                        <View style={styles.modalPosition}>
-                            {children}
+        <TouchableWithoutFeedback onPress={() => conditionClose(false)} style={{ backgroundColor: "green" }}>
+            <View style={styles.modalContainer}>
+                <TouchableWithoutFeedback style={{ width: "100%", alignItems: "center" }}>
+                    <View style={styles.modalBackground}>
+                        <View style={styles.modalMain}>
+                            <View style={styles.modalHeader}>
+                                <Text style={styles.textHeader}>{headerText}</Text>
+                                <Pressable
+                                    onPress={conditionClose}
+                                    style={styles.closeButton}
+                                >
+                                    <Icon name="times" size={getFontSize(26)} color="#fff" />
+                                </Pressable>
+                            </View>
+                            <View style={styles.modalContent}>
+                                <View style={styles.modalPosition}>
+                                    {children}
+                                </View>
+                            </View>
                         </View>
+                        <View style={styles.redLayer} />
                     </View>
-                </View>
-                <View style={styles.redLayer} />
+                </TouchableWithoutFeedback>
             </View>
-        </View>
+
+
+        </TouchableWithoutFeedback>
     </Modal>
+
+
 }
 
 const styles = StyleSheet.create({
     modalContainer: {
-        flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        width: '100%',
+        height: '100%',
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalBackground: {

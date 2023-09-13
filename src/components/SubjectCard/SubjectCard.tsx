@@ -1,35 +1,30 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Subject } from "../../@clean/shared/domain/entities/subject";
+import { SubjectContext } from "../../contexts/subjectContext";
 import { propsStack } from "../../routes/stack/models";
 import { getFontSize } from "../../utils/fontSizeHandlers";
 import { handleDeleteBarColor, handleGradeBoxBackgroundColor, handleGradeFormat } from "../../utils/gradeHandlers";
 import DeleteButton from "../DeleteButton/DeleteButton";
-import { SubjectContext } from "../../contexts/subjectContext";
 
 type Props = {
-    list: Subject[],
     subject: Subject
 }
 
-const SubjectCard = ({ list, subject }: Props) => {
-    const {setActualSubjectCode} = useContext(SubjectContext)
+const SubjectCard = ({ subject }: Props) => {
+    const { setActualSubjectCode } = useContext(SubjectContext)
     const navigation = useNavigation<propsStack>()
-
-    // const [press, setPress] = useState<boolean>(false)
     const [longPress, setLongPress] = useState<boolean>(false)
 
-    useEffect(() => {
-        setLongPress(false)
-    }, [list])
-
     return <Pressable onLongPress={() => setLongPress(!longPress)} onPress={
-            () => {
+        () => {
+            if (!longPress) {
                 setActualSubjectCode(subject.code)
                 navigation.navigate('InputGraduationTests')
             }
-        }>
+        }
+    }>
         <View style={[styles.content, !longPress ? null : { width: "99%" }]}>
             <View style={[styles.gradeBox, { backgroundColor: handleGradeBoxBackgroundColor(subject.average) }]}>
                 <View>
@@ -41,7 +36,7 @@ const SubjectCard = ({ list, subject }: Props) => {
                 </View>
             </View>
             <View style={styles.subjectBox}>
-                <Text style={styles.subjectTitle}>{subject.name}</Text>
+                <Text numberOfLines={2} style={styles.subjectTitle}>{subject.name}</Text>
                 <Text style={styles.subjectSubtitle}>{subject.code}</Text>
             </View>
         </View>
@@ -82,14 +77,16 @@ const styles = StyleSheet.create({
     },
     subjectBox: {
         marginLeft: "2%",
+        width: "83%"
     },
     subjectTitle: {
+        maxWidth: "95%",
         fontWeight: "bold",
-        fontSize: getFontSize(16)
+        fontSize: getFontSize(15)
     },
     subjectSubtitle: {
         fontWeight: "bold",
-        fontSize: getFontSize(13)
+        fontSize: getFontSize(12)
     },
     shadowIOS: {
         backgroundColor: "#fff",
