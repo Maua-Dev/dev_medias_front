@@ -1,18 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
-  Pressable,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {SubjectContext} from '../../contexts/subjectContext';
-import {getFontSize} from '../../utils/fontSizeHandlers';
+import { SubjectContext } from '../../contexts/subjectContext';
+import { getFontSize } from '../../utils/fontSizeHandlers';
 import FinalAverage from '../FinalAverage/FinalAverage';
 import Item from '../Item/Item';
+import SubjectWrongModal from '../SubjectWrongModal/SubjectWrongModal';
 import TargetSubjectModal from '../TargetSubjectModal/TargetSubjectModal';
 
 const windowHeight = Dimensions.get('window').height;
@@ -31,10 +31,11 @@ interface IGrade {
   generated: boolean;
 }
 
-const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
-  const {actualSubject, cleanGeneratedGrades} = useContext(SubjectContext);
+const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
+  const { actualSubject, cleanGeneratedGrades } = useContext(SubjectContext);
   const [grades, setGrades] = useState<IGrade[]>([]);
   const [assignments, setAssignments] = useState<IGrade[]>([]);
+  const [openWrongSubjectModal, setOpenWrongSubjectModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (actualSubject) {
@@ -102,11 +103,13 @@ const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'center'
           }}>
-          <View style={{width: '10%'}}></View>
+          <TouchableOpacity onPress={() => setOpenWrongSubjectModal(true)} style={{ width: "10%", alignItems: "center" }}>
+            <Icon name="exclamation" size={20} />
+          </TouchableOpacity>
           <Text style={styles.title}>Provas</Text>
-          <TouchableOpacity onPress={() => cleanGeneratedGrades()}>
+          <TouchableOpacity onPress={() => cleanGeneratedGrades()} style={{ alignItems: "center", width: "10%" }}>
             <Icon name="eraser" size={26} />
           </TouchableOpacity>
         </View>
@@ -115,7 +118,7 @@ const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
           scrollEnabled={false}
           data={createRows(grades, 3)}
           keyExtractor={item => String(item.id)}
-          renderItem={({item}: {item: IGrade}) => {
+          renderItem={({ item }: { item: IGrade }) => {
             return (
               <Item
                 key={item.id}
@@ -137,7 +140,7 @@ const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
           scrollEnabled={false}
           data={createRows(assignments, 3)}
           keyExtractor={item => String(item.id)}
-          renderItem={({item}: {item: IGrade}) => {
+          renderItem={({ item }: { item: IGrade }) => {
             return (
               <Item
                 key={item.id}
@@ -161,6 +164,7 @@ const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
         isConfiguring={isConfiguring}
         setIsConfiguring={setIsConfiguring}
       />
+      <SubjectWrongModal open={openWrongSubjectModal} close={() => setOpenWrongSubjectModal(false)} />
     </View>
   );
 };
