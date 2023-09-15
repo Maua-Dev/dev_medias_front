@@ -20,6 +20,7 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
 
     const { optimizeGrades, setStudentSubjectValue, actualSubject, isLoading } = useContext(SubjectContext)
     const [text, setText] = useState<string>(subjectDetails ? String(subjectDetails.target) : '');
+    const [canClick, setCanClick] = useState<boolean>(false);
 
     useEffect(() => {
         setText(subjectDetails ? String(subjectDetails.target) : '')
@@ -33,6 +34,14 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
             setText(newText);
         }
     }
+
+    useEffect(() => {
+        if (Number.isNaN(parseInt(text)))
+            setCanClick(false);
+        else {
+            setCanClick(true);
+        }
+    }, [text]);
 
     return <View>
         <ModalBox headerText="Configurações da Matéria" condition={isConfiguring} conditionClose={setIsConfiguring}>
@@ -68,7 +77,7 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                     />
                 </View>
                 <View style={styles.buttonPosition}>
-                    <Button action={async () => {
+                    <Button isDisabled={!canClick} action={async () => {
                         await optimizeGrades()
                         setIsConfiguring(false)
                     }}>
