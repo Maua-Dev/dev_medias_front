@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
 import { StyleSheet } from "react-native";
 import InputGraduationTests from "../../views/InputGraduationTests/InputGraduationTests";
 import MainPage from "../../views/MainPage/MainPage";
@@ -19,6 +18,8 @@ const styles = StyleSheet.create({
 const screenOptions = {
   headerShown: false,
   contentStyle: styles.contentStyle,
+  orientation: 'portrait',
+  animation: 'slide_from_right'
 };
 
 export default function AppStack() {
