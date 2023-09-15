@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -98,63 +98,106 @@ const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
 
   return (
     <View style={styles.content}>
-      <View style={styles.subareas}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-          <TouchableOpacity onPress={() => setOpenWrongSubjectModal(true)} style={{ width: "10%", alignItems: "center" }}>
-            <Icon name="exclamation" size={20} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Provas</Text>
-          <TouchableOpacity onPress={() => cleanGeneratedGrades()} style={{ alignItems: "center", width: "10%" }}>
-            <Icon name="eraser" size={26} />
-          </TouchableOpacity>
+      {grades.length > 0 &&
+        <View style={styles.subareas}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+            <TouchableOpacity onPress={() => setOpenWrongSubjectModal(true)} style={{ width: "10%", alignItems: "center" }}>
+              <Icon name="exclamation" size={20} />
+            </TouchableOpacity>
+            <Text style={styles.title}>Provas</Text>
+            <TouchableOpacity onPress={() => cleanGeneratedGrades()} style={{ alignItems: "center", width: "10%" }}>
+              <Icon name="eraser" size={26} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            numColumns={3}
+            scrollEnabled={false}
+            data={createRows(grades, 3)}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }: { item: IGrade }) => {
+              return (
+                <Item
+                  key={item.id}
+                  code={item.id}
+                  value={item.value}
+                  isExam={item.isExam}
+                  title={item.title}
+                  isEmpty={item.empty}
+                  generated={item.generated}
+                />
+              );
+            }}
+          />
         </View>
-        <FlatList
-          numColumns={3}
-          scrollEnabled={false}
-          data={createRows(grades, 3)}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }: { item: IGrade }) => {
-            return (
-              <Item
-                key={item.id}
-                code={item.id}
-                value={item.value}
-                isExam={item.isExam}
-                title={item.title}
-                isEmpty={item.empty}
-                generated={item.generated}
-              />
-            );
-          }}
-        />
-      </View>
-      <View style={styles.subareas}>
-        <Text style={styles.title}>Trabalhos</Text>
-        <FlatList
-          numColumns={3}
-          scrollEnabled={false}
-          data={createRows(assignments, 3)}
-          keyExtractor={item => String(item.id)}
-          renderItem={({ item }: { item: IGrade }) => {
-            return (
-              <Item
-                key={item.id}
-                code={item.id}
-                isExam={item.isExam}
-                value={item.value}
-                title={item.title}
-                isEmpty={item.empty}
-                generated={item.generated}
-              />
-            );
-          }}
-        />
-      </View>
+      }
+
+      {
+        grades.length === 0 ?
+          <View style={styles.subareas}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+              <TouchableOpacity onPress={() => setOpenWrongSubjectModal(true)} style={{ width: "10%", alignItems: "center" }}>
+                <Icon name="exclamation" size={20} />
+              </TouchableOpacity>
+              {assignments.length > 0 && <Text style={styles.title}>Trabalhos</Text>}
+              <TouchableOpacity onPress={() => cleanGeneratedGrades()} style={{ alignItems: "center", width: "10%" }}>
+                <Icon name="eraser" size={26} />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              numColumns={3}
+              scrollEnabled={false}
+              data={createRows(assignments, 3)}
+              keyExtractor={item => String(item.id)}
+              renderItem={({ item }: { item: IGrade }) => {
+                return (
+                  <Item
+                    key={item.id}
+                    code={item.id}
+                    isExam={item.isExam}
+                    value={item.value}
+                    title={item.title}
+                    isEmpty={item.empty}
+                    generated={item.generated}
+                  />
+                );
+              }}
+            />
+          </View>
+          :
+          <View style={styles.subareas}>
+            {assignments.length > 0 && <Text style={styles.title}>Trabalhos</Text>}
+            <FlatList
+              numColumns={3}
+              scrollEnabled={false}
+              data={createRows(assignments, 3)}
+              keyExtractor={item => String(item.id)}
+              renderItem={({ item }: { item: IGrade }) => {
+                return (
+                  <Item
+                    key={item.id}
+                    code={item.id}
+                    isExam={item.isExam}
+                    value={item.value}
+                    title={item.title}
+                    isEmpty={item.empty}
+                    generated={item.generated}
+                  />
+                );
+              }}
+            />
+          </View>
+      }
+
       <FinalAverage
         finalAverage={actualSubject?.average ? actualSubject!.average : 0}
       />
