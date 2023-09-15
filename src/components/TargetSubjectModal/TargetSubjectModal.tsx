@@ -45,7 +45,7 @@ const TargetSubjectModal = ({ subjectDetails, isConfiguring, setIsConfiguring }:
                     <View style={styles.gradesContainer}>
                         {subjectDetails?.exams.map((value: Grade) => {
                             if (!value.name.toUpperCase().includes('SUB'))
-                                return <Text style={styles.infos}>{value.name}: {handlePercentageWeight(value.weight, subjectDetails?.exams.length)}</Text>
+                                return <Text style={styles.infos}>{value.name}: {handlePercentageWeight(value.weight, subjectDetails?.exams.reduce((a: number,b: any) => a+b.weight,0))}</Text>
                         })}
                     </View>
                     <View style={styles.gradesContainer}>
