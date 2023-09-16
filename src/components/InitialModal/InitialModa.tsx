@@ -21,7 +21,7 @@ const InitialModal = () => {
             </Text>
             <Text style={[styles.text, styles.email]}>devmedias.devmaua@gmail.com.</Text>
             <Text style={styles.text}>
-                A Dev Community Mauá se isenta da responsabilidade qualquer prejuízo causado por qualquer erro ou imprecisão no cálculo das médias.
+                A Dev Community Mauá se isenta da responsabilidade de qualquer prejuízo causado por qualquer erro ou imprecisão no cálculo das médias.
             </Text>
         </View>
     </ModalBox>

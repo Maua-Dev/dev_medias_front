@@ -1,18 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
-  Pressable,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {SubjectContext} from '../../contexts/subjectContext';
-import {getFontSize} from '../../utils/fontSizeHandlers';
+import { SubjectContext } from '../../contexts/subjectContext';
+import { getFontSize } from '../../utils/fontSizeHandlers';
 import FinalAverage from '../FinalAverage/FinalAverage';
 import Item from '../Item/Item';
+import SubjectWrongModal from '../SubjectWrongModal/SubjectWrongModal';
 import TargetSubjectModal from '../TargetSubjectModal/TargetSubjectModal';
 
 const windowHeight = Dimensions.get('window').height;
@@ -31,10 +31,11 @@ interface IGrade {
   generated: boolean;
 }
 
-const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
-  const {actualSubject, cleanGeneratedGrades} = useContext(SubjectContext);
+const GradesBox = ({ isConfiguring, setIsConfiguring }: Props) => {
+  const { actualSubject, cleanGeneratedGrades } = useContext(SubjectContext);
   const [grades, setGrades] = useState<IGrade[]>([]);
   const [assignments, setAssignments] = useState<IGrade[]>([]);
+  const [openWrongSubjectModal, setOpenWrongSubjectModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (actualSubject) {
@@ -97,61 +98,106 @@ const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
 
   return (
     <View style={styles.content}>
-      <View style={styles.subareas}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{width: '10%'}}></View>
-          <Text style={styles.title}>Provas</Text>
-          <TouchableOpacity onPress={() => cleanGeneratedGrades()}>
-            <Icon name="eraser" size={26} />
-          </TouchableOpacity>
+      {grades.length > 0 &&
+        <View style={styles.subareas}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+            <TouchableOpacity onPress={() => setOpenWrongSubjectModal(true)} style={{ width: "10%", alignItems: "center" }}>
+              <Icon name="exclamation" size={20} />
+            </TouchableOpacity>
+            <Text style={styles.title}>Provas</Text>
+            <TouchableOpacity onPress={() => cleanGeneratedGrades()} style={{ alignItems: "center", width: "10%" }}>
+              <Icon name="eraser" size={26} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            numColumns={3}
+            scrollEnabled={false}
+            data={createRows(grades, 3)}
+            keyExtractor={item => String(item.id)}
+            renderItem={({ item }: { item: IGrade }) => {
+              return (
+                <Item
+                  key={item.id}
+                  code={item.id}
+                  value={item.value}
+                  isExam={item.isExam}
+                  title={item.title}
+                  isEmpty={item.empty}
+                  generated={item.generated}
+                />
+              );
+            }}
+          />
         </View>
-        <FlatList
-          numColumns={3}
-          scrollEnabled={false}
-          data={createRows(grades, 3)}
-          keyExtractor={item => String(item.id)}
-          renderItem={({item}: {item: IGrade}) => {
-            return (
-              <Item
-                key={item.id}
-                code={item.id}
-                value={item.value}
-                isExam={item.isExam}
-                title={item.title}
-                isEmpty={item.empty}
-                generated={item.generated}
-              />
-            );
-          }}
-        />
-      </View>
-      <View style={styles.subareas}>
-        <Text style={styles.title}>Trabalhos</Text>
-        <FlatList
-          numColumns={3}
-          scrollEnabled={false}
-          data={createRows(assignments, 3)}
-          keyExtractor={item => String(item.id)}
-          renderItem={({item}: {item: IGrade}) => {
-            return (
-              <Item
-                key={item.id}
-                code={item.id}
-                isExam={item.isExam}
-                value={item.value}
-                title={item.title}
-                isEmpty={item.empty}
-                generated={item.generated}
-              />
-            );
-          }}
-        />
-      </View>
+      }
+
+      {
+        grades.length === 0 ?
+          <View style={styles.subareas}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+              <TouchableOpacity onPress={() => setOpenWrongSubjectModal(true)} style={{ width: "10%", alignItems: "center" }}>
+                <Icon name="exclamation" size={20} />
+              </TouchableOpacity>
+              {assignments.length > 0 && <Text style={styles.title}>Trabalhos</Text>}
+              <TouchableOpacity onPress={() => cleanGeneratedGrades()} style={{ alignItems: "center", width: "10%" }}>
+                <Icon name="eraser" size={26} />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              numColumns={3}
+              scrollEnabled={false}
+              data={createRows(assignments, 3)}
+              keyExtractor={item => String(item.id)}
+              renderItem={({ item }: { item: IGrade }) => {
+                return (
+                  <Item
+                    key={item.id}
+                    code={item.id}
+                    isExam={item.isExam}
+                    value={item.value}
+                    title={item.title}
+                    isEmpty={item.empty}
+                    generated={item.generated}
+                  />
+                );
+              }}
+            />
+          </View>
+          :
+          <View style={styles.subareas}>
+            {assignments.length > 0 && <Text style={styles.title}>Trabalhos</Text>}
+            <FlatList
+              numColumns={3}
+              scrollEnabled={false}
+              data={createRows(assignments, 3)}
+              keyExtractor={item => String(item.id)}
+              renderItem={({ item }: { item: IGrade }) => {
+                return (
+                  <Item
+                    key={item.id}
+                    code={item.id}
+                    isExam={item.isExam}
+                    value={item.value}
+                    title={item.title}
+                    isEmpty={item.empty}
+                    generated={item.generated}
+                  />
+                );
+              }}
+            />
+          </View>
+      }
+
       <FinalAverage
         finalAverage={actualSubject?.average ? actualSubject!.average : 0}
       />
@@ -161,6 +207,7 @@ const GradesBox = ({isConfiguring, setIsConfiguring}: Props) => {
         isConfiguring={isConfiguring}
         setIsConfiguring={setIsConfiguring}
       />
+      <SubjectWrongModal open={openWrongSubjectModal} close={() => setOpenWrongSubjectModal(false)} />
     </View>
   );
 };
