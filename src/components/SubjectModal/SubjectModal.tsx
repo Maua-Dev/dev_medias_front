@@ -19,8 +19,8 @@ type Item = {
 const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
 
     const { allSubjectsWithoutStudentSubjects, saveSubject } = useContext(SubjectContext)
-    const [selectedSubject, setSelectedSubject] = useState<string>()
-    const [selectedCode, setSelectCode] = useState<string>()
+    const [selectedSubject, setSelectedSubject] = useState<string>('')
+    const [selectedCode, setSelectCode] = useState<string>('')
     const [dataFormatted, setDataFormatted] = useState<Item[]>([{ key: '', value: '' }])
     const [codes, setCodes] = useState<Item[]>([{ key: '', value: '' }])
     const [select, setSelect] = useState<Subject>()
@@ -84,6 +84,7 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
     const handleCloseModal = () => {
         setIsAdding(false)
         setSelectCode('')
+        setSelectedSubject('')
     }
 
     return <ModalBox headerText="Adicionar Matérias" condition={isAdding} conditionClose={handleCloseModal}>
@@ -92,7 +93,7 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
             inputStyles={{ color: "#000" }}
             dropdownTextStyles={{ color: "#000" }}
             dropdownStyles={{ marginTop: 0, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderTopWidth: 0 }}
-            setSelected={(value: SetStateAction<string | undefined>) => setSelectCode(value)}
+            setSelected={(value: SetStateAction<string>) => setSelectCode(value)}
             data={codes}
             save="key"
             placeholder="Buscar código"
@@ -103,14 +104,14 @@ const SubjectModal = ({ isAdding, setIsAdding }: Props) => {
             inputStyles={{ color: "#000" }}
             dropdownTextStyles={{ color: "#000" }}
             dropdownStyles={{ marginTop: 0, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderTopWidth: 0 }}
-            setSelected={(value: SetStateAction<string | undefined>) => setSelectedSubject(value)}
+            setSelected={(value: SetStateAction<string>) => setSelectedSubject(value)}
             data={dataFormatted}
             save="key"
             placeholder="Buscar disciplina"
             notFoundText="Disciplina não encontrada"
         />
         <View style={styles.buttonPosition}>
-            <Button action={() => {
+            <Button isDisabled={selectedSubject === ''} action={() => {
                 saveSubject(select!)
                 handleCloseModal()
             }}>Selecionar</Button>
