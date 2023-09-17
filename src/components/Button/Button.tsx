@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native"
 import { getFontSize } from "../../utils/fontSizeHandlers"
 
-const Button = ({ children, action }: any) => {
-    return <TouchableOpacity style={styles.content} onPress={action}>
-        <Text style={styles.button}>
+const Button = ({ children, action, isDisabled }: any) => {
+    return <TouchableOpacity style={styles.content} onPress={action} disabled={isDisabled}>
+        <Text style={isDisabled ? [styles.button, { backgroundColor: "#d3d3d3" }] : styles.button}>
             {children}
         </Text>
     </TouchableOpacity>

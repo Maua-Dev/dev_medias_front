@@ -34,7 +34,7 @@ export const handlePercentageWeight = (value: number, size: number) => {
 
 export const handlePercentageWeightAssignment = (value: number, array: any[]) => {
     const data = array.reduce((acc, actual) => { return acc + actual.weight }, 0);
-    return `${(value / data) * 100}%`
+    return `${((value / data) * 100).toFixed(2)}%`
 }
 
 export const handlePercentageWeightAll = (value: number) => {
