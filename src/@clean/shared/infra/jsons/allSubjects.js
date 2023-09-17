@@ -3121,8 +3121,10 @@ export default allSubjects = {
     code: 'EFB207',
     examWeight: 50,
     exams: [
-      {name: 'P1', weight: 0.4},
-      {name: 'P2', weight: 0.6},
+      {name: 'P1', weight: 0.2},
+      {name: 'P2', weight: 0.2},
+      {name: 'P3', weight: 0.3},
+      {name: 'P4', weight: 0.3},
     ],
     name: 'Física I',
     period: 'a',
@@ -4652,11 +4654,10 @@ export default allSubjects = {
   ETC326: {
     assignmentWeight: 30,
     assignments: [
-      {name: 'T1', weight: 0.2},
-      {name: 'T2', weight: 0.2},
-      {name: 'T3', weight: 0.2},
-      {name: 'T4', weight: 0.2},
-      {name: 'T5', weight: 0.2},
+      {name: 'T1', weight: 0.25},
+      {name: 'T2', weight: 0.25},
+      {name: 'T3', weight: 0.25},
+      {name: 'T4', weight: 0.25},
     ],
     code: 'ETC326',
     examWeight: 70,
