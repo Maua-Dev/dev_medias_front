@@ -2532,7 +2532,7 @@ export default allSubjects = {
     period: 'a',
   },
   EEE281: {
-    assignmentWeight: 100,
+    assignmentWeight: 50,
     assignments: [
       {name: 'T1', weight: 0.25},
       {name: 'T2', weight: 0.25},
@@ -2540,8 +2540,11 @@ export default allSubjects = {
       {name: 'T4', weight: 0.25},
     ],
     code: 'EEE281',
-    examWeight: 0,
-    exams: [],
+    examWeight: 50,
+    exams: [
+      {name: 'P1', weight: 0.4},
+      {name: 'P2', weight: 0.6},
+    ],
     name: 'Instalações Elétricas',
     period: 'a',
   },
@@ -3406,8 +3409,10 @@ export default allSubjects = {
   EMC216: {
     assignmentWeight: 100,
     assignments: [
-      {name: 'T1', weight: 0.5},
-      {name: 'T2', weight: 0.5},
+      {name: 'T1', weight: 0.25},
+      {name: 'T2', weight: 0.25},
+      {name: 'T3', weight: 0.25},
+      {name: 'T4', weight: 0.25},
     ],
     code: 'EMC216',
     examWeight: 0,
@@ -4840,8 +4845,10 @@ export default allSubjects = {
   ETC509: {
     assignmentWeight: 30,
     assignments: [
-      {name: 'T1', weight: 0.5},
-      {name: 'T2', weight: 0.5},
+      {name: 'T1', weight: 0.25},
+      {name: 'T2', weight: 0.25},
+      {name: 'T3', weight: 0.25},
+      {name: 'T4', weight: 0.25},
     ],
     code: 'ETC509',
     examWeight: 70,
