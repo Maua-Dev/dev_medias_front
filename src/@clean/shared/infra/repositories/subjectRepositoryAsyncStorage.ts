@@ -138,11 +138,11 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async calculateFinalAverage(subject: Subject): Promise<void> {
-    const examsAverage = Math.round(subject.exams.reduce((total: number, obj) => total + (obj.value*obj.weight) ,0)*10)/10;
+    const examsAverage = Math.round(subject.exams.reduce((total: number, obj) => total + ((obj.value != -1?obj.value :0)*obj.weight) ,0)*10)/10;
     
-    const assignmentAverage = Math.round(subject.assignments.reduce((total: number, obj) => total + (obj.value*obj.weight) ,0)*10)/10;
+    const assignmentAverage = Math.round(subject.assignments.reduce((total: number, obj) => total + ((obj.value != -1?obj.value :0)*obj.weight) ,0)*10)/10;
     
-    const finalAverage = Math.round((examsAverage*subject.examWeight/100 + assignmentAverage*subject.assignmentWeight/100)*10)/10; 
+    const finalAverage = Math.round((Math.abs(examsAverage)*subject.examWeight/100 + assignmentAverage*subject.assignmentWeight/100)*10)/10; 
     
     subject.average = finalAverage;
     await this.saveStudentSubject(subject.code, subject);
