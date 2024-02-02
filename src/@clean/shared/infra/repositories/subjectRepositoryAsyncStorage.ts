@@ -6,10 +6,8 @@ import {Subject, SubjectProps} from '../../domain/entities/subject';
 import allSubjects from '../jsons/allSubjects';
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
-  constructor(){
-
-      this.deleteAllSubjects();
-   
+  constructor() {
+    this.deleteAllSubjects();
   }
 
   async getStudentSubjects(): Promise<Subject[]> {
@@ -109,8 +107,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
   async deleteAllSubjects(): Promise<void> {
     const del = await AsyncStorage.getItem('delete312312312');
-    console.log(del)
-    if(del === null){
+
+    if (del === null) {
       const keys = await AsyncStorage.getItem('keys');
       if (!keys) {
         return;
@@ -120,8 +118,6 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
       await AsyncStorage.removeItem('keys');
       await AsyncStorage.setItem('delete312312312', 'false');
     }
-    
-    
   }
   async deleteStudentSubject(code: string): Promise<void> {
     const keys = await AsyncStorage.getItem('keys');
@@ -138,12 +134,31 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async calculateFinalAverage(subject: Subject): Promise<void> {
-    const examsAverage = Math.round(subject.exams.reduce((total: number, obj) => total + ((obj.value != -1?obj.value :0)*obj.weight) ,0)*10)/10;
-    
-    const assignmentAverage = Math.round(subject.assignments.reduce((total: number, obj) => total + ((obj.value != -1?obj.value :0)*obj.weight) ,0)*10)/10;
-    
-    const finalAverage = Math.round((Math.abs(examsAverage)*subject.examWeight/100 + assignmentAverage*subject.assignmentWeight/100)*10)/10; 
-    
+    const examsAverage =
+      Math.round(
+        subject.exams.reduce(
+          (total: number, obj) =>
+            total + (obj.value != -1 ? obj.value : 0) * obj.weight,
+          0,
+        ) * 10,
+      ) / 10;
+
+    const assignmentAverage =
+      Math.round(
+        subject.assignments.reduce(
+          (total: number, obj) =>
+            total + (obj.value != -1 ? obj.value : 0) * obj.weight,
+          0,
+        ) * 10,
+      ) / 10;
+
+    const finalAverage =
+      Math.round(
+        ((Math.abs(examsAverage) * subject.examWeight) / 100 +
+          (assignmentAverage * subject.assignmentWeight) / 100) *
+          10,
+      ) / 10;
+
     subject.average = finalAverage;
     await this.saveStudentSubject(subject.code, subject);
   }
@@ -161,7 +176,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         elem.generated = false;
       }
     });
-    // await AsyncStorage.setItem(subject.code, JSON.stringify(subject));
+
     await this.saveStudentSubject(subject.code, subject);
   }
 }
