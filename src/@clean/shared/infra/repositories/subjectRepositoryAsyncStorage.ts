@@ -4,9 +4,10 @@ import {ISubjectRepository} from '../../../modules/subject/domain/repositories/s
 import {Grade} from '../../domain/entities/grade';
 import {Subject, SubjectProps} from '../../domain/entities/subject';
 import allSubjects from '../jsons/allSubjects';
+import {AxiosInstance} from 'axios';
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
-  constructor() {
+  constructor(private http: AxiosInstance) {
     this.deleteAllSubjects();
   }
 
@@ -63,7 +64,30 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async getAllSubjects(): Promise<Subject[]> {
-    return Subject.fromDataJson(allSubjects);
+    try {
+      let allSubjects = await this.http.get('/');
+      console.log(allSubjects);
+      const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
+
+      if (allSubjectsAsyncStorage === null) {
+        await AsyncStorage.setItem('allSubjects', JSON.stringify(allSubjects));
+      } else if (JSON.stringify(allSubjects) !== allSubjectsAsyncStorage) {
+        // chamar update das matérias do student que já está no storage "saveStudentSubject()"
+        await AsyncStorage.setItem('allSubjects', JSON.stringify(allSubjects));
+      }
+
+      return Subject.fromDataJson(allSubjects);
+    } catch (err) {
+      const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
+
+      if (allSubjectsAsyncStorage === null) {
+        throw new Error(
+          'Erro ao buscar matérias, verifique a conexão com internet',
+        );
+      } else {
+        return Subject.fromDataJson(JSON.parse(allSubjectsAsyncStorage));
+      }
+    }
   }
 
   async getAllSubjectsWithoutStudentSubjects(): Promise<Subject[]> {
