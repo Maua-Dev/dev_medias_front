@@ -132,9 +132,22 @@ export function SubjectProvider({children}: PropsWithChildren) {
       setAllSubjects(allSubjects);
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert('Ops! Ocorreu um erro...', error.message, [{text: 'OK'}], {
-          cancelable: false,
-        });
+        Alert.alert(
+          'Ops! Ocorreu um erro...',
+          error.message,
+          [
+            {
+              text: 'Tentar novamente',
+              onPress: async () => {
+                await new Promise(resolve => setTimeout(resolve, 300));
+                await getAllSubjects();
+              },
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
       }
     }
   }
