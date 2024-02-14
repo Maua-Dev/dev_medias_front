@@ -3,10 +3,10 @@ import {decorate, injectable} from 'inversify';
 import {ISubjectRepository} from '../../../modules/subject/domain/repositories/subject_repository_interface';
 import {Grade} from '../../domain/entities/grade';
 import {Subject, SubjectProps} from '../../domain/entities/subject';
-import allSubjects from '../jsons/allSubjects';
+import axios, {AxiosResponse, AxiosInstance} from 'axios';
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
-  constructor() {
+  constructor(private http: AxiosInstance) {
     this.deleteAllSubjects();
   }
 
@@ -63,14 +63,37 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async getAllSubjects(): Promise<Subject[]> {
-    return Subject.fromDataJson(allSubjects);
+    try {
+      let allSubjects = await this.http.get('/allSubjects.json');
+      allSubjects = allSubjects.data;
+
+      const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
+
+      if (JSON.stringify(allSubjects) !== allSubjectsAsyncStorage) {
+        await AsyncStorage.setItem('allSubjects', JSON.stringify(allSubjects));
+        await this.syncStudentSubjects();
+      }
+
+      return Subject.fromDataJson(allSubjects);
+    } catch (err) {
+      const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
+
+      if (allSubjectsAsyncStorage === null) {
+        throw new Error(
+          `Erro ao buscar matérias, verifique a conexão com internet.`,
+        );
+      } else {
+        return Subject.fromDataJson(JSON.parse(allSubjectsAsyncStorage));
+      }
+    }
   }
 
   async getAllSubjectsWithoutStudentSubjects(): Promise<Subject[]> {
     let studentSubjects = (await this.getStudentSubjects()).map(
       subject => subject.code,
     );
-    let filtered = Subject.fromDataJson(allSubjects).filter(
+    let allSubjects = await this.getAllSubjects();
+    let filtered = allSubjects.filter(
       subject => !studentSubjects.includes(subject.code),
     );
     return filtered;
@@ -178,6 +201,44 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     });
 
     await this.saveStudentSubject(subject.code, subject);
+  }
+
+  async syncStudentSubjects() {
+    const keys = await AsyncStorage.getItem('keys');
+    if (!keys) {
+      return;
+    }
+    const keyArray = JSON.parse(keys);
+    keyArray.forEach(async (key: string) => {
+      let actualSubjectFromAsyncStorage = await AsyncStorage.getItem(key);
+      let actualSubject: Subject = actualSubjectFromAsyncStorage
+        ? JSON.parse(actualSubjectFromAsyncStorage)
+        : null;
+
+      let allNewSubjects: Subject[] = (await this.getAllSubjects()).filter(
+        (subject: any) => subject.code === key,
+      );
+
+      if (actualSubject !== null && allNewSubjects.length > 0) {
+        let newSubject = allNewSubjects[0];
+        newSubject.exams.forEach((exam, index) => {
+          if (actualSubject!.exams[index]) {
+            exam.value = actualSubject!.exams[index].value;
+          } else {
+            exam.value = -1;
+          }
+        });
+        newSubject.assignments.forEach((assignment, index) => {
+          if (actualSubject!.assignments[index]) {
+            assignment.value = actualSubject!.assignments[index].value;
+          } else {
+            assignment.value = -1;
+          }
+        });
+
+        await this.calculateFinalAverage(newSubject);
+      }
+    });
   }
 }
 
