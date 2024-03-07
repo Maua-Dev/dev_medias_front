@@ -117,7 +117,6 @@ export function SubjectProvider({children}: PropsWithChildren) {
         subject => subject.code === actualSubjectCode,
       );
       setActualSubject(subject);
-      console.log(subject);
     }
   }, [actualSubjectCode, subjects]);
 
