@@ -66,14 +66,8 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     try {
       let allSubjects = await this.http.get('/allSubjects.json');
       allSubjects = allSubjects.data;
-
-      const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
-
-      if (JSON.stringify(allSubjects) !== allSubjectsAsyncStorage) {
-        await AsyncStorage.setItem('allSubjects', JSON.stringify(allSubjects));
-        await this.syncStudentSubjects();
-      }
-
+      await AsyncStorage.setItem('allSubjects', JSON.stringify(allSubjects));
+      await this.syncStudentSubjects(Subject.fromDataJson(allSubjects));
       return Subject.fromDataJson(allSubjects);
     } catch (err) {
       const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
@@ -203,7 +197,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     await this.saveStudentSubject(subject.code, subject);
   }
 
-  async syncStudentSubjects() {
+  async syncStudentSubjects(allSubjects: Subject[] = []): Promise<void> {
     const keys = await AsyncStorage.getItem('keys');
     if (!keys) {
       return;
@@ -215,7 +209,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         ? JSON.parse(actualSubjectFromAsyncStorage)
         : null;
 
-      let allNewSubjects: Subject[] = (await this.getAllSubjects()).filter(
+      let allNewSubjects: Subject[] = allSubjects.filter(
         (subject: any) => subject.code === key,
       );
 
