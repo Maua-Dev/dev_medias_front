@@ -3,12 +3,10 @@ import {decorate, injectable} from 'inversify';
 import {ISubjectRepository} from '../../../modules/subject/domain/repositories/subject_repository_interface';
 import {Grade} from '../../domain/entities/grade';
 import {Subject, SubjectProps} from '../../domain/entities/subject';
-import axios, {AxiosResponse, AxiosInstance} from 'axios';
+import {AxiosInstance} from 'axios';
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
-  constructor(private http: AxiosInstance) {
-    this.deleteAllSubjects();
-  }
+  constructor(private http: AxiosInstance) {}
 
   async getStudentSubjects(): Promise<Subject[]> {
     const keys = await AsyncStorage.getItem('keys');
@@ -122,20 +120,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     };
     await AsyncStorage.setItem(subject.code, JSON.stringify(subjectData));
   }
-  async deleteAllSubjects(): Promise<void> {
-    const del = await AsyncStorage.getItem('delete312312312');
 
-    if (del === null) {
-      const keys = await AsyncStorage.getItem('keys');
-      if (!keys) {
-        return;
-      }
-      const keyArray = JSON.parse(keys);
-      await AsyncStorage.multiRemove(keyArray);
-      await AsyncStorage.removeItem('keys');
-      await AsyncStorage.setItem('delete312312312', 'false');
-    }
-  }
   async deleteStudentSubject(code: string): Promise<void> {
     const keys = await AsyncStorage.getItem('keys');
     if (!keys) {
