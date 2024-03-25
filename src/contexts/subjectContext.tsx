@@ -23,6 +23,7 @@ export type SubjectContextType = {
   allSubjectsWithoutStudentSubjects: Subject[];
   actualSubject: Subject | undefined;
   isLoading: boolean;
+  isAllSubjectFiledsFilled: boolean;
   saveSubject: (subject: Subject) => Promise<void>;
   getSubjects: () => Promise<void>;
   getAllSubjects: () => Promise<void>;
@@ -43,6 +44,7 @@ const defaultSubjectContext: SubjectContextType = {
   allSubjectsWithoutStudentSubjects: [] as Subject[],
   actualSubject: Subject.createEmptySubject(),
   isLoading: false,
+  isAllSubjectFiledsFilled: false,
   saveSubject: async (subject: Subject) => {},
   getSubjects: async () => {},
   getAllSubjects: async () => {},
@@ -96,6 +98,8 @@ export function SubjectProvider({children}: PropsWithChildren) {
   const [allSubjects, setAllSubjects] = useState<Subject[]>([]);
   const [actualSubjectCode, setActualSubjectCode] = useState<string>('');
   const [actualSubject, setActualSubject] = useState<Subject>();
+  const [isAllSubjectFiledsFilled, setIsAllSubjectFiledsFilled] =
+    useState<boolean>(false);
   const [
     allSubjectsWithoutStudentSubjects,
     setAllSubjectsWithoutStudentSubjects,
@@ -190,6 +194,12 @@ export function SubjectProvider({children}: PropsWithChildren) {
         assignment.name === name ? (assignment.value = value) : '';
       });
     }
+    setIsAllSubjectFiledsFilled(
+      oldActualSubject!.exams.every(exam => exam.value !== -1) &&
+        oldActualSubject!.assignments.every(
+          assignment => assignment.value !== -1,
+        ),
+    );
     setActualSubject(oldActualSubject);
   }
 
@@ -232,6 +242,7 @@ export function SubjectProvider({children}: PropsWithChildren) {
         allSubjectsWithoutStudentSubjects,
         actualSubject,
         isLoading,
+        isAllSubjectFiledsFilled,
         saveSubject,
         getSubjects,
         deleteSubject,
