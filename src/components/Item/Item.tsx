@@ -33,7 +33,7 @@ const Item = ({code, title, value, isEmpty, isExam, generated}: Props) => {
   }, [value, actualSubject]);
 
   const onChange = (newText: string) => {
-    const isValidInput = /^([0-9]|10)(,\d)?$/.test(newText);
+    const isValidInput = /^(10(,0)?|[0-9](,[0-9])?|10)$/.test(newText);
 
     if (isValidInput || newText === '') {
       const newValue =
