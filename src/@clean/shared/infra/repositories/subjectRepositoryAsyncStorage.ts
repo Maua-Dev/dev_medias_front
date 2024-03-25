@@ -203,6 +203,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         newSubject.exams.forEach((exam, index) => {
           if (actualSubject!.exams[index]) {
             exam.value = actualSubject!.exams[index].value;
+            exam.generated = actualSubject!.exams[index].generated;
           } else {
             exam.value = -1;
           }
@@ -210,6 +211,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         newSubject.assignments.forEach((assignment, index) => {
           if (actualSubject!.assignments[index]) {
             assignment.value = actualSubject!.assignments[index].value;
+            assignment.generated = actualSubject!.assignments[index].generated;
           } else {
             assignment.value = -1;
           }
