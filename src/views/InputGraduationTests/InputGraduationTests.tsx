@@ -9,8 +9,12 @@ import MainBox from '../../components/MainBox/MainBox';
 import {SubjectContext} from '../../contexts/subjectContext';
 
 const InputGraduationTests = () => {
-  const {calculateFinalAverage, getAllSubjects, getSubjects} =
-    useContext(SubjectContext);
+  const {
+    calculateFinalAverage,
+    getAllSubjects,
+    getSubjects,
+    isAllSubjectFiledsFilled,
+  } = useContext(SubjectContext);
 
   const [target, setTarget] = useState<boolean>(false);
 
@@ -30,7 +34,11 @@ const InputGraduationTests = () => {
         </RefreshableScrollView>
         <View style={styles.buttonPosition}>
           <Button action={() => calculateFinalAverage()}>Calcular média</Button>
-          <Button action={() => setTarget(true)}>Definir meta</Button>
+          <Button
+            action={() => setTarget(true)}
+            isDisabled={isAllSubjectFiledsFilled}>
+            Definir meta
+          </Button>
         </View>
       </MainBox>
       <DevLogo />
