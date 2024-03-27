@@ -8,7 +8,7 @@ on:
 jobs:
   build_IOS_App:
     name: Build IOS App
-    runs-on: macos-latest
+    runs-on: macos-13
     environment: ${{ github.ref_name }}
     steps:
       - name: Checkout code
