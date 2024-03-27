@@ -3,14 +3,10 @@ import {decorate, injectable} from 'inversify';
 import {ISubjectRepository} from '../../../modules/subject/domain/repositories/subject_repository_interface';
 import {Grade} from '../../domain/entities/grade';
 import {Subject, SubjectProps} from '../../domain/entities/subject';
-import allSubjects from '../jsons/allSubjects';
+import {AxiosInstance} from 'axios';
 
 export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
-  constructor(){
-
-      this.deleteAllSubjects();
-   
-  }
+  constructor(private http: AxiosInstance) {}
 
   async getStudentSubjects(): Promise<Subject[]> {
     const keys = await AsyncStorage.getItem('keys');
@@ -65,14 +61,31 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async getAllSubjects(): Promise<Subject[]> {
-    return Subject.fromDataJson(allSubjects);
+    try {
+      let allSubjects = await this.http.get('/allSubjects.json');
+      allSubjects = allSubjects.data;
+      await AsyncStorage.setItem('allSubjects', JSON.stringify(allSubjects));
+      await this.syncStudentSubjects(Subject.fromDataJson(allSubjects));
+      return Subject.fromDataJson(allSubjects);
+    } catch (err) {
+      const allSubjectsAsyncStorage = await AsyncStorage.getItem('allSubjects');
+
+      if (allSubjectsAsyncStorage === null) {
+        throw new Error(
+          `Erro ao buscar matérias, verifique a conexão com internet.`,
+        );
+      } else {
+        return Subject.fromDataJson(JSON.parse(allSubjectsAsyncStorage));
+      }
+    }
   }
 
   async getAllSubjectsWithoutStudentSubjects(): Promise<Subject[]> {
     let studentSubjects = (await this.getStudentSubjects()).map(
       subject => subject.code,
     );
-    let filtered = Subject.fromDataJson(allSubjects).filter(
+    let allSubjects = await this.getAllSubjects();
+    let filtered = allSubjects.filter(
       subject => !studentSubjects.includes(subject.code),
     );
     return filtered;
@@ -107,22 +120,7 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
     };
     await AsyncStorage.setItem(subject.code, JSON.stringify(subjectData));
   }
-  async deleteAllSubjects(): Promise<void> {
-    const del = await AsyncStorage.getItem('delete312312312');
-    console.log(del)
-    if(del === null){
-      const keys = await AsyncStorage.getItem('keys');
-      if (!keys) {
-        return;
-      }
-      const keyArray = JSON.parse(keys);
-      await AsyncStorage.multiRemove(keyArray);
-      await AsyncStorage.removeItem('keys');
-      await AsyncStorage.setItem('delete312312312', 'false');
-    }
-    
-    
-  }
+
   async deleteStudentSubject(code: string): Promise<void> {
     const keys = await AsyncStorage.getItem('keys');
     if (!keys) {
@@ -138,12 +136,31 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
   }
 
   async calculateFinalAverage(subject: Subject): Promise<void> {
-    const examsAverage = Math.round(subject.exams.reduce((total: number, obj) => total + ((obj.value != -1?obj.value :0)*obj.weight) ,0)*10)/10;
-    
-    const assignmentAverage = Math.round(subject.assignments.reduce((total: number, obj) => total + ((obj.value != -1?obj.value :0)*obj.weight) ,0)*10)/10;
-    
-    const finalAverage = Math.round((Math.abs(examsAverage)*subject.examWeight/100 + assignmentAverage*subject.assignmentWeight/100)*10)/10; 
-    
+    const examsAverage =
+      Math.round(
+        subject.exams.reduce(
+          (total: number, obj) =>
+            total + (obj.value != -1 ? obj.value : 0) * obj.weight,
+          0,
+        ) * 10,
+      ) / 10;
+
+    const assignmentAverage =
+      Math.round(
+        subject.assignments.reduce(
+          (total: number, obj) =>
+            total + (obj.value != -1 ? obj.value : 0) * obj.weight,
+          0,
+        ) * 10,
+      ) / 10;
+
+    const finalAverage =
+      Math.round(
+        ((Math.abs(examsAverage) * subject.examWeight) / 100 +
+          (assignmentAverage * subject.assignmentWeight) / 100) *
+          10,
+      ) / 10;
+
     subject.average = finalAverage;
     await this.saveStudentSubject(subject.code, subject);
   }
@@ -161,8 +178,48 @@ export class SubjectRepositoryAsyncStorage implements ISubjectRepository {
         elem.generated = false;
       }
     });
-    // await AsyncStorage.setItem(subject.code, JSON.stringify(subject));
+
     await this.saveStudentSubject(subject.code, subject);
+  }
+
+  async syncStudentSubjects(allSubjects: Subject[] = []): Promise<void> {
+    const keys = await AsyncStorage.getItem('keys');
+    if (!keys) {
+      return;
+    }
+    const keyArray = JSON.parse(keys);
+    keyArray.forEach(async (key: string) => {
+      let actualSubjectFromAsyncStorage = await AsyncStorage.getItem(key);
+      let actualSubject: Subject = actualSubjectFromAsyncStorage
+        ? JSON.parse(actualSubjectFromAsyncStorage)
+        : null;
+
+      let allNewSubjects: Subject[] = allSubjects.filter(
+        (subject: any) => subject.code === key,
+      );
+
+      if (actualSubject !== null && allNewSubjects.length > 0) {
+        let newSubject = allNewSubjects[0];
+        newSubject.exams.forEach((exam, index) => {
+          if (actualSubject!.exams[index]) {
+            exam.value = actualSubject!.exams[index].value;
+            exam.generated = actualSubject!.exams[index].generated;
+          } else {
+            exam.value = -1;
+          }
+        });
+        newSubject.assignments.forEach((assignment, index) => {
+          if (actualSubject!.assignments[index]) {
+            assignment.value = actualSubject!.assignments[index].value;
+            assignment.generated = actualSubject!.assignments[index].generated;
+          } else {
+            assignment.value = -1;
+          }
+        });
+
+        await this.calculateFinalAverage(newSubject);
+      }
+    });
   }
 }
 

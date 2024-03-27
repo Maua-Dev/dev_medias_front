@@ -11,10 +11,11 @@ import {SaveStudentSubjectUsecase} from '../../../modules/subject/usecases/saveS
 import {CleanGeneratedGradesUsecase} from '../../../modules/subject/usecases/cleanGeneratedGradesUsecase';
 import {SubjectRepositoryAsyncStorage} from '../repositories/subjectRepositoryAsyncStorage';
 import {SubjectRepositoryMock} from '../repositories/subjectRepositoryMock';
-import {http} from '../http';
+import {gradeOptimizerHttp, subjectsHttp} from '../http';
 
 export const Registry = {
-  AxiosAdapter: Symbol.for('AxiosAdapter'),
+  GradeOptimizerAxiosAdapter: Symbol.for('GradeOptimizerAxiosAdapter'),
+  SubjectsAxiosAdapter: Symbol.for('SubjectsAxiosAdapter'),
 
   SubjectRepository: Symbol.for('SubjectRepository'),
   GradeOptimizerRepository: Symbol.for('GradeOptimizerRepository'),
@@ -34,14 +35,23 @@ export const Registry = {
 export const subjectsContainer = new Container();
 
 // HTTP
-subjectsContainer.bind(Registry.AxiosAdapter).toConstantValue(http);
+subjectsContainer
+  .bind(Registry.GradeOptimizerAxiosAdapter)
+  .toConstantValue(gradeOptimizerHttp);
+subjectsContainer
+  .bind(Registry.SubjectsAxiosAdapter)
+  .toConstantValue(subjectsHttp);
 
 // Repositories
 let useAsyncStorage = true;
 if (useAsyncStorage) {
   subjectsContainer
     .bind(Registry.SubjectRepository)
-    .to(SubjectRepositoryAsyncStorage)
+    .toDynamicValue(context => {
+      return new SubjectRepositoryAsyncStorage(
+        context.container.get(Registry.SubjectsAxiosAdapter),
+      );
+    })
     .inSingletonScope();
 } else {
   subjectsContainer
@@ -53,7 +63,7 @@ subjectsContainer
   .bind(Registry.GradeOptimizerRepository)
   .toDynamicValue(context => {
     return new GradeOptimizerRepositoryHttp(
-      context.container.get(Registry.AxiosAdapter),
+      context.container.get(Registry.GradeOptimizerAxiosAdapter),
     );
   });
 
