@@ -1,25 +1,20 @@
 'use client';
-import {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from 'react';
+import {createContext, PropsWithChildren, useEffect, useState} from 'react';
 import {
   Registry,
   subjectsContainer,
 } from '../@clean/shared/infra/containers/subjectsContainer';
 
-import { Alert } from 'react-native';
-import { CalculateFinalAverageUsecase } from '../@clean/modules/subject/usecases/calculateFinalAverageUsecase';
-import { CleanGeneratedGradesUsecase } from '../@clean/modules/subject/usecases/cleanGeneratedGradesUsecase';
-import { DeleteStudentSubjectUsecase } from '../@clean/modules/subject/usecases/deleteStudentSubjectUsecase';
-import { GetAllSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsUsecase';
-import { GetAllSubjectsWithoutStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase';
-import { GetStudentSubjectsUsecase } from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase';
-import { GradeOptimizerUsecase } from '../@clean/modules/subject/usecases/gradeOptimizerUsecase';
-import { SaveStudentSubjectUsecase } from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase';
-import { Subject } from '../@clean/shared/domain/entities/subject';
+import {Alert} from 'react-native';
+import {CalculateFinalAverageUsecase} from '../@clean/modules/subject/usecases/calculateFinalAverageUsecase';
+import {CleanGeneratedGradesUsecase} from '../@clean/modules/subject/usecases/cleanGeneratedGradesUsecase';
+import {DeleteStudentSubjectUsecase} from '../@clean/modules/subject/usecases/deleteStudentSubjectUsecase';
+import {GetAllSubjectsUsecase} from '../@clean/modules/subject/usecases/getAllSubjectsUsecase';
+import {GetAllSubjectsWithoutStudentSubjectsUsecase} from '../@clean/modules/subject/usecases/getAllSubjectsWithoutStudentSubjectsUsecase';
+import {GetStudentSubjectsUsecase} from '../@clean/modules/subject/usecases/getStudentSubjectsUsecase';
+import {GradeOptimizerUsecase} from '../@clean/modules/subject/usecases/gradeOptimizerUsecase';
+import {SaveStudentSubjectUsecase} from '../@clean/modules/subject/usecases/saveStudentSubjectUsecase';
+import {Subject} from '../@clean/shared/domain/entities/subject';
 
 export type SubjectContextType = {
   subjects: Subject[];
@@ -28,6 +23,7 @@ export type SubjectContextType = {
   allSubjectsWithoutStudentSubjects: Subject[];
   actualSubject: Subject | undefined;
   isLoading: boolean;
+  isAllSubjectFiledsFilled: boolean;
   saveSubject: (subject: Subject) => Promise<void>;
   getSubjects: () => Promise<void>;
   getAllSubjects: () => Promise<void>;
@@ -48,17 +44,18 @@ const defaultSubjectContext: SubjectContextType = {
   allSubjectsWithoutStudentSubjects: [] as Subject[],
   actualSubject: Subject.createEmptySubject(),
   isLoading: false,
-  saveSubject: async (subject: Subject) => { },
-  getSubjects: async () => { },
-  getAllSubjects: async () => { },
-  getAllSubjectsWithoutStudentSubjects: async () => { },
-  deleteSubject: async (code: string) => { },
-  optimizeGrades: async () => { },
-  setStudentSubjectValue: async (name: string, value: number) => { },
-  calculateFinalAverage: async () => { },
-  cleanGeneratedGrades: async () => { },
-  setActualSubjectCode: (code: string) => { },
-  setIsLoading: (isLoading: boolean) => { },
+  isAllSubjectFiledsFilled: false,
+  saveSubject: async (subject: Subject) => {},
+  getSubjects: async () => {},
+  getAllSubjects: async () => {},
+  getAllSubjectsWithoutStudentSubjects: async () => {},
+  deleteSubject: async (code: string) => {},
+  optimizeGrades: async () => {},
+  setStudentSubjectValue: async (name: string, value: number) => {},
+  calculateFinalAverage: async () => {},
+  cleanGeneratedGrades: async () => {},
+  setActualSubjectCode: (code: string) => {},
+  setIsLoading: (isLoading: boolean) => {},
 };
 
 export const SubjectContext = createContext<SubjectContextType>(
@@ -96,11 +93,13 @@ const cleanGeneratedGradesUsecase =
     Registry.CleanGeneratedGradesUsecase,
   );
 
-export function SubjectProvider({ children }: PropsWithChildren) {
+export function SubjectProvider({children}: PropsWithChildren) {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [allSubjects, setAllSubjects] = useState<Subject[]>([]);
   const [actualSubjectCode, setActualSubjectCode] = useState<string>('');
   const [actualSubject, setActualSubject] = useState<Subject>();
+  const [isAllSubjectFiledsFilled, setIsAllSubjectFiledsFilled] =
+    useState<boolean>(false);
   const [
     allSubjectsWithoutStudentSubjects,
     setAllSubjectsWithoutStudentSubjects,
@@ -122,7 +121,6 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         subject => subject.code === actualSubjectCode,
       );
       setActualSubject(subject);
-      console.log(subject);
     }
   }, [actualSubjectCode, subjects]);
 
@@ -132,8 +130,29 @@ export function SubjectProvider({ children }: PropsWithChildren) {
   }
 
   async function getAllSubjects() {
-    const allSubjects = await getAllSubjectsUsecase.execute();
-    setAllSubjects(allSubjects);
+    try {
+      const allSubjects = await getAllSubjectsUsecase.execute();
+      setAllSubjects(allSubjects);
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(
+          'Ops! Ocorreu um erro...',
+          error.message,
+          [
+            {
+              text: 'Tentar novamente',
+              onPress: async () => {
+                await new Promise(resolve => setTimeout(resolve, 300));
+                await getAllSubjects();
+              },
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    }
   }
 
   async function getAllSubjectsWithoutStudentSubjects() {
@@ -148,7 +167,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
       await getSubjects();
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert('Ops! Ocorreu um erro...', error.message, [{ text: 'OK' }], {
+        Alert.alert('Ops! Ocorreu um erro...', error.message, [{text: 'OK'}], {
           cancelable: false,
         });
       }
@@ -175,6 +194,12 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         assignment.name === name ? (assignment.value = value) : '';
       });
     }
+    setIsAllSubjectFiledsFilled(
+      oldActualSubject!.exams.every(exam => exam.value !== -1) &&
+        oldActualSubject!.assignments.every(
+          assignment => assignment.value !== -1,
+        ),
+    );
     setActualSubject(oldActualSubject);
   }
 
@@ -195,7 +220,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
       setActualSubjectCode(subjectOptimized.code);
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert('Ops! Ocorreu um erro...', error.message, [{ text: 'OK' }], {
+        Alert.alert('Ops! Ocorreu um erro...', error.message, [{text: 'OK'}], {
           cancelable: false,
         });
       }
@@ -217,6 +242,7 @@ export function SubjectProvider({ children }: PropsWithChildren) {
         allSubjectsWithoutStudentSubjects,
         actualSubject,
         isLoading,
+        isAllSubjectFiledsFilled,
         saveSubject,
         getSubjects,
         deleteSubject,
