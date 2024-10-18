@@ -29,6 +29,5 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        implementation('org.jetbrains:annotations:16.0.2')
     }
 }
