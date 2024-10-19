@@ -61,7 +61,7 @@ jobs:
           echo "REACT_APP_SUBJECTS_URL=${{ vars.REACT_APP_SUBJECTS_URL }}" >> .env
 
       - name: Build appbundle
-        run: ./gradlew bundleRelease
+        run: ./gradlew clean && ./gradlew :app:bundleRelease
         working-directory: android   
 
       - name: Exec fastlane
